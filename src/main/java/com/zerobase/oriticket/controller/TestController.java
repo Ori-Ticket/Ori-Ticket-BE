@@ -12,6 +12,6 @@ public class TestController {
 
     @GetMapping
     public String test(){
-        return "테스트입니다.";
+        return "새로운 30버전 테스트입니다.";
     }
 }
