@@ -3,10 +3,12 @@ package com.zerobase.oriticket.config;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.TimeZone;
+
 @Configuration
-public class TimeZone {
+public class ServerTimeZone {
     @PostConstruct
     public void setServerTimeZone() {
-        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Seoul"));
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
     }
 }
