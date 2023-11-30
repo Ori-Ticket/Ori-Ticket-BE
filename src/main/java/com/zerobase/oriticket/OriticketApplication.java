@@ -10,4 +10,5 @@ public class OriticketApplication {
 		SpringApplication.run(OriticketApplication.class, args);
 	}
 
+
 }
