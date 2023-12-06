@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +22,9 @@ public class Stadium {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stadiumId;
 
-    private Long sportsId; //
+    @ManyToOne
+    @JoinColumn(name = "SPORTS_ID")
+    private Sports sports;
 
     private String stadiumName;
     private String homeTeamName;
