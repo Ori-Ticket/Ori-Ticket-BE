@@ -2,6 +2,7 @@ package com.zerobase.oriticket.transaction.controller;
 
 import com.zerobase.oriticket.transaction.dto.TransactionRequest;
 import com.zerobase.oriticket.transaction.service.TransactionService;
+import com.zerobase.oriticket.transaction.service.TransactionUpdateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final TransactionUpdateService transactionUpdateService;
+
 
     @PostMapping
     public ResponseEntity<?> register(
@@ -32,30 +35,10 @@ public class TransactionController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getAll(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size
-
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
     ){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.getAll(page, size));
-    }
-
-    @GetMapping("/pend/list")
-    public ResponseEntity<?> getPendStatus(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size
-    ){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.getPendStatus(page, size));
-    }
-
-    @GetMapping("/receive/list")
-    public ResponseEntity<?> getReceiveStatus(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size
-    ){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.getReceiveStatus(page, size));
+        return ResponseEntity.ok(transactionService.getAll(page, size));
     }
 
     @PatchMapping("/receive")
@@ -63,16 +46,7 @@ public class TransactionController {
             @RequestBody TransactionRequest.UpdateStatus request
     ){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.updateToReceived(request));
-    }
-
-    @GetMapping("/completion/list")
-    public ResponseEntity<?> getCompletionStatus(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size
-    ){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.getCompletionStatus(page, size));
+                .body(transactionUpdateService.updateToReceived(request));
     }
 
     @PatchMapping("/completion")
@@ -80,16 +54,7 @@ public class TransactionController {
             @RequestBody TransactionRequest.UpdateStatus request
     ){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.updateToCompleted(request));
-    }
-
-    @GetMapping("/cancel/list")
-    public ResponseEntity<?> getCancelStatus(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size
-    ){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.getCancelStatus(page, size));
+                .body(transactionUpdateService.updateToCompleted(request));
     }
 
     @PatchMapping("/cancel")
@@ -97,16 +62,7 @@ public class TransactionController {
             @RequestBody TransactionRequest.UpdateStatus request
     ){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.updateToCanceled(request));
-    }
-
-    @GetMapping("/report/list")
-    public ResponseEntity<?> getReportStatus(
-            @RequestParam("page") int page,
-            @RequestParam("size") int size
-    ){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.getReportStatus(page, size));
+                .body(transactionUpdateService.updateToCanceled(request));
     }
 
     @PatchMapping("/report")
@@ -114,7 +70,7 @@ public class TransactionController {
             @RequestBody TransactionRequest.UpdateStatus request
     ){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.updateToReported(request));
+                .body(transactionUpdateService.updateToReported(request));
     }
 
 }
