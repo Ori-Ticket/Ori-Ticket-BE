@@ -2,6 +2,7 @@ package com.zerobase.oriticket.transaction.service;
 
 import com.zerobase.oriticket.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.elasticsearch.transaction.repository.TransactionSearchRepository;
+import com.zerobase.oriticket.global.exception.impl.TransactionNotFound;
 import com.zerobase.oriticket.transaction.dto.TransactionRequest;
 import com.zerobase.oriticket.transaction.dto.TransactionResponse;
 import com.zerobase.oriticket.transaction.entity.Transaction;
@@ -35,7 +36,7 @@ public class TransactionService {
 
     public TransactionResponse get(Long transactionId){
         Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new RuntimeException("해당 거래 없음."));
+                .orElseThrow(() -> new TransactionNotFound());
 
         return TransactionResponse.fromEntity(transaction);
     }
