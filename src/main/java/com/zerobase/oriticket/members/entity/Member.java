@@ -1,6 +1,7 @@
-package com.zerobase.oriticket.user.entity;
+package com.zerobase.oriticket.members.entity;
 
-import com.zerobase.oriticket.user.constants.UserRole;
+import com.zerobase.global.constants.MemberStatus;
+import com.zerobase.global.constants.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,19 +9,21 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Entity
-@Table(name = "members")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Members {
+@Builder
+@Entity
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,23 +45,20 @@ public class Members {
     @Column(nullable = false, length = 30)
     private String phoneNum;
 
-
     @Enumerated(EnumType.STRING)
-    @Column(length = 10)
+    @Column(nullable = false, length = 10)
     private UserRole roles;
 
-
-    private String status;
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    private MemberStatus status;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime registeredAt;
 
-
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
-
 
 }
