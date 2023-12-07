@@ -12,7 +12,6 @@ public class CustomExceptionHandler {
     @ExceptionHandler(AbstractException.class)
     protected ResponseEntity<?> handleCustomException(AbstractException e) {
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .code(e.getErrorCode())
                 .message(e.getMessage())
                 .build();
 
