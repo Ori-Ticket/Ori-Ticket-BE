@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +26,6 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "SPORTS_ID")
     private Sports sports;
-
-    @OneToOne
-    @JoinColumn(name = "SALE_POST_ID")
-    private Post post;
 
     @ManyToOne
     @JoinColumn(name = "STADIUM_ID")

@@ -8,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,10 @@ public class Post {
     private Long salePostId;
 
     private Long memberId; //
+
+    @OneToOne
+    @JoinColumn(name = "TICKET_ID")
+    private Ticket ticket;
 
     @Enumerated(EnumType.STRING)
     private SaleStatus saleStatus;
