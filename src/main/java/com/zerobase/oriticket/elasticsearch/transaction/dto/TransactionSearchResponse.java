@@ -1,12 +1,8 @@
 package com.zerobase.oriticket.elasticsearch.transaction.dto;
 
 import com.zerobase.oriticket.elasticsearch.transaction.entity.TransactionSearchDocument;
-import com.zerobase.oriticket.transaction.constants.TransactionStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
