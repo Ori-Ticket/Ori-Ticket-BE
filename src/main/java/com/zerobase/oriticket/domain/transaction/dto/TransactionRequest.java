@@ -13,10 +13,10 @@ public class TransactionRequest {
         private Long salePostId;
         private Long memberId;
 
-        public Transaction toEntity(TransactionRequest.Register request) {
+        public Transaction toEntity() {
             return Transaction.builder()
-                    .salePostId(request.getSalePostId())
-                    .memberId(request.getMemberId())
+                    .salePostId(this.salePostId)
+                    .memberId(this.memberId)
                     .status(TransactionStatus.PENDING)
                     .startedAt(LocalDateTime.now())
                     .build();

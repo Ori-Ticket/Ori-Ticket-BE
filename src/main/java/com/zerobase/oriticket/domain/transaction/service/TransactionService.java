@@ -30,7 +30,7 @@ public class TransactionService {
 
         // 멤버 유효성 체크
 
-        Transaction transaction = transactionRepository.save(request.toEntity(request));
+        Transaction transaction = transactionRepository.save(request.toEntity());
 
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 

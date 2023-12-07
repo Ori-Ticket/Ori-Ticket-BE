@@ -22,7 +22,7 @@ public class TicketResponse {
     private boolean isSuccessive;
 
     private String seatInfo;
-    private String url;
+    private String imgUrl;
     private String note;
 
     public static TicketResponse fromEntity(Ticket ticket) {
@@ -34,9 +34,9 @@ public class TicketResponse {
                 .salePrice(ticket.getSalePrice())
                 .originalPrice(ticket.getOriginalPrice())
                 .expirationAt(ticket.getExpirationAt())
-                .isSuccessive(ticket.isSuccessive())
+                .isSuccessive(ticket.getIsSuccessive())
                 .seatInfo(ticket.getSeatInfo())
-                .url(ticket.getUrl())
+                .imgUrl(ticket.getImgUrl())
                 .note(ticket.getNote())
                 .build();
     }
