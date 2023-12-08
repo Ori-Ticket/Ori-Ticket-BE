@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.global.exception.impl;
+package com.zerobase.oriticket.global.exception.impl.post;
 
 import com.zerobase.oriticket.global.constants.PostExceptionStatus;
 import com.zerobase.oriticket.global.exception.AbstractException;

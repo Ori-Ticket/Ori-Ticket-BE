@@ -5,6 +5,7 @@ import com.zerobase.oriticket.domain.post.dto.PostResponse;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.*;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
+import com.zerobase.oriticket.global.exception.impl.post.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,17 +33,17 @@ public class PostService {
 
     public PostResponse get(Long postId) {
         Post salePost = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("해당 글이 존재하지 않습니다."));
+                .orElseThrow(() -> new SalePostNotFound());
 
         return PostResponse.fromEntity(salePost);
     }
 
     public void delete(Long postId) {
         Post salePost = postRepository.findById(postId)
-                .orElseThrow(() -> new RuntimeException("해당 글이 존재하지 않습니다."));
+                .orElseThrow(() -> new SalePostNotFound());
 
         boolean exists = transactionRepository.existsBySalePost(salePost);
-        if (exists) throw new RuntimeException("생성된 거래가 있다면 판매글 삭제를 할 수 없습니다.");
+        if (exists) throw new CannotDeletePostTransactionExist();
 
         postRepository.delete(salePost);
         ticketRepository.delete(salePost.getTicket());
@@ -51,13 +52,13 @@ public class PostService {
     public Ticket registerTicket(PostRequest.Register request) {
 
         Sports sports = sportsRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new RuntimeException("해당 스포츠가 존재하지 않습니다."));
+                .orElseThrow(() -> new SportsNotFound());
 
         Stadium stadium = stadiumRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new RuntimeException("해당 경기장이 존재하지 않습니다."));
+                .orElseThrow(() -> new StadiumNotFound());
 
         AwayTeam awayTeam = awayTeamRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new RuntimeException("해당 팀이 존재하지 않습니다."));
+                .orElseThrow(() -> new AwayTeamNotFound());
 
         return ticketRepository.save(request.toEntityTicket(sports, stadium, awayTeam));
     }
