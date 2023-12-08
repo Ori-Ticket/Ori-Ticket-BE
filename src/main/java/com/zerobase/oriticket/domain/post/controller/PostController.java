@@ -30,4 +30,11 @@ public class PostController {
                 .body(postService.get(postId));
     }
 
+    @DeleteMapping
+    private void delete(
+            @RequestParam("id") Long postId
+    ){
+        postService.delete(postId);
+    }
+
 }
