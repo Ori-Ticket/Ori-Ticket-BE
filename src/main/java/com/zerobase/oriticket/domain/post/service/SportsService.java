@@ -6,6 +6,7 @@ import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.transaction.dto.TransactionResponse;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
+import com.zerobase.oriticket.global.exception.impl.post.SportsNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +28,7 @@ public class SportsService {
 
     public SportsResponse get(Long awayTeamId) {
         Sports sports = sportsRepository.findById(awayTeamId)
-                .orElseThrow(() -> new RuntimeException("스포츠 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new SportsNotFound());
 
         return SportsResponse.fromEntity(sports);
     }

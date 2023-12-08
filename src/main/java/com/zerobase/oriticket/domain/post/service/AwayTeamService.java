@@ -7,6 +7,8 @@ import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.repository.AwayTeamRepository;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
+import com.zerobase.oriticket.global.exception.impl.post.AwayTeamNotFound;
+import com.zerobase.oriticket.global.exception.impl.post.SportsNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +24,7 @@ public class AwayTeamService {
 
     public AwayTeamResponse register(AwayTeamRequest.Register request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new RuntimeException("스포츠 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new SportsNotFound());
 
         return AwayTeamResponse.fromEntity(
                 awayTeamRepository.save(request.toEntity(sports))
@@ -31,7 +33,7 @@ public class AwayTeamService {
 
     public AwayTeamResponse get(Long awayTeamId) {
         AwayTeam awayTeam = awayTeamRepository.findById(awayTeamId)
-                .orElseThrow(() -> new RuntimeException("어웨이 팀 정보를 찾을 수 없습니다."));
+                .orElseThrow(() -> new AwayTeamNotFound());
 
         return AwayTeamResponse.fromEntity(awayTeam);
     }
