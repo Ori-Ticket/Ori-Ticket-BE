@@ -29,4 +29,13 @@ public class StadiumController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(stadiumService.get(stadiumId));
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> getAll(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(stadiumService.getAll(page, size));
+    }
 }

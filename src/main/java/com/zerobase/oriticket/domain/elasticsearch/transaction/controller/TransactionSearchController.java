@@ -17,9 +17,9 @@ public class TransactionSearchController {
 
     private final TransactionSearchService transactionSearchService;
 
-    @GetMapping("/search/status")
+    @GetMapping("/search")
     public ResponseEntity<?> searchByStatus(
-            @RequestParam("value") String status,
+            @RequestParam("status") String status,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ){

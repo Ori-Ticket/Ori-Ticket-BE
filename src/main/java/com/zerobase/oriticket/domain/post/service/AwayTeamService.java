@@ -2,11 +2,15 @@ package com.zerobase.oriticket.domain.post.service;
 
 import com.zerobase.oriticket.domain.post.dto.AwayTeamRequest;
 import com.zerobase.oriticket.domain.post.dto.AwayTeamResponse;
+import com.zerobase.oriticket.domain.post.dto.SportsResponse;
 import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.repository.AwayTeamRepository;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,5 +34,14 @@ public class AwayTeamService {
                 .orElseThrow(() -> new RuntimeException("어웨이 팀 정보를 찾을 수 없습니다."));
 
         return AwayTeamResponse.fromEntity(awayTeam);
+    }
+
+    public Page<AwayTeamResponse> getAll(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page-1, size);
+
+        Page<AwayTeam> transactionDocuments = awayTeamRepository.findAll(pageable);
+
+        return transactionDocuments.map(AwayTeamResponse::fromEntity);
     }
 }
