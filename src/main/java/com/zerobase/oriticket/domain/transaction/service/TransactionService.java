@@ -4,13 +4,12 @@ import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.Transactio
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
-import com.zerobase.oriticket.global.exception.impl.transaction.AlreadyExistTransaction;
-import com.zerobase.oriticket.global.exception.impl.post.SalePostNotFound;
-import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFound;
-import com.zerobase.oriticket.domain.transaction.dto.TransactionRequest;
-import com.zerobase.oriticket.domain.transaction.dto.TransactionResponse;
+import com.zerobase.oriticket.domain.transaction.dto.RegisterTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
+import com.zerobase.oriticket.global.exception.impl.post.SalePostNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.transaction.AlreadyExistTransaction;
+import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,39 +24,42 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionSearchRepository transactionSearchRepository;
     private final PostRepository postRepository;
-    private String STARTED_AT = "startedAt";
+    private static final String STARTED_AT = "startedAt";
 
-    public TransactionResponse register(TransactionRequest.Register request){
+    public Transaction register(RegisterTransactionRequest request){
 
         Post salePost = postRepository.findById(request.getSalePostId())
-                .orElseThrow(() -> new SalePostNotFound());
+                .orElseThrow(SalePostNotFoundException::new);
 
         // 멤버 유효성 체크
 
         boolean exists = transactionRepository.existsBySalePost(salePost);
-        if (exists) throw new AlreadyExistTransaction();
+
+        if (exists){
+            throw new AlreadyExistTransaction();
+        }
 
         Transaction transaction = transactionRepository.save(request.toEntity(salePost));
 
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
-        return TransactionResponse.fromEntity(transaction);
+        return transaction;
     }
 
-    public TransactionResponse get(Long transactionId){
+    public Transaction get(Long transactionId){
         Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new TransactionNotFound());
+                .orElseThrow(TransactionNotFound::new);
 
-        return TransactionResponse.fromEntity(transaction);
+        return transaction;
     }
 
-    public Page<TransactionResponse> getAll(int page, int size) {
+    public Page<Transaction> getAll(int page, int size) {
         Sort sort = Sort.by(STARTED_AT).descending();
 
         Pageable pageable = PageRequest.of(page-1, size, sort);
 
         Page<Transaction> transactionDocuments = transactionRepository.findAll(pageable);
 
-        return transactionDocuments.map(TransactionResponse::fromEntity);
+        return transactionDocuments;
     }
 }

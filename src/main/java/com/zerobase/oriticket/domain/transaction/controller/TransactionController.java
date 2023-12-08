@@ -1,9 +1,13 @@
 package com.zerobase.oriticket.domain.transaction.controller;
 
-import com.zerobase.oriticket.domain.transaction.dto.TransactionRequest;
+import com.zerobase.oriticket.domain.transaction.dto.RegisterTransactionRequest;
+import com.zerobase.oriticket.domain.transaction.dto.TransactionResponse;
+import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequest;
+import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.service.TransactionService;
 import com.zerobase.oriticket.domain.transaction.service.TransactionUpdateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,61 +20,77 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final TransactionUpdateService transactionUpdateService;
 
-
     @PostMapping
-    public ResponseEntity<?> register(
-            @RequestBody TransactionRequest.Register request
+    public ResponseEntity<TransactionResponse> register(
+            @RequestBody RegisterTransactionRequest registerRequest
     ){
+
+        Transaction transaction = transactionService.register(registerRequest);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.register(request));
+                .body(TransactionResponse.fromEntity(transaction));
     }
 
     @GetMapping
-    public ResponseEntity<?> get(
+    public ResponseEntity<TransactionResponse> get(
             @RequestParam("id") Long transactionId
     ){
+
+        Transaction transaction = transactionService.get(transactionId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionService.get(transactionId));
+                .body(TransactionResponse.fromEntity(transaction));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> getAll(
+    public ResponseEntity<Page<TransactionResponse>> getAll(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ){
-        return ResponseEntity.ok(transactionService.getAll(page, size));
+
+        Page<Transaction> transactions = transactionService.getAll(page, size);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(transactions.map(TransactionResponse::fromEntity));
     }
 
     @PatchMapping("/receive")
-    public ResponseEntity<?> updateToReceived(
-            @RequestBody TransactionRequest.UpdateStatus request
+    public ResponseEntity<TransactionResponse> updateToReceived(
+            @RequestBody UpdateStatusTransactionRequest updateRequest
     ){
+        Transaction transaction = transactionUpdateService.updateToReceived(updateRequest);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionUpdateService.updateToReceived(request));
+                .body(TransactionResponse.fromEntity(transaction));
     }
 
     @PatchMapping("/completion")
-    public ResponseEntity<?> updateToCompleted(
-            @RequestBody TransactionRequest.UpdateStatus request
+    public ResponseEntity<TransactionResponse> updateToCompleted(
+            @RequestBody UpdateStatusTransactionRequest request
     ){
+        Transaction transaction = transactionUpdateService.updateToCompleted(request);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionUpdateService.updateToCompleted(request));
+                .body(TransactionResponse.fromEntity(transaction));
     }
 
     @PatchMapping("/cancel")
-    public ResponseEntity<?> updateToCanceled(
-            @RequestBody TransactionRequest.UpdateStatus request
+    public ResponseEntity<TransactionResponse> updateToCanceled(
+            @RequestBody UpdateStatusTransactionRequest request
     ){
+        Transaction transaction = transactionUpdateService.updateToCanceled(request);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionUpdateService.updateToCanceled(request));
+                .body(TransactionResponse.fromEntity(transaction));
     }
 
     @PatchMapping("/report")
-    public ResponseEntity<?> updateToReported(
-            @RequestBody TransactionRequest.UpdateStatus request
+    public ResponseEntity<TransactionResponse> updateToReported(
+            @RequestBody UpdateStatusTransactionRequest request
     ){
+        Transaction transaction = transactionUpdateService.updateToReported(request);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionUpdateService.updateToReported(request));
+                .body(TransactionResponse.fromEntity(transaction));
     }
 
 }

@@ -3,7 +3,7 @@ package com.zerobase.oriticket.global.exception.impl.post;
 import com.zerobase.oriticket.global.constants.PostExceptionStatus;
 import com.zerobase.oriticket.global.exception.AbstractException;
 
-public class CannotDeletePostExistTransaction extends AbstractException {
+public class CannotDeletePostExistTransactionException extends AbstractException {
     @Override
     public int getErrorCode() {
         return PostExceptionStatus.CANNOT_DELETE_POST_EXIST_TRANSACTION.getCode();

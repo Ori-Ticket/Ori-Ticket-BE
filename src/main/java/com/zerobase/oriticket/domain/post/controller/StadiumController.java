@@ -1,11 +1,16 @@
 package com.zerobase.oriticket.domain.post.controller;
 
-import com.zerobase.oriticket.domain.post.dto.StadiumRequest;
+import com.zerobase.oriticket.domain.post.dto.RegisterStadiumRequest;
+import com.zerobase.oriticket.domain.post.dto.StadiumResponse;
+import com.zerobase.oriticket.domain.post.entity.Stadium;
 import com.zerobase.oriticket.domain.post.service.StadiumService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,36 +20,47 @@ public class StadiumController {
     private final StadiumService stadiumService;
 
     @PostMapping
-    public ResponseEntity<?> register(
-            @RequestBody StadiumRequest.Register request
+    public ResponseEntity<StadiumResponse> register(
+            @RequestBody RegisterStadiumRequest request
     ){
+        Stadium stadium = stadiumService.register(request);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(stadiumService.register(request));
+                .body(StadiumResponse.fromEntity(stadium));
     }
 
     @GetMapping
-    public ResponseEntity<?> get(
+    public ResponseEntity<StadiumResponse> get(
             @RequestParam("id") Long stadiumId
     ){
+        Stadium stadium = stadiumService.get(stadiumId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(stadiumService.get(stadiumId));
+                .body(StadiumResponse.fromEntity(stadium));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> getAll(
+    public ResponseEntity<Page<StadiumResponse>> getAll(
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ){
+        Page<Stadium> stadiums = stadiumService.getAll(page, size);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(stadiumService.getAll(page, size));
+                .body(stadiums.map(StadiumResponse::fromEntity));
     }
 
     @GetMapping("/sports")
-    public ResponseEntity<?> getBySportId(
+    public ResponseEntity<List<StadiumResponse>> getBySportId(
             @RequestParam("id") Long sportsId
     ){
+        List<Stadium> stadiums = stadiumService.getBySportsId(sportsId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(stadiumService.getBySportsId(sportsId));
+                .body(
+                        stadiums.stream()
+                        .map(StadiumResponse::fromEntity)
+                        .toList()
+                );
     }
 
     @DeleteMapping

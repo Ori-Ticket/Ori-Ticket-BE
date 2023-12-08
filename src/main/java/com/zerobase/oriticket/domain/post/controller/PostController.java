@@ -1,6 +1,8 @@
 package com.zerobase.oriticket.domain.post.controller;
 
-import com.zerobase.oriticket.domain.post.dto.PostRequest;
+import com.zerobase.oriticket.domain.post.dto.PostResponse;
+import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
+import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,19 +17,23 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<?> register(
-            @RequestBody PostRequest.Register request
+    public ResponseEntity<PostResponse> register(
+            @RequestBody RegisterPostRequest request
     ){
+        Post post = postService.registerPost(request);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(postService.registerPost(request));
+                .body(PostResponse.fromEntity(post));
     }
 
     @GetMapping
-    public ResponseEntity<?> get(
+    public ResponseEntity<PostResponse> get(
             @RequestParam("id") Long postId
     ){
+        Post post = postService.get(postId);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(postService.get(postId));
+                .body(PostResponse.fromEntity(post));
     }
 
     @DeleteMapping

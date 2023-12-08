@@ -1,7 +1,6 @@
 package com.zerobase.oriticket.domain.post.service;
 
-import com.zerobase.oriticket.domain.post.dto.PostRequest;
-import com.zerobase.oriticket.domain.post.dto.PostResponse;
+import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.*;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
@@ -20,45 +19,45 @@ public class PostService {
     private final StadiumRepository stadiumRepository;
     private final AwayTeamRepository awayTeamRepository;
 
-    public PostResponse registerPost(PostRequest.Register request) {
+    public Post registerPost(RegisterPostRequest request) {
 
         // 멤버 객체 가져오도록 수정 예정
 
         Ticket ticket = registerTicket(request);
 
-        return PostResponse.fromEntity(
-                postRepository.save(request.toEntityPost(ticket))
-        );
+        return postRepository.save(request.toEntityPost(ticket));
     }
 
-    public PostResponse get(Long postId) {
+    public Post get(Long postId) {
         Post salePost = postRepository.findById(postId)
-                .orElseThrow(() -> new SalePostNotFound());
+                .orElseThrow(SalePostNotFoundException::new);
 
-        return PostResponse.fromEntity(salePost);
+        return salePost;
     }
 
     public void delete(Long postId) {
         Post salePost = postRepository.findById(postId)
-                .orElseThrow(() -> new SalePostNotFound());
+                .orElseThrow(SalePostNotFoundException::new);
 
         boolean exists = transactionRepository.existsBySalePost(salePost);
-        if (exists) throw new CannotDeletePostExistTransaction();
+        if (exists){
+            throw new CannotDeletePostExistTransactionException();
+        }
 
         postRepository.delete(salePost);
         ticketRepository.delete(salePost.getTicket());
     }
 
-    public Ticket registerTicket(PostRequest.Register request) {
+    public Ticket registerTicket(RegisterPostRequest request) {
 
         Sports sports = sportsRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new SportsNotFound());
+                .orElseThrow(SportsNotFoundException::new);
 
         Stadium stadium = stadiumRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new StadiumNotFound());
+                .orElseThrow(StadiumNotFoundException::new);
 
         AwayTeam awayTeam = awayTeamRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new AwayTeamNotFound());
+                .orElseThrow(AwayTeamNotFoundException::new);
 
         return ticketRepository.save(request.toEntityTicket(sports, stadium, awayTeam));
     }

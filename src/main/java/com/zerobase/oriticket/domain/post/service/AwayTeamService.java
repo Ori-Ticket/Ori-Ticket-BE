@@ -1,15 +1,14 @@
 package com.zerobase.oriticket.domain.post.service;
 
-import com.zerobase.oriticket.domain.post.dto.AwayTeamRequest;
-import com.zerobase.oriticket.domain.post.dto.AwayTeamResponse;
+import com.zerobase.oriticket.domain.post.dto.RegisterAwayTeamRequest;
 import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.repository.AwayTeamRepository;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.post.repository.TicketRepository;
-import com.zerobase.oriticket.global.exception.impl.post.AwayTeamNotFound;
-import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteAwayTeamExistTicket;
-import com.zerobase.oriticket.global.exception.impl.post.SportsNotFound;
+import com.zerobase.oriticket.global.exception.impl.post.AwayTeamNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteAwayTeamExistTicketException;
+import com.zerobase.oriticket.global.exception.impl.post.SportsNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,50 +25,45 @@ public class AwayTeamService {
     private final SportsRepository sportsRepository;
     private final TicketRepository ticketRepository;
 
-    public AwayTeamResponse register(AwayTeamRequest.Register request) {
+    public AwayTeam register(RegisterAwayTeamRequest request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new SportsNotFound());
+                .orElseThrow(SportsNotFoundException::new);
 
-        return AwayTeamResponse.fromEntity(
-                awayTeamRepository.save(request.toEntity(sports))
-        );
+
+        return awayTeamRepository.save(request.toEntity(sports));
     }
 
-    public AwayTeamResponse get(Long awayTeamId) {
+    public AwayTeam get(Long awayTeamId) {
         AwayTeam awayTeam = awayTeamRepository.findById(awayTeamId)
-                .orElseThrow(() -> new AwayTeamNotFound());
+                .orElseThrow(AwayTeamNotFoundException::new);
 
-        return AwayTeamResponse.fromEntity(awayTeam);
+        return awayTeam;
     }
 
-    public Page<AwayTeamResponse> getAll(int page, int size) {
+    public Page<AwayTeam> getAll(int page, int size) {
 
         Pageable pageable = PageRequest.of(page-1, size);
 
-        Page<AwayTeam> transactionDocuments = awayTeamRepository.findAll(pageable);
-
-        return transactionDocuments.map(AwayTeamResponse::fromEntity);
+        return awayTeamRepository.findAll(pageable);
     }
 
-    public List<AwayTeamResponse> getBySportsId(Long sportsId) {
+    public List<AwayTeam> getBySportsId(Long sportsId) {
 
         Sports sports = sportsRepository.findById(sportsId)
-                .orElseThrow(() -> new SportsNotFound());
+                .orElseThrow(SportsNotFoundException::new);
 
-        List<AwayTeam> awayTeams = awayTeamRepository.findBySports(sports);
-
-        return awayTeams.stream()
-                .map(AwayTeamResponse::fromEntity)
-                .toList();
+        return awayTeamRepository.findBySports(sports);
     }
 
     public void delete(Long awayTeamId){
         AwayTeam awayTeam = awayTeamRepository.findById(awayTeamId)
-                .orElseThrow(() -> new AwayTeamNotFound());
+                .orElseThrow(AwayTeamNotFoundException::new);
 
         boolean exists = ticketRepository.existsByAwayTeam(awayTeam);
 
-        if(exists) throw new CannotDeleteAwayTeamExistTicket();
+        if(exists){
+            throw new CannotDeleteAwayTeamExistTicketException();
+        }
 
         awayTeamRepository.delete(awayTeam);
     }

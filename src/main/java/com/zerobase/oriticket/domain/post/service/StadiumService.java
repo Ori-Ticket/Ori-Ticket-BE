@@ -1,15 +1,14 @@
 package com.zerobase.oriticket.domain.post.service;
 
-import com.zerobase.oriticket.domain.post.dto.StadiumRequest;
-import com.zerobase.oriticket.domain.post.dto.StadiumResponse;
+import com.zerobase.oriticket.domain.post.dto.RegisterStadiumRequest;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.entity.Stadium;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.post.repository.StadiumRepository;
 import com.zerobase.oriticket.domain.post.repository.TicketRepository;
-import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteStadiumExistTicket;
-import com.zerobase.oriticket.global.exception.impl.post.SportsNotFound;
-import com.zerobase.oriticket.global.exception.impl.post.StadiumNotFound;
+import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteStadiumExistTicketException;
+import com.zerobase.oriticket.global.exception.impl.post.SportsNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.post.StadiumNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,49 +25,44 @@ public class StadiumService {
     private final SportsRepository sportsRepository;
     private final TicketRepository ticketRepository;
 
-    public StadiumResponse register(StadiumRequest.Register request) {
+    public Stadium register(RegisterStadiumRequest request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new SportsNotFound());
+                .orElseThrow(SportsNotFoundException::new);
 
-        return StadiumResponse.fromEntity(
-                stadiumRepository.save(request.toEntity(sports))
-        );
+        return stadiumRepository.save(request.toEntity(sports));
     }
 
-    public StadiumResponse get(Long stadiumId) {
+    public Stadium get(Long stadiumId) {
         Stadium stadium = stadiumRepository.findById(stadiumId)
-                .orElseThrow(() -> new StadiumNotFound());
+                .orElseThrow(StadiumNotFoundException::new);
 
-        return StadiumResponse.fromEntity(stadium);
+        return stadium;
     }
 
-    public Page<StadiumResponse> getAll(int page, int size) {
+    public Page<Stadium> getAll(int page, int size) {
 
         Pageable pageable = PageRequest.of(page-1, size);
 
-        Page<Stadium> transactionDocuments = stadiumRepository.findAll(pageable);
-
-        return transactionDocuments.map(StadiumResponse::fromEntity);
+        return stadiumRepository.findAll(pageable);
     }
 
-    public List<StadiumResponse> getBySportsId(Long sportsId) {
+    public List<Stadium> getBySportsId(Long sportsId) {
         Sports sports = sportsRepository.findById(sportsId)
-                .orElseThrow(() -> new SportsNotFound());
+                .orElseThrow(SportsNotFoundException::new);
 
-        List<Stadium> stadiums = stadiumRepository.findBySports(sports);
 
-        return stadiums.stream()
-                .map(StadiumResponse::fromEntity)
-                .toList();
+        return stadiumRepository.findBySports(sports);
     }
 
     public void delete(Long stadiumId){
         Stadium stadium = stadiumRepository.findById(stadiumId)
-                .orElseThrow(() -> new StadiumNotFound());
+                .orElseThrow(StadiumNotFoundException::new);
 
         boolean exists = ticketRepository.existsByStadium(stadium);
 
-        if(exists) throw new CannotDeleteStadiumExistTicket();
+        if(exists){
+            throw new CannotDeleteStadiumExistTicketException();
+        }
 
         stadiumRepository.delete(stadium);
     }

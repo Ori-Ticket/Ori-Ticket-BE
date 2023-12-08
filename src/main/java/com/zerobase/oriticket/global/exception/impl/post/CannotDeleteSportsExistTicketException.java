@@ -3,14 +3,14 @@ package com.zerobase.oriticket.global.exception.impl.post;
 import com.zerobase.oriticket.global.constants.PostExceptionStatus;
 import com.zerobase.oriticket.global.exception.AbstractException;
 
-public class AwayTeamNotFound extends AbstractException {
+public class CannotDeleteSportsExistTicketException extends AbstractException {
     @Override
     public int getErrorCode() {
-        return PostExceptionStatus.AWAY_TEAM_NOT_FOUND.getCode();
+        return PostExceptionStatus.CANNOT_DELETE_SPORTS_EXIST_TICKET.getCode();
     }
 
     @Override
     public String getMessage() {
-        return PostExceptionStatus.AWAY_TEAM_NOT_FOUND.getMessage();
+        return PostExceptionStatus.CANNOT_DELETE_SPORTS_EXIST_TICKET.getMessage();
     }
 }
