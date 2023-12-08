@@ -1,8 +1,10 @@
 package com.zerobase.oriticket.domain.post.service;
 
+import com.zerobase.oriticket.domain.post.dto.AwayTeamResponse;
 import com.zerobase.oriticket.domain.post.dto.SportsResponse;
 import com.zerobase.oriticket.domain.post.dto.StadiumRequest;
 import com.zerobase.oriticket.domain.post.dto.StadiumResponse;
+import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.entity.Stadium;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +49,16 @@ public class StadiumService {
         Page<Stadium> transactionDocuments = stadiumRepository.findAll(pageable);
 
         return transactionDocuments.map(StadiumResponse::fromEntity);
+    }
+
+    public List<StadiumResponse> getBySportsId(Long sportsId) {
+        Sports sports = sportsRepository.findById(sportsId)
+                .orElseThrow(() -> new SportsNotFound());
+
+        List<Stadium> stadiums = stadiumRepository.findBySports(sports);
+
+        return stadiums.stream()
+                .map(StadiumResponse::fromEntity)
+                .toList();
     }
 }

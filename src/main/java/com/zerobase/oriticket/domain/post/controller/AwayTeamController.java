@@ -38,4 +38,12 @@ public class AwayTeamController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(awayTeamService.getAll(page, size));
     }
+
+    @GetMapping("/sports")
+    public ResponseEntity<?> getBySportId(
+            @RequestParam("id") Long sportsId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(awayTeamService.getBySportsId(sportsId));
+    }
 }

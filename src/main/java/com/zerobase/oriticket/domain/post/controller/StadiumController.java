@@ -38,4 +38,12 @@ public class StadiumController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(stadiumService.getAll(page, size));
     }
+
+    @GetMapping("/sports")
+    public ResponseEntity<?> getBySportId(
+            @RequestParam("id") Long sportsId
+    ){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(stadiumService.getBySportsId(sportsId));
+    }
 }

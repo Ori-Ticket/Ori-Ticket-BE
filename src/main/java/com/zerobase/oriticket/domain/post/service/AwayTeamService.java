@@ -15,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AwayTeamService {
@@ -46,4 +48,17 @@ public class AwayTeamService {
 
         return transactionDocuments.map(AwayTeamResponse::fromEntity);
     }
+
+    public List<AwayTeamResponse> getBySportsId(Long sportsId) {
+
+        Sports sports = sportsRepository.findById(sportsId)
+                .orElseThrow(() -> new SportsNotFound());
+
+        List<AwayTeam> awayTeams = awayTeamRepository.findBySports(sports);
+
+        return awayTeams.stream()
+                .map(AwayTeamResponse::fromEntity)
+                .toList();
+    }
+
 }
