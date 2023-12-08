@@ -1,13 +1,9 @@
 package com.zerobase.oriticket.domain.post.service;
 
-import com.zerobase.oriticket.domain.post.dto.AwayTeamRequest;
-import com.zerobase.oriticket.domain.post.dto.AwayTeamResponse;
 import com.zerobase.oriticket.domain.post.dto.StadiumRequest;
 import com.zerobase.oriticket.domain.post.dto.StadiumResponse;
-import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.entity.Stadium;
-import com.zerobase.oriticket.domain.post.repository.AwayTeamRepository;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.post.repository.StadiumRepository;
 import lombok.RequiredArgsConstructor;

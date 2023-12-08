@@ -1,8 +1,6 @@
 package com.zerobase.oriticket.domain.post.controller;
 
-import com.zerobase.oriticket.domain.post.dto.AwayTeamRequest;
 import com.zerobase.oriticket.domain.post.dto.SportsRequest;
-import com.zerobase.oriticket.domain.post.service.AwayTeamService;
 import com.zerobase.oriticket.domain.post.service.SportsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,12 +1,8 @@
 package com.zerobase.oriticket.domain.post.service;
 
-import com.zerobase.oriticket.domain.post.dto.AwayTeamRequest;
-import com.zerobase.oriticket.domain.post.dto.AwayTeamResponse;
 import com.zerobase.oriticket.domain.post.dto.SportsRequest;
 import com.zerobase.oriticket.domain.post.dto.SportsResponse;
-import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
-import com.zerobase.oriticket.domain.post.repository.AwayTeamRepository;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
