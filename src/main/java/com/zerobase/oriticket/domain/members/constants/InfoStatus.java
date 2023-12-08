@@ -1,4 +1,4 @@
-package com.zerobase.global.constants;
+package com.zerobase.oriticket.domain.members.constants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

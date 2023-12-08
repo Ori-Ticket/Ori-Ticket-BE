@@ -1,4 +1,4 @@
-package com.zerobase.global.config;
+package com.zerobase.oriticket.global.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
