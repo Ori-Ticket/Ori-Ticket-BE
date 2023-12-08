@@ -1,6 +1,6 @@
-package com.zerobase.oriticket.members.entity;
+package com.zerobase.oriticket.domain.members.entity;
 
-import com.zerobase.global.constants.UserRole;
+import com.zerobase.oriticket.domain.members.constants.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Data
 @NoArgsConstructor
@@ -36,9 +37,9 @@ public class Admin {
     @Column(nullable = false, length = 30)
     private String nickname;
 
-    @Enumerated(EnumType.STRING)
     @Column(length = 10)
-    private UserRole roles;
+    @Enumerated(EnumType.STRING)
+    private UserRole roles = UserRole.ADMIN;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
