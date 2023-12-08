@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.transaction.entity;
 
+import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,8 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
-//    @OneToOne
-    private Long salePostId;
+    @OneToOne
+    private Post salePost;
 
 //    @ManyToOne
     private Long memberId;

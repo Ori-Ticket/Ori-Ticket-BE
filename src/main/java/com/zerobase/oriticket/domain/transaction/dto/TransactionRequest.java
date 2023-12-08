@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.transaction.dto;
 
+import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import lombok.Data;
@@ -13,9 +14,9 @@ public class TransactionRequest {
         private Long salePostId;
         private Long memberId;
 
-        public Transaction toEntity() {
+        public Transaction toEntity(Post salePost) {
             return Transaction.builder()
-                    .salePostId(this.salePostId)
+                    .salePost(salePost)
                     .memberId(this.memberId)
                     .status(TransactionStatus.PENDING)
                     .startedAt(LocalDateTime.now())

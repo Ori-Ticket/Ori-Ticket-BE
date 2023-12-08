@@ -2,7 +2,11 @@ package com.zerobase.oriticket.domain.transaction.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
+import com.zerobase.oriticket.domain.post.entity.Post;
+import com.zerobase.oriticket.domain.post.repository.PostRepository;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
+import com.zerobase.oriticket.global.exception.impl.AlreadyExistTransaction;
+import com.zerobase.oriticket.global.exception.impl.SalePostNotFound;
 import com.zerobase.oriticket.global.exception.impl.TransactionNotFound;
 import com.zerobase.oriticket.domain.transaction.dto.TransactionRequest;
 import com.zerobase.oriticket.domain.transaction.dto.TransactionResponse;
@@ -23,14 +27,20 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionSearchRepository transactionSearchRepository;
+    private final PostRepository postRepository;
     private String STARTED_AT = "startedAt";
 
     public TransactionResponse register(TransactionRequest.Register request){
-        // 판매 글 유효성 체크
+
+        Post salePost = postRepository.findById(request.getSalePostId())
+                .orElseThrow(() -> new SalePostNotFound());
 
         // 멤버 유효성 체크
 
-        Transaction transaction = transactionRepository.save(request.toEntity());
+        boolean exists = transactionRepository.existsBySalePost(salePost);
+        if (exists) throw new AlreadyExistTransaction();
+
+        Transaction transaction = transactionRepository.save(request.toEntity(salePost));
 
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 

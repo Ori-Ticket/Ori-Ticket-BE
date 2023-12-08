@@ -22,7 +22,7 @@ public class TransactionResponse {
     public static TransactionResponse fromEntity(Transaction transaction){
         return TransactionResponse.builder()
                 .transactionId(transaction.getTransactionId())
-                .salePostId(transaction.getSalePostId())
+                .salePostId(transaction.getSalePost().getSalePostId())
                 .memberId(transaction.getMemberId())
                 .payAmount(transaction.getPayAmount())
                 .status(transaction.getStatus().getState())
