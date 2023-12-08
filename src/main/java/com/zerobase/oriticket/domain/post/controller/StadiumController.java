@@ -46,4 +46,11 @@ public class StadiumController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(stadiumService.getBySportsId(sportsId));
     }
+
+    @DeleteMapping
+    public void delete(
+            @RequestParam("id") Long stadiumId
+    ){
+        stadiumService.delete(stadiumId);
+    }
 }

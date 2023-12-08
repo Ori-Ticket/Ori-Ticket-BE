@@ -46,4 +46,11 @@ public class AwayTeamController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(awayTeamService.getBySportsId(sportsId));
     }
+
+    @DeleteMapping
+    public void delete(
+            @RequestParam("id") Long awayTeamId
+    ){
+        awayTeamService.delete(awayTeamId);
+    }
 }

@@ -1,14 +1,13 @@
 package com.zerobase.oriticket.domain.post.service;
 
-import com.zerobase.oriticket.domain.post.dto.AwayTeamResponse;
-import com.zerobase.oriticket.domain.post.dto.SportsResponse;
 import com.zerobase.oriticket.domain.post.dto.StadiumRequest;
 import com.zerobase.oriticket.domain.post.dto.StadiumResponse;
-import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.entity.Stadium;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.post.repository.StadiumRepository;
+import com.zerobase.oriticket.domain.post.repository.TicketRepository;
+import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteStadiumExistTicket;
 import com.zerobase.oriticket.global.exception.impl.post.SportsNotFound;
 import com.zerobase.oriticket.global.exception.impl.post.StadiumNotFound;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,7 @@ public class StadiumService {
 
     private final StadiumRepository stadiumRepository;
     private final SportsRepository sportsRepository;
+    private final TicketRepository ticketRepository;
 
     public StadiumResponse register(StadiumRequest.Register request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
@@ -35,8 +35,8 @@ public class StadiumService {
         );
     }
 
-    public StadiumResponse get(Long awayTeamId) {
-        Stadium stadium = stadiumRepository.findById(awayTeamId)
+    public StadiumResponse get(Long stadiumId) {
+        Stadium stadium = stadiumRepository.findById(stadiumId)
                 .orElseThrow(() -> new StadiumNotFound());
 
         return StadiumResponse.fromEntity(stadium);
@@ -60,5 +60,16 @@ public class StadiumService {
         return stadiums.stream()
                 .map(StadiumResponse::fromEntity)
                 .toList();
+    }
+
+    public void delete(Long stadiumId){
+        Stadium stadium = stadiumRepository.findById(stadiumId)
+                .orElseThrow(() -> new StadiumNotFound());
+
+        boolean exists = ticketRepository.existsByStadium(stadium);
+
+        if(exists) throw new CannotDeleteStadiumExistTicket();
+
+        stadiumRepository.delete(stadium);
     }
 }

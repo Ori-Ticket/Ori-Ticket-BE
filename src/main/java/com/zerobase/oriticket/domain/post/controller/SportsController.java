@@ -38,4 +38,11 @@ public class SportsController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(sportsService.getAll(page, size));
     }
+
+    @DeleteMapping
+    public void delete(
+            @RequestParam("id") Long sportsId
+    ){
+        sportsService.delete(sportsId);
+    }
 }

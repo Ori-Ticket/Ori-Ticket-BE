@@ -7,7 +7,6 @@ import com.zerobase.oriticket.domain.post.repository.*;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
 import com.zerobase.oriticket.global.exception.impl.post.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,7 +43,7 @@ public class PostService {
                 .orElseThrow(() -> new SalePostNotFound());
 
         boolean exists = transactionRepository.existsBySalePost(salePost);
-        if (exists) throw new CannotDeletePostTransactionExist();
+        if (exists) throw new CannotDeletePostExistTransaction();
 
         postRepository.delete(salePost);
         ticketRepository.delete(salePost.getTicket());

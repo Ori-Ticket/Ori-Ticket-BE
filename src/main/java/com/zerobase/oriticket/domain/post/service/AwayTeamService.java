@@ -2,12 +2,13 @@ package com.zerobase.oriticket.domain.post.service;
 
 import com.zerobase.oriticket.domain.post.dto.AwayTeamRequest;
 import com.zerobase.oriticket.domain.post.dto.AwayTeamResponse;
-import com.zerobase.oriticket.domain.post.dto.SportsResponse;
 import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.repository.AwayTeamRepository;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
+import com.zerobase.oriticket.domain.post.repository.TicketRepository;
 import com.zerobase.oriticket.global.exception.impl.post.AwayTeamNotFound;
+import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteAwayTeamExistTicket;
 import com.zerobase.oriticket.global.exception.impl.post.SportsNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ public class AwayTeamService {
 
     private final AwayTeamRepository awayTeamRepository;
     private final SportsRepository sportsRepository;
+    private final TicketRepository ticketRepository;
 
     public AwayTeamResponse register(AwayTeamRequest.Register request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
@@ -61,4 +63,14 @@ public class AwayTeamService {
                 .toList();
     }
 
+    public void delete(Long awayTeamId){
+        AwayTeam awayTeam = awayTeamRepository.findById(awayTeamId)
+                .orElseThrow(() -> new AwayTeamNotFound());
+
+        boolean exists = ticketRepository.existsByAwayTeam(awayTeam);
+
+        if(exists) throw new CannotDeleteAwayTeamExistTicket();
+
+        awayTeamRepository.delete(awayTeam);
+    }
 }

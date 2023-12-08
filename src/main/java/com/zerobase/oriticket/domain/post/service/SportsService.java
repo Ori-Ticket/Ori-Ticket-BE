@@ -4,8 +4,8 @@ import com.zerobase.oriticket.domain.post.dto.SportsRequest;
 import com.zerobase.oriticket.domain.post.dto.SportsResponse;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
-import com.zerobase.oriticket.domain.transaction.dto.TransactionResponse;
-import com.zerobase.oriticket.domain.transaction.entity.Transaction;
+import com.zerobase.oriticket.domain.post.repository.TicketRepository;
+import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteSportsExistTicket;
 import com.zerobase.oriticket.global.exception.impl.post.SportsNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class SportsService {
 
     private final SportsRepository sportsRepository;
+    private final TicketRepository ticketRepository;
 
     public SportsResponse register(SportsRequest.Register request) {
 
@@ -26,8 +27,8 @@ public class SportsService {
         );
     }
 
-    public SportsResponse get(Long awayTeamId) {
-        Sports sports = sportsRepository.findById(awayTeamId)
+    public SportsResponse get(Long sportsId) {
+        Sports sports = sportsRepository.findById(sportsId)
                 .orElseThrow(() -> new SportsNotFound());
 
         return SportsResponse.fromEntity(sports);
@@ -41,4 +42,16 @@ public class SportsService {
 
         return transactionDocuments.map(SportsResponse::fromEntity);
     }
+
+    public void delete(Long sportsId){
+        Sports sports = sportsRepository.findById(sportsId)
+                .orElseThrow(() -> new SportsNotFound());
+
+        boolean exists = ticketRepository.existsBySports(sports);
+
+        if(exists) throw new CannotDeleteSportsExistTicket();
+
+        sportsRepository.delete(sports);
+    }
+
 }
