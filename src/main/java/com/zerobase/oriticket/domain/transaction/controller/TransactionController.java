@@ -56,9 +56,9 @@ public class TransactionController {
 
     @PatchMapping("/receive")
     public ResponseEntity<TransactionResponse> updateToReceived(
-            @RequestBody UpdateStatusTransactionRequest updateRequest
+            @RequestBody UpdateStatusTransactionRequest request
     ){
-        Transaction transaction = transactionUpdateService.updateToReceived(updateRequest);
+        Transaction transaction = transactionUpdateService.updateToReceived(request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(TransactionResponse.fromEntity(transaction));
     }
