@@ -5,6 +5,7 @@ import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.controller.TransactionController;
 import com.zerobase.oriticket.domain.transaction.dto.RegisterTransactionRequest;
+import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusToReceivedTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.service.TransactionService;
@@ -49,6 +50,7 @@ public class    TransactionControllerTest {
     private final static Long TRANSACTION_ID = 1L;
     private final static Long POST_ID = 1L;
     private final static Long BUYER_ID = 2L;
+    private final static Integer PAY_AMOUNT = 10000;
 
     @Test
     void successRegister() throws Exception {
@@ -82,7 +84,8 @@ public class    TransactionControllerTest {
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(2L))
-                .andExpect(jsonPath("$.status").value("Pending"));
+                .andExpect(jsonPath("$.status").value("Pending"))
+                .andExpect(jsonPath("$.startedAt").exists());
 
     }
 
@@ -110,7 +113,8 @@ public class    TransactionControllerTest {
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(2L))
-                .andExpect(jsonPath("$.status").value("Pending"));
+                .andExpect(jsonPath("$.status").value("Pending"))
+                .andExpect(jsonPath("$.startedAt").exists());
     }
 
     @Test
@@ -167,22 +171,26 @@ public class    TransactionControllerTest {
                 .andExpect(jsonPath("$.content[0].salePostId").value(1L))
                 .andExpect(jsonPath("$.content[0].memberId").value(2L))
                 .andExpect(jsonPath("$.content[0].status").value("Pending"))
+                .andExpect(jsonPath("$.content[0].startedAt").exists())
                 .andExpect(jsonPath("$.content[1].transactionId").value(2L))
                 .andExpect(jsonPath("$.content[1].salePostId").value(2L))
                 .andExpect(jsonPath("$.content[1].memberId").value(2L))
                 .andExpect(jsonPath("$.content[1].status").value("Pending"))
+                .andExpect(jsonPath("$.content[1].startedAt").exists())
                 .andExpect(jsonPath("$.content[2].transactionId").value(3L))
                 .andExpect(jsonPath("$.content[2].salePostId").value(3L))
                 .andExpect(jsonPath("$.content[2].memberId").value(2L))
-                .andExpect(jsonPath("$.content[2].status").value("Pending"));
+                .andExpect(jsonPath("$.content[2].status").value("Pending"))
+                .andExpect(jsonPath("$.content[2].startedAt").exists());
     }
 
     @Test
     void successUpdateToReceived() throws Exception {
         //given
-        UpdateStatusTransactionRequest transactionRequest =
-                UpdateStatusTransactionRequest.builder()
+        UpdateStatusToReceivedTransactionRequest transactionRequest =
+                UpdateStatusToReceivedTransactionRequest.builder()
                         .transactionId(TRANSACTION_ID)
+                        .payAmount(PAY_AMOUNT)
                         .build();
 
         Post salePost = Post.builder()
@@ -194,7 +202,9 @@ public class    TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .salePost(salePost)
                         .memberId(BUYER_ID)
+                        .payAmount(PAY_AMOUNT)
                         .status(TransactionStatus.RECEIVED)
+                        .receivedAt(LocalDateTime.now())
                         .startedAt(LocalDateTime.now())
                         .build());
 
@@ -208,7 +218,10 @@ public class    TransactionControllerTest {
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(2L))
-                .andExpect(jsonPath("$.status").value("Received"));
+                .andExpect(jsonPath("$.payAmount").value(10000))
+                .andExpect(jsonPath("$.status").value("Received"))
+                .andExpect(jsonPath("$.receivedAt").exists())
+                .andExpect(jsonPath("$.startedAt").exists());
     }
 
     @Test
@@ -230,6 +243,7 @@ public class    TransactionControllerTest {
                         .memberId(BUYER_ID)
                         .status(TransactionStatus.COMPLETED)
                         .startedAt(LocalDateTime.now())
+                        .endedAt(LocalDateTime.now())
                         .build());
 
         //when
@@ -242,7 +256,9 @@ public class    TransactionControllerTest {
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(2L))
-                .andExpect(jsonPath("$.status").value("Completed"));
+                .andExpect(jsonPath("$.status").value("Completed"))
+                .andExpect(jsonPath("$.startedAt").exists())
+                .andExpect(jsonPath("$.endedAt").exists());
     }
 
     @Test
@@ -264,6 +280,7 @@ public class    TransactionControllerTest {
                         .memberId(BUYER_ID)
                         .status(TransactionStatus.CANCELED)
                         .startedAt(LocalDateTime.now())
+                        .endedAt(LocalDateTime.now())
                         .build());
 
         //when
@@ -276,7 +293,9 @@ public class    TransactionControllerTest {
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(2L))
-                .andExpect(jsonPath("$.status").value("Canceled"));
+                .andExpect(jsonPath("$.status").value("Canceled"))
+                .andExpect(jsonPath("$.startedAt").exists())
+                .andExpect(jsonPath("$.endedAt").exists());
     }
 
     @Test
@@ -298,6 +317,7 @@ public class    TransactionControllerTest {
                         .memberId(BUYER_ID)
                         .status(TransactionStatus.REPORTED)
                         .startedAt(LocalDateTime.now())
+                        .endedAt(LocalDateTime.now())
                         .build());
 
         //when
@@ -310,6 +330,8 @@ public class    TransactionControllerTest {
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(2L))
-                .andExpect(jsonPath("$.status").value("Reported"));
+                .andExpect(jsonPath("$.status").value("Reported"))
+                .andExpect(jsonPath("$.startedAt").exists())
+                .andExpect(jsonPath("$.endedAt").exists());
     }
 }

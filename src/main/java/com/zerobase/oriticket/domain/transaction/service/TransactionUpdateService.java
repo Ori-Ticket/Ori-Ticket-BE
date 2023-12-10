@@ -3,6 +3,7 @@ package com.zerobase.oriticket.domain.transaction.service;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
+import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusToReceivedTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
@@ -19,13 +20,13 @@ public class TransactionUpdateService {
     private final TransactionRepository transactionRepository;
     private final TransactionSearchRepository transactionSearchRepository;
 
-    public Transaction updateToReceived(UpdateStatusTransactionRequest request) {
+    public Transaction updateToReceived(UpdateStatusToReceivedTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
                 .orElseThrow(TransactionNotFound::new);
 
         validateCanUpdateStatus(transaction.getStatus());
 
-        transaction.updateStatus(TransactionStatus.RECEIVED);
+        transaction.updateStatusToReceived(request.getPayAmount());
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
         return transactionRepository.save(transaction);
@@ -37,7 +38,7 @@ public class TransactionUpdateService {
 
         validateCanUpdateStatus(transaction.getStatus());
 
-        transaction.updateStatus(TransactionStatus.COMPLETED);
+        transaction.updateStatusToCompleted();
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
         return transactionRepository.save(transaction);
@@ -49,7 +50,7 @@ public class TransactionUpdateService {
 
         validateCanUpdateStatus(transaction.getStatus());
 
-        transaction.updateStatus(TransactionStatus.CANCELED);
+        transaction.updateStatusToCanceled();
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
         return transactionRepository.save(transaction);
@@ -61,7 +62,7 @@ public class TransactionUpdateService {
 
         validateCanUpdateStatus(transaction.getStatus());
 
-        transaction.updateStatus(TransactionStatus.REPORTED);
+        transaction.updateStatusToReported();
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
         return transactionRepository.save(transaction);

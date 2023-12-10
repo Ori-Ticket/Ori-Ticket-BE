@@ -40,7 +40,24 @@ public class Transaction {
 
     private LocalDateTime endedAt;
 
-    public void updateStatus(TransactionStatus transactionStatus){
-        this.status = transactionStatus;
+    public void updateStatusToReceived(Integer payAmount){
+        this.payAmount = payAmount;
+        this.status = TransactionStatus.RECEIVED;
+        this.receivedAt = LocalDateTime.now();
+    }
+
+    public void updateStatusToCompleted(){
+        this.status = TransactionStatus.COMPLETED;
+        this.endedAt = LocalDateTime.now();
+    }
+
+    public void updateStatusToCanceled(){
+        this.status = TransactionStatus.CANCELED;
+        this.endedAt = LocalDateTime.now();
+    }
+
+    public void updateStatusToReported(){
+        this.status = TransactionStatus.REPORTED;
+        this.endedAt = LocalDateTime.now();
     }
 }

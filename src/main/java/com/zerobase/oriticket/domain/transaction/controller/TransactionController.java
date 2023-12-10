@@ -2,6 +2,7 @@ package com.zerobase.oriticket.domain.transaction.controller;
 
 import com.zerobase.oriticket.domain.transaction.dto.RegisterTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.dto.TransactionResponse;
+import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusToReceivedTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.service.TransactionService;
@@ -56,7 +57,7 @@ public class TransactionController {
 
     @PatchMapping("/receive")
     public ResponseEntity<TransactionResponse> updateToReceived(
-            @RequestBody UpdateStatusTransactionRequest request
+            @RequestBody UpdateStatusToReceivedTransactionRequest request
     ){
         Transaction transaction = transactionUpdateService.updateToReceived(request);
         return ResponseEntity.status(HttpStatus.OK)
