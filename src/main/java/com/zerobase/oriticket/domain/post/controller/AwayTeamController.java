@@ -5,7 +5,6 @@ import com.zerobase.oriticket.domain.post.dto.RegisterAwayTeamRequest;
 import com.zerobase.oriticket.domain.post.entity.AwayTeam;
 import com.zerobase.oriticket.domain.post.service.AwayTeamService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,14 +40,14 @@ public class AwayTeamController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<AwayTeamResponse>> getAll(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size
-    ){
-        Page<AwayTeam> awayTeams = awayTeamService.getAll(page, size);
+    public ResponseEntity<List<AwayTeamResponse>> getAll(){
+
+        List<AwayTeam> awayTeams = awayTeamService.getAll();
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(awayTeams.map(AwayTeamResponse::fromEntity));
+                .body(awayTeams.stream()
+                        .map(AwayTeamResponse::fromEntity)
+                        .toList());
     }
 
     @GetMapping("/sports")
@@ -66,9 +65,9 @@ public class AwayTeamController {
     }
 
     @DeleteMapping
-    public void delete(
+    public Long delete(
             @RequestParam("id") Long awayTeamId
     ){
-        awayTeamService.delete(awayTeamId);
+        return awayTeamService.delete(awayTeamId);
     }
 }

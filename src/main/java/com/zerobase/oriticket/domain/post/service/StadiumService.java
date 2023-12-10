@@ -39,11 +39,9 @@ public class StadiumService {
         return stadium;
     }
 
-    public Page<Stadium> getAll(int page, int size) {
+    public List<Stadium> getAll() {
 
-        Pageable pageable = PageRequest.of(page-1, size);
-
-        return stadiumRepository.findAll(pageable);
+        return stadiumRepository.findAll();
     }
 
     public List<Stadium> getBySportsId(Long sportsId) {
@@ -54,7 +52,7 @@ public class StadiumService {
         return stadiumRepository.findBySports(sports);
     }
 
-    public void delete(Long stadiumId){
+    public Long delete(Long stadiumId){
         Stadium stadium = stadiumRepository.findById(stadiumId)
                 .orElseThrow(StadiumNotFoundException::new);
 
@@ -65,5 +63,7 @@ public class StadiumService {
         }
 
         stadiumRepository.delete(stadium);
+
+        return stadium.getStadiumId();
     }
 }

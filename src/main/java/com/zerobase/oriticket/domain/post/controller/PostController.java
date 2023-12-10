@@ -37,10 +37,10 @@ public class PostController {
     }
 
     @DeleteMapping
-    private void delete(
+    private Long delete(
             @RequestParam("id") Long postId
     ){
-        postService.delete(postId);
+        return postService.delete(postId);
     }
 
 }

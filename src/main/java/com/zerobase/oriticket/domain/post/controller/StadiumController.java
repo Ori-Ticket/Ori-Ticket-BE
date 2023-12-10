@@ -5,7 +5,6 @@ import com.zerobase.oriticket.domain.post.dto.StadiumResponse;
 import com.zerobase.oriticket.domain.post.entity.Stadium;
 import com.zerobase.oriticket.domain.post.service.StadiumService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,13 +39,14 @@ public class StadiumController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<StadiumResponse>> getAll(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size
-    ){
-        Page<Stadium> stadiums = stadiumService.getAll(page, size);
+    public ResponseEntity<List<StadiumResponse>> getAll(){
+
+        List<Stadium> stadiums = stadiumService.getAll();
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(stadiums.map(StadiumResponse::fromEntity));
+                .body(stadiums.stream()
+                        .map(StadiumResponse::fromEntity)
+                        .toList());
     }
 
     @GetMapping("/sports")
@@ -56,17 +56,15 @@ public class StadiumController {
         List<Stadium> stadiums = stadiumService.getBySportsId(sportsId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        stadiums.stream()
+                .body(stadiums.stream()
                         .map(StadiumResponse::fromEntity)
-                        .toList()
-                );
+                        .toList());
     }
 
     @DeleteMapping
-    public void delete(
+    public Long delete(
             @RequestParam("id") Long stadiumId
     ){
-        stadiumService.delete(stadiumId);
+        return stadiumService.delete(stadiumId);
     }
 }

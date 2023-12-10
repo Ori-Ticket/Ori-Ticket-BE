@@ -40,11 +40,9 @@ public class AwayTeamService {
         return awayTeam;
     }
 
-    public Page<AwayTeam> getAll(int page, int size) {
+    public List<AwayTeam> getAll() {
 
-        Pageable pageable = PageRequest.of(page-1, size);
-
-        return awayTeamRepository.findAll(pageable);
+        return awayTeamRepository.findAll();
     }
 
     public List<AwayTeam> getBySportsId(Long sportsId) {
@@ -55,7 +53,7 @@ public class AwayTeamService {
         return awayTeamRepository.findBySports(sports);
     }
 
-    public void delete(Long awayTeamId){
+    public Long delete(Long awayTeamId){
         AwayTeam awayTeam = awayTeamRepository.findById(awayTeamId)
                 .orElseThrow(AwayTeamNotFoundException::new);
 
@@ -66,5 +64,7 @@ public class AwayTeamService {
         }
 
         awayTeamRepository.delete(awayTeam);
+
+        return awayTeam.getAwayTeamId();
     }
 }

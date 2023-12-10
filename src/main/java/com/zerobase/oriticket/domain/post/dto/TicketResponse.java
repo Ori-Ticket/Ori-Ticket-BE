@@ -19,7 +19,7 @@ public class TicketResponse {
     private int originalPrice;
 
     private LocalDateTime expirationAt;
-    private boolean isSuccessive;
+    private Boolean isSuccessive;
 
     private String seatInfo;
     private String imgUrl;

@@ -5,10 +5,11 @@ import com.zerobase.oriticket.domain.post.dto.SportsResponse;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.service.SportsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,20 +39,20 @@ public class SportsController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<SportsResponse>> getAll(
-            @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size
-    ){
-        Page<Sports> sports = sportsService.getAll(page, size);
+    public ResponseEntity<List<SportsResponse>> getAll(){
+
+        List<Sports> sports = sportsService.getAll();
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(sports.map(SportsResponse::fromEntity));
+                .body(sports.stream()
+                        .map(SportsResponse::fromEntity)
+                        .toList());
     }
 
     @DeleteMapping
-    public void delete(
+    public Long delete(
             @RequestParam("id") Long sportsId
     ){
-        sportsService.delete(sportsId);
+        return sportsService.delete(sportsId);
     }
 }

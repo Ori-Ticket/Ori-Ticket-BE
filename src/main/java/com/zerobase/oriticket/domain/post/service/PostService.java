@@ -35,7 +35,7 @@ public class PostService {
         return salePost;
     }
 
-    public void delete(Long postId) {
+    public Long delete(Long postId) {
         Post salePost = postRepository.findById(postId)
                 .orElseThrow(SalePostNotFoundException::new);
 
@@ -46,6 +46,8 @@ public class PostService {
 
         postRepository.delete(salePost);
         ticketRepository.delete(salePost.getTicket());
+
+        return salePost.getSalePostId();
     }
 
     public Ticket registerTicket(RegisterPostRequest request) {

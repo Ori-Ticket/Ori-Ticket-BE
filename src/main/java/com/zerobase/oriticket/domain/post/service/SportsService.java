@@ -12,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SportsService {
@@ -31,14 +33,12 @@ public class SportsService {
         return sports;
     }
 
-    public Page<Sports> getAll(int page, int size) {
+    public List<Sports> getAll() {
 
-        Pageable pageable = PageRequest.of(page-1, size);
-
-        return sportsRepository.findAll(pageable);
+        return sportsRepository.findAll();
     }
 
-    public void delete(Long sportsId){
+    public Long delete(Long sportsId){
         Sports sports = sportsRepository.findById(sportsId)
                 .orElseThrow(SportsNotFoundException::new);
 
@@ -49,6 +49,8 @@ public class SportsService {
         }
 
         sportsRepository.delete(sports);
+
+        return sports.getSportsId();
     }
 
 }
