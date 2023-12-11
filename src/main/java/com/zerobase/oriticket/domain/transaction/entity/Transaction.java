@@ -19,10 +19,11 @@ import java.time.LocalDateTime;
 public class Transaction {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transactionId;
 
-    @OneToOne
+    @ManyToOne
     private Post salePost;
 
 //    @ManyToOne

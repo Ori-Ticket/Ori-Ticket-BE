@@ -1,7 +1,10 @@
 package com.zerobase.oriticket.domain.transaction.service;
 
+import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
+import com.zerobase.oriticket.domain.post.entity.Post;
+import com.zerobase.oriticket.domain.post.repository.PostRepository;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusToReceivedTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequest;
@@ -9,6 +12,7 @@ import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
 import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyStateOfCanceled;
 import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyStateOfCompleted;
+import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyStateOfReported;
 import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +22,9 @@ import org.springframework.stereotype.Service;
 public class TransactionUpdateService {
 
     private final TransactionRepository transactionRepository;
+    private final PostRepository postRepository;
     private final TransactionSearchRepository transactionSearchRepository;
+    private final PostSearchRepository postSearchRepository;
 
     public Transaction updateToReceived(UpdateStatusToReceivedTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
@@ -73,5 +79,7 @@ public class TransactionUpdateService {
             throw new CannotModifyStateOfCanceled();
         if(status == TransactionStatus.COMPLETED)
             throw new CannotModifyStateOfCompleted();
+        if(status == TransactionStatus.REPORTED)
+            throw new CannotModifyStateOfReported();
     }
 }

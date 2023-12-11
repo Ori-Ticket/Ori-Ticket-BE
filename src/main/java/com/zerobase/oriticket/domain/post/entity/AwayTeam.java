@@ -16,6 +16,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class AwayTeam {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long awayTeamId;
 

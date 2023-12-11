@@ -1,9 +1,11 @@
 package com.zerobase.oriticket.domain.transaction.service;
 
+import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
+import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.dto.RegisterTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
@@ -24,6 +26,8 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionSearchRepository transactionSearchRepository;
     private final PostRepository postRepository;
+    private final PostSearchRepository postSearchRepository;
+
     private static final String STARTED_AT = "startedAt";
 
     public Transaction register(RegisterTransactionRequest request){
@@ -32,10 +36,9 @@ public class TransactionService {
                 .orElseThrow(SalePostNotFoundException::new);
 
         // 멤버 유효성 체크
+        boolean exists = transactionRepository.existsCanRegisterByStatus(salePost);
 
-        boolean exists = transactionRepository.existsBySalePost(salePost);
-
-        if (exists){
+        if (!exists){
             throw new AlreadyExistTransaction();
         }
 
@@ -62,4 +65,5 @@ public class TransactionService {
 
         return transactionDocuments;
     }
+
 }

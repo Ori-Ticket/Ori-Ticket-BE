@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class Ticket {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ticketId;
 

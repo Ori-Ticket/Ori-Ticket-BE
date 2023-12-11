@@ -14,11 +14,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "sale_posts")
+@Table(name = "sale_post")
 @EntityListeners(AuditingEntityListener.class)
 public class Post {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long salePostId;
 
@@ -33,5 +34,13 @@ public class Post {
 
     @CreatedDate
     private LocalDateTime createdAt;
+
+    public void updateToTrading(){
+        this.saleStatus = SaleStatus.TRADING;
+    }
+
+    public void updateToSold(){
+        this.saleStatus = SaleStatus.SOLD;
+    }
 
 }
