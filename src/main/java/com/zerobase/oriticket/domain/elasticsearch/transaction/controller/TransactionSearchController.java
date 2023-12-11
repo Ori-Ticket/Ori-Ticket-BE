@@ -22,7 +22,7 @@ public class TransactionSearchController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<TransactionSearchResponse>> searchByStatus(
-            @RequestParam("status") String status,
+            @RequestParam(name = "status", required = false) String status,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ){
