@@ -2,11 +2,14 @@ package com.zerobase.oriticket.domain.post.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
+import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
+import com.zerobase.oriticket.domain.post.dto.UpdateStatusToReportedPostRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.*;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
 import com.zerobase.oriticket.global.exception.impl.post.*;
+import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyTransactionStateOfCompletedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,15 +38,15 @@ public class PostService {
         return post;
     }
 
-    public Post get(Long postId) {
-        Post salePost = postRepository.findById(postId)
+    public Post get(Long salePostId) {
+        Post salePost = postRepository.findById(salePostId)
                 .orElseThrow(SalePostNotFoundException::new);
 
         return salePost;
     }
 
-    public Long delete(Long postId) {
-        Post salePost = postRepository.findById(postId)
+    public Long delete(Long salePostId) {
+        Post salePost = postRepository.findById(salePostId)
                 .orElseThrow(SalePostNotFoundException::new);
 
         boolean exists = transactionRepository.existsBySalePost(salePost);
@@ -71,5 +74,22 @@ public class PostService {
                 .orElseThrow(AwayTeamNotFoundException::new);
 
         return ticketRepository.save(request.toEntityTicket(sports, stadium, awayTeam));
+    }
+
+    public Post updateToReported(UpdateStatusToReportedPostRequest request) {
+        Post salePost = postRepository.findById(request.getSalePostId())
+                .orElseThrow(SalePostNotFoundException::new);
+
+        validateCanUpdateToReportedStatus(salePost.getSaleStatus());
+
+        salePost.updateToReported();
+        return postRepository.save(salePost);
+    }
+
+    public void validateCanUpdateToReportedStatus(SaleStatus status){
+        if(status == SaleStatus.REPORTED)
+            throw new CannotModifyPostStateOfReportedException();
+        if(status == SaleStatus.SOLD)
+            throw new CannotModifyPostStateOfSoldException();
     }
 }

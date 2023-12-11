@@ -2,6 +2,7 @@ package com.zerobase.oriticket.domain.post.controller;
 
 import com.zerobase.oriticket.domain.post.dto.PostResponse;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
+import com.zerobase.oriticket.domain.post.dto.UpdateStatusToReportedPostRequest;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -20,27 +21,36 @@ public class PostController {
     public ResponseEntity<PostResponse> register(
             @RequestBody RegisterPostRequest request
     ){
-        Post post = postService.registerPost(request);
+        Post salePost = postService.registerPost(request);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(PostResponse.fromEntity(post));
+                .body(PostResponse.fromEntity(salePost));
     }
 
     @GetMapping
     public ResponseEntity<PostResponse> get(
-            @RequestParam("id") Long postId
+            @RequestParam("id") Long salePostId
     ){
-        Post post = postService.get(postId);
+        Post salePost = postService.get(salePostId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(PostResponse.fromEntity(post));
+                .body(PostResponse.fromEntity(salePost));
     }
 
     @DeleteMapping
     private Long delete(
-            @RequestParam("id") Long postId
-    ){
-        return postService.delete(postId);
+            @RequestParam("id") Long salePostId
+    ) {
+        return postService.delete(salePostId);
     }
 
+    @PatchMapping("/report")
+    private ResponseEntity<PostResponse> updateToReported(
+            @RequestBody UpdateStatusToReportedPostRequest request
+    ){
+        Post salePost = postService.updateToReported(request);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(PostResponse.fromEntity(salePost));
+    }
 }

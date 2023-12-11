@@ -43,4 +43,12 @@ public class Post {
         this.saleStatus = SaleStatus.SOLD;
     }
 
+    public void updateToForeSale(){
+        this.saleStatus = SaleStatus.FOR_SALE;
+    }
+
+    public void updateToReported(){
+        this.saleStatus = SaleStatus.REPORTED;
+    }
+
 }

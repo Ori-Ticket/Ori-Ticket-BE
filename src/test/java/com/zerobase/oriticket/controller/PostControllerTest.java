@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.controller.PostController;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
+import com.zerobase.oriticket.domain.post.dto.UpdateStatusToReportedPostRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.service.PostService;
 import org.junit.jupiter.api.Test;
@@ -125,7 +126,7 @@ public class PostControllerTest {
                         .content(objectMapper.writeValueAsString(postRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.postId").value(1L))
+                .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(1L))
                 .andExpect(jsonPath("$.ticket.sportsId").value(1L))
                 .andExpect(jsonPath("$.ticket.stadiumId").value(1L))
@@ -190,7 +191,7 @@ public class PostControllerTest {
         mockMvc.perform(get(BASE_URL+"?id=1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.postId").value(1L))
+                .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(1L))
                 .andExpect(jsonPath("$.ticket.sportsId").value(1L))
                 .andExpect(jsonPath("$.ticket.stadiumId").value(1L))
@@ -217,6 +218,78 @@ public class PostControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(1L));
+    }
+
+    @Test
+    void successUpdateToReported() throws Exception {
+        //given
+        UpdateStatusToReportedPostRequest postRequest =
+                UpdateStatusToReportedPostRequest.builder()
+                        .salePostId(SALE_POST_ID)
+                        .build();
+
+        Sports sports = Sports.builder()
+                .sportsId(SPORTS_ID)
+                .sportsName(SPORTS_NAME)
+                .build();
+
+        Stadium stadium = Stadium.builder()
+                .stadiumId(STADIUM_ID)
+                .sports(sports)
+                .stadiumName(STADIUM_NAME)
+                .homeTeamName(HOME_TEAM_NAME)
+                .build();
+
+        AwayTeam awayTeam = AwayTeam.builder()
+                .awayTeamId(AWAY_TEAM_ID)
+                .sports(sports)
+                .awayTeamName(AWAY_TEAM_NAME)
+                .build();
+
+        Ticket ticket = Ticket.builder()
+                .ticketId(TICKET_ID)
+                .sports(sports)
+                .stadium(stadium)
+                .awayTeam(awayTeam)
+                .quantity(QUANTITY)
+                .salePrice(SALE_PRICE)
+                .originalPrice(ORIGINAL_PRICE)
+                .expirationAt(EXPIRATION_AT)
+                .isSuccessive(IS_SUCCESSIVE)
+                .seatInfo(SEAT_INFO)
+                .imgUrl(IMG_URL)
+                .note(NOTE)
+                .build();
+
+        given(postService.updateToReported(any()))
+                .willReturn(Post.builder()
+                        .salePostId(SALE_POST_ID)
+                        .memberId(MEMBER_ID)
+                        .ticket(ticket)
+                        .saleStatus(SaleStatus.REPORTED)
+                        .createdAt(LocalDateTime.now())
+                        .build());
+
+        //when
+        //then
+        mockMvc.perform(patch(BASE_URL+"/report")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.salePostId").value(1L))
+                .andExpect(jsonPath("$.memberId").value(1L))
+                .andExpect(jsonPath("$.ticket.sportsId").value(1L))
+                .andExpect(jsonPath("$.ticket.stadiumId").value(1L))
+                .andExpect(jsonPath("$.ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.ticket.quantity").value(1))
+                .andExpect(jsonPath("$.ticket.salePrice").value(10000))
+                .andExpect(jsonPath("$.ticket.originalPrice").value(20000))
+                .andExpect(jsonPath("$.ticket.isSuccessive").value(false))
+                .andExpect(jsonPath("$.ticket.seatInfo").value("seat info"))
+                .andExpect(jsonPath("$.ticket.imgUrl").value("image url"))
+                .andExpect(jsonPath("$.ticket.note").value("note"))
+                .andExpect(jsonPath("$.saleStatus").value("REPORTED"));
     }
 
 }

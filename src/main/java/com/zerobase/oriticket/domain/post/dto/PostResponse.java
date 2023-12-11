@@ -11,7 +11,7 @@ import lombok.Getter;
 @Builder
 public class PostResponse {
 
-    private Long postId;
+    private Long salePostId;
     private Long memberId;
     private TicketResponse ticket;
     private SaleStatus saleStatus;
@@ -22,7 +22,7 @@ public class PostResponse {
         TicketResponse ticketResponse = TicketResponse.fromEntity(post.getTicket());
 
         return PostResponse.builder()
-                .postId(post.getSalePostId())
+                .salePostId(post.getSalePostId())
                 .memberId(post.getMemberId())
                 .ticket(ticketResponse)
                 .saleStatus(post.getSaleStatus())

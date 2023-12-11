@@ -4,5 +4,5 @@ public enum SaleStatus {
     FOR_SALE,
     TRADING,
     SOLD,
-    EXPIRED
+    REPORTED
 }

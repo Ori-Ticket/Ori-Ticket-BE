@@ -10,10 +10,10 @@ import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusToReceivedTrans
 import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
-import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyStateOfCanceled;
-import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyStateOfCompleted;
-import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyStateOfReported;
-import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFound;
+import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyTransactionStateOfCanceledException;
+import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyTransactionStateOfCompletedException;
+import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyTransactionStateOfReportedException;
+import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class TransactionUpdateService {
 
     public Transaction updateToReceived(UpdateStatusToReceivedTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
-                .orElseThrow(TransactionNotFound::new);
+                .orElseThrow(TransactionNotFoundException::new);
 
         validateCanUpdateStatus(transaction.getStatus());
 
@@ -40,46 +40,58 @@ public class TransactionUpdateService {
 
     public Transaction updateToCompleted(UpdateStatusTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
-                .orElseThrow(TransactionNotFound::new);
+                .orElseThrow(TransactionNotFoundException::new);
 
         validateCanUpdateStatus(transaction.getStatus());
 
         transaction.updateStatusToCompleted();
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
+        Post salePost = transaction.getSalePost();
+        salePost.updateToSold();
+        postRepository.save(salePost);
+
         return transactionRepository.save(transaction);
     }
 
     public Transaction updateToCanceled(UpdateStatusTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
-                .orElseThrow(TransactionNotFound::new);
+                .orElseThrow(TransactionNotFoundException::new);
 
         validateCanUpdateStatus(transaction.getStatus());
 
         transaction.updateStatusToCanceled();
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
+        Post salePost = transaction.getSalePost();
+        salePost.updateToForeSale();
+        postRepository.save(salePost);
+
         return transactionRepository.save(transaction);
     }
 
     public Transaction updateToReported(UpdateStatusTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
-                .orElseThrow(TransactionNotFound::new);
+                .orElseThrow(TransactionNotFoundException::new);
 
         validateCanUpdateStatus(transaction.getStatus());
 
         transaction.updateStatusToReported();
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
+        Post salePost = transaction.getSalePost();
+        salePost.updateToReported();
+        postRepository.save(salePost);
+
         return transactionRepository.save(transaction);
     }
 
     public void validateCanUpdateStatus(TransactionStatus status){
         if(status == TransactionStatus.CANCELED)
-            throw new CannotModifyStateOfCanceled();
+            throw new CannotModifyTransactionStateOfCanceledException();
         if(status == TransactionStatus.COMPLETED)
-            throw new CannotModifyStateOfCompleted();
+            throw new CannotModifyTransactionStateOfCompletedException();
         if(status == TransactionStatus.REPORTED)
-            throw new CannotModifyStateOfReported();
+            throw new CannotModifyTransactionStateOfReportedException();
     }
 }

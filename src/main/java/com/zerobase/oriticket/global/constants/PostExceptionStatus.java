@@ -15,7 +15,9 @@ public enum PostExceptionStatus {
     CANNOT_DELETE_POST_EXIST_TRANSACTION(HttpStatus.BAD_REQUEST.value(), "생성된 거래가 있습니다. 판매글을 삭제 할 수 없습니다."),
     CANNOT_DELETE_SPORTS_EXIST_TICKET(HttpStatus.BAD_REQUEST.value(), "생성된 티켓이 있습니다. 스포츠를 삭제할 수 없습니다."),
     CANNOT_DELETE_STADIUM_EXIST_TICKET(HttpStatus.BAD_REQUEST.value(), "생성된 티켓이 있습니다. 경기장을 삭제할 수 없습니다."),
-    CANNOT_DELETE_AWAY_TEAM_EXIST_TICKET(HttpStatus.BAD_REQUEST.value(), "생성된 티켓이 있습니다. 팀 정보를 삭제할 수 없습니다.");
+    CANNOT_DELETE_AWAY_TEAM_EXIST_TICKET(HttpStatus.BAD_REQUEST.value(), "생성된 티켓이 있습니다. 팀 정보를 삭제할 수 없습니다."),
+    CANNOT_MODIFY_POST_STATE_OF_SOLD(HttpStatus.BAD_REQUEST.value(), "판매 완료된 글은 상태를 변경할 수 없습니다."),
+    CANNOT_MODIFY_POST_STATE_OF_REPORTED(HttpStatus.BAD_REQUEST.value(), "신고된 글은 상태를 변경할 수 없습니다.");
 
     private int code;
     private String message;

@@ -5,13 +5,12 @@ import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.Transactio
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
-import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.dto.RegisterTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
 import com.zerobase.oriticket.global.exception.impl.post.SalePostNotFoundException;
-import com.zerobase.oriticket.global.exception.impl.transaction.AlreadyExistTransaction;
-import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFound;
+import com.zerobase.oriticket.global.exception.impl.transaction.AlreadyExistTransactionException;
+import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,19 +38,20 @@ public class TransactionService {
         boolean exists = transactionRepository.existsCanRegisterByStatus(salePost);
 
         if (!exists){
-            throw new AlreadyExistTransaction();
+            throw new AlreadyExistTransactionException();
         }
 
         Transaction transaction = transactionRepository.save(request.toEntity(salePost));
-
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
+        salePost.updateToTrading();
+        postRepository.save(salePost);
 
         return transaction;
     }
 
     public Transaction get(Long transactionId){
         Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(TransactionNotFound::new);
+                .orElseThrow(TransactionNotFoundException::new);
 
         return transaction;
     }
