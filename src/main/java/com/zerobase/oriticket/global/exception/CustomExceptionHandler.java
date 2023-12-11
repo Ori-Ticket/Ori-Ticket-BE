@@ -1,20 +1,33 @@
 package com.zerobase.oriticket.global.exception;
 
-import com.zerobase.oriticket.global.dto.ErrorResponse;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.Objects;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
 
     @ExceptionHandler(AbstractException.class)
     protected ResponseEntity<?> handleCustomException(AbstractException e) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message(e.getMessage())
-                .build();
 
-        return new ResponseEntity<>(errorResponse, HttpStatus.resolve(e.getErrorCode()));
+        return ResponseEntity.status(e.getErrorCode()).build();
     }
+
+    @ExceptionHandler(TypeMismatchException.class)
+    protected ResponseEntity<?> handleRuntimeException(TypeMismatchException e) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<?> handleRuntimeException(RuntimeException e) {
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 }
