@@ -6,11 +6,11 @@ import com.zerobase.oriticket.global.exception.AbstractException;
 public class CannotModifyTransactionStateOfCompletedException extends AbstractException {
     @Override
     public int getErrorCode() {
-        return TransactionExceptionStatus.CANNOT_MODIFY_STATE_OF_COMPLETED.getCode();
+        return TransactionExceptionStatus.CANNOT_MODIFY_TRANSACTION_STATE_OF_COMPLETED.getCode();
     }
 
     @Override
     public String getMessage() {
-        return TransactionExceptionStatus.CANNOT_MODIFY_STATE_OF_COMPLETED.getMessage();
+        return TransactionExceptionStatus.CANNOT_MODIFY_TRANSACTION_STATE_OF_COMPLETED.getMessage();
     }
 }
