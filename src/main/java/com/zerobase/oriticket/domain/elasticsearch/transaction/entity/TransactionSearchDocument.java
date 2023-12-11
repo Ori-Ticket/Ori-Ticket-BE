@@ -45,7 +45,7 @@ public class TransactionSearchDocument {
         return TransactionSearchDocument.builder()
                 .transactionId(transaction.getTransactionId())
                 .salePostId(transaction.getSalePost().getSalePostId())
-                .memberName("buyer")
+                .memberName("buyer name")
 //                .memberName(transaction.getMember().getUserName())
                 .payAmount(transaction.getPayAmount())
                 .status(transaction.getStatus())

@@ -1,5 +1,7 @@
 package com.zerobase.oriticket.domain.post.service;
 
+import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
+import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.*;
@@ -14,6 +16,7 @@ public class PostService {
 
     private final TransactionRepository transactionRepository;
     private final PostRepository postRepository;
+    private final PostSearchRepository postSearchRepository;
     private final TicketRepository ticketRepository;
     private final SportsRepository sportsRepository;
     private final StadiumRepository stadiumRepository;
@@ -25,7 +28,11 @@ public class PostService {
 
         Ticket ticket = registerTicket(request);
 
-        return postRepository.save(request.toEntityPost(ticket));
+        Post post = postRepository.save(request.toEntityPost(ticket));
+
+        postSearchRepository.save(PostSearchDocument.fromEntity(post));
+
+        return post;
     }
 
     public Post get(Long postId) {
@@ -47,6 +54,8 @@ public class PostService {
         postRepository.delete(salePost);
         ticketRepository.delete(salePost.getTicket());
 
+        postSearchRepository.delete(PostSearchDocument.fromEntity(salePost));
+
         return salePost.getSalePostId();
     }
 
@@ -55,10 +64,10 @@ public class PostService {
         Sports sports = sportsRepository.findById(request.getSportsId())
                 .orElseThrow(SportsNotFoundException::new);
 
-        Stadium stadium = stadiumRepository.findById(request.getSportsId())
+        Stadium stadium = stadiumRepository.findById(request.getStadiumId())
                 .orElseThrow(StadiumNotFoundException::new);
 
-        AwayTeam awayTeam = awayTeamRepository.findById(request.getSportsId())
+        AwayTeam awayTeam = awayTeamRepository.findById(request.getAwayTeamId())
                 .orElseThrow(AwayTeamNotFoundException::new);
 
         return ticketRepository.save(request.toEntityTicket(sports, stadium, awayTeam));

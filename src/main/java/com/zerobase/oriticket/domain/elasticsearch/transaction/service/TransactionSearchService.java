@@ -17,18 +17,16 @@ public class TransactionSearchService {
 
     private final TransactionSearchRepository transactionSearchRepository;
 
-    private String STARTED_AT = "startedAt";
+    private final static String STARTED_AT = "startedAt";
     private final Sort sort = Sort.by(STARTED_AT).descending();
 
-    public Page<TransactionSearchResponse> searchByStatus(String status, int page, int size){
+    public Page<TransactionSearchDocument> searchByStatus(String status, int page, int size){
 
         TransactionStatus transactionStatus = TransactionStatus.valueOf(status.toUpperCase());
 
         Pageable pageable = PageRequest.of(page-1, size, sort);
 
-        Page<TransactionSearchDocument> transactionSearchDocuments = transactionSearchRepository.findByStatus(transactionStatus, pageable);
-
-        return transactionSearchDocuments.map(TransactionSearchResponse::fromEntity);
+        return transactionSearchRepository.findByStatus(transactionStatus, pageable);
     }
 
 }

@@ -19,16 +19,16 @@ public class TransactionSearchResponse {
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 
-    public static TransactionSearchResponse fromEntity(TransactionSearchDocument transactionSearchDocument){
+    public static TransactionSearchResponse fromEntity(TransactionSearchDocument transaction){
         return TransactionSearchResponse.builder()
-                .transactionId(transactionSearchDocument.getTransactionId())
-                .salePostId(transactionSearchDocument.getSalePostId())
-                .memberName(transactionSearchDocument.getMemberName())
-                .payAmount(transactionSearchDocument.getPayAmount())
-                .status(transactionSearchDocument.getStatus().getState())
-                .receivedAt(transactionSearchDocument.getReceivedAt())
-                .startedAt(transactionSearchDocument.getStartedAt())
-                .endedAt(transactionSearchDocument.getEndedAt())
+                .transactionId(transaction.getTransactionId())
+                .salePostId(transaction.getSalePostId())
+                .memberName(transaction.getMemberName())
+                .payAmount(transaction.getPayAmount())
+                .status(transaction.getStatus().getState())
+                .receivedAt(transaction.getReceivedAt())
+                .startedAt(transaction.getStartedAt())
+                .endedAt(transaction.getEndedAt())
                 .build();
     }
 }

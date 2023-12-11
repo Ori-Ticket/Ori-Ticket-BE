@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.domain.elasticsearch.transaction.controller;
 
 import com.zerobase.oriticket.domain.elasticsearch.transaction.dto.TransactionSearchResponse;
+import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.service.TransactionSearchService;
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +26,10 @@ public class TransactionSearchController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size
     ){
+        Page<TransactionSearchDocument> transactionSearchDocuments =
+                transactionSearchService.searchByStatus(status, page, size);
+
         return ResponseEntity.status(HttpStatus.OK)
-                .body(transactionSearchService.searchByStatus(status, page, size));
+                .body(transactionSearchDocuments.map(TransactionSearchResponse::fromEntity));
     }
 }
