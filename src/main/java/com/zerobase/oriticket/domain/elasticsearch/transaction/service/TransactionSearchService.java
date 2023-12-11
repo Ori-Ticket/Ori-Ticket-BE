@@ -2,7 +2,6 @@ package com.zerobase.oriticket.domain.elasticsearch.transaction.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
-import com.zerobase.oriticket.domain.elasticsearch.transaction.dto.TransactionSearchResponse;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

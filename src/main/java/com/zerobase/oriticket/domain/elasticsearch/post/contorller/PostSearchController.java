@@ -3,7 +3,6 @@ package com.zerobase.oriticket.domain.elasticsearch.post.contorller;
 import com.zerobase.oriticket.domain.elasticsearch.post.dto.PostSearchResponse;
 import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.post.service.PostSearchService;
-import com.zerobase.oriticket.domain.elasticsearch.transaction.dto.TransactionSearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;

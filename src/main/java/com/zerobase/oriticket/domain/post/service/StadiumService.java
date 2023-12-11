@@ -10,9 +10,6 @@ import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteStadiumExis
 import com.zerobase.oriticket.global.exception.impl.post.SportsNotFoundException;
 import com.zerobase.oriticket.global.exception.impl.post.StadiumNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

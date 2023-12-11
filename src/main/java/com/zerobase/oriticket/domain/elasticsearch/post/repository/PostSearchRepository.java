@@ -9,8 +9,6 @@ public interface PostSearchRepository extends ElasticsearchRepository<PostSearch
 
     Page<PostSearchDocument> findAll(Pageable pageable);
 
-    Page<PostSearchDocument> findAllByHomeTeamNameContainingOrAwayTeamNameContaining(String homeTeamName, String awayTeamName, Pageable pageable);
-
     Page<PostSearchDocument> findAllBySportsNameContainingOrStadiumNameContainingOrHomeTeamNameContainingOrAwayTeamNameContaining(String sportsName, String stadiumName, String homeTeamName, String awayTeamName, Pageable pageable);
 
 
