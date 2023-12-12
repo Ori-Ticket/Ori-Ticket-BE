@@ -5,7 +5,9 @@ import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
-    ChatRoom findByTransaction(Transaction transaction);
+    Optional<ChatRoom> findByTransaction(Transaction transaction);
 }

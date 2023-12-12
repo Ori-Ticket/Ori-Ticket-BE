@@ -11,6 +11,7 @@ import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusToReceivedTrans
 import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
+import com.zerobase.oriticket.global.exception.impl.chat.ChatRoomNotFoundException;
 import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyTransactionStateOfCanceledException;
 import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyTransactionStateOfCompletedException;
 import com.zerobase.oriticket.global.exception.impl.transaction.CannotModifyTransactionStateOfReportedException;
@@ -54,6 +55,8 @@ public class TransactionUpdateService {
         salePost.updateToSold();
         postRepository.save(salePost);
 
+        endChatRoom(transaction);
+
         return transactionRepository.save(transaction);
     }
 
@@ -69,6 +72,8 @@ public class TransactionUpdateService {
         Post salePost = transaction.getSalePost();
         salePost.updateToForeSale();
         postRepository.save(salePost);
+
+        endChatRoom(transaction);
 
         return transactionRepository.save(transaction);
     }
@@ -86,6 +91,8 @@ public class TransactionUpdateService {
         salePost.updateToReported();
         postRepository.save(salePost);
 
+        endChatRoom(transaction);
+
         return transactionRepository.save(transaction);
     }
 
@@ -96,5 +103,13 @@ public class TransactionUpdateService {
             throw new CannotModifyTransactionStateOfCompletedException();
         if(status == TransactionStatus.REPORTED)
             throw new CannotModifyTransactionStateOfReportedException();
+    }
+
+    public void endChatRoom(Transaction transaction){
+        ChatRoom chatRoom = chatRoomRepository.findByTransaction(transaction)
+                .orElseThrow(ChatRoomNotFoundException::new);
+
+        chatRoom.endChatRoom();
+        chatRoomRepository.save(chatRoom);
     }
 }

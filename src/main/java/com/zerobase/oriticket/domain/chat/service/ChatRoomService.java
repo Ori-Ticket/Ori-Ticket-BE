@@ -44,6 +44,9 @@ public class ChatRoomService {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(TransactionNotFoundException::new);
 
-        return chatRoomRepository.findByTransaction(transaction);
+        ChatRoom chatRoom = chatRoomRepository.findByTransaction(transaction)
+                .orElseThrow(ChatRoomNotFoundException::new);
+
+        return chatRoom;
     }
 }

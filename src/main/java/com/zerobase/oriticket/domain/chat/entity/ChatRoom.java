@@ -30,6 +30,10 @@ public class ChatRoom {
 
     private LocalDateTime endedAt;
 
+    public void endChatRoom(){
+        this.endedAt = LocalDateTime.now();
+    }
+
     public static ChatRoom createChatRoom(Transaction transaction){
         return ChatRoom.builder()
                 .transaction(transaction)
