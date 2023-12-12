@@ -29,4 +29,11 @@ public class ChatRoom {
     private LocalDateTime createdAt;
 
     private LocalDateTime endedAt;
+
+    public static ChatRoom createChatRoom(Transaction transaction){
+        return ChatRoom.builder()
+                .transaction(transaction)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 }

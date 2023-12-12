@@ -33,4 +33,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "END AS result \n" +
             "FROM Transaction WHERE salePost = %:salePost%")
     boolean existsCanRegisterByStatus(@Param("salePost") Post salePost);
+
 }

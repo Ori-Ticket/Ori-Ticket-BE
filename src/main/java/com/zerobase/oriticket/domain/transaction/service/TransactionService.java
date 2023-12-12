@@ -1,6 +1,6 @@
 package com.zerobase.oriticket.domain.transaction.service;
 
-import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
+import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.post.entity.Post;
@@ -25,7 +25,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionSearchRepository transactionSearchRepository;
     private final PostRepository postRepository;
-    private final PostSearchRepository postSearchRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     private static final String STARTED_AT = "startedAt";
 
@@ -65,5 +65,4 @@ public class TransactionService {
 
         return transactionDocuments;
     }
-
 }
