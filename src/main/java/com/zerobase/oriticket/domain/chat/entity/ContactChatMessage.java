@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.chat.entity;
 
+import com.zerobase.oriticket.domain.chat.constants.ContactSenderType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,16 +12,15 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage extends BaseChatMessage {
+public class ContactChatMessage extends BaseChatMessage {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatMessageId;
+    private Long contactChatMessageId;
 
     @ManyToOne
-    private ChatRoom chatRoom;
+    private ContactChatRoom contactChatRoom;
 
-    private Long memberId;
-
+    private ContactSenderType senderType;
 }

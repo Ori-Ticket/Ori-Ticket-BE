@@ -11,15 +11,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage extends BaseChatMessage {
+public class ContactChatRoom extends BaseChatRoom{
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatMessageId;
-
-    @ManyToOne
-    private ChatRoom chatRoom;
+    private Long contactChatRoomId;
 
     private Long memberId;
 

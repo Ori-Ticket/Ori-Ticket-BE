@@ -35,6 +35,7 @@ public class TransactionService {
                 .orElseThrow(SalePostNotFoundException::new);
 
         // 멤버 유효성 체크
+
         boolean exists = transactionRepository.existsCanRegisterByStatus(salePost);
 
         if (!exists){

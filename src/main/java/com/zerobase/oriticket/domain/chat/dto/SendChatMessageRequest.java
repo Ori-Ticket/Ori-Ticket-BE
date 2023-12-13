@@ -7,15 +7,15 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class RegisterChatMessageRequest {
+public class SendChatMessageRequest {
 
-    private String sender;
+    private Long memberId;
     private String message;
 
     public ChatMessage toEntity(ChatRoom chatRoom){
         return ChatMessage.builder()
                 .chatRoom(chatRoom)
-                .sender(this.sender)
+                .memberId(memberId)
                 .message(this.message)
                 .chattedAt(LocalDateTime.now())
                 .build();

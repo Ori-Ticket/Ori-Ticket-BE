@@ -37,7 +37,7 @@ public class TransactionUpdateService {
         transaction.updateStatusToReceived(request.getPayAmount());
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
 
-        chatRoomRepository.save(ChatRoom.createChatRoom(transaction));
+        chatRoomRepository.save(ChatRoom.createChatRoom(transaction, transaction.getSalePost()));
 
         return transactionRepository.save(transaction);
     }

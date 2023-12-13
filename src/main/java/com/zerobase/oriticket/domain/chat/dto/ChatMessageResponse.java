@@ -12,7 +12,7 @@ public class ChatMessageResponse {
 
     private Long chatMessageId;
     private Long chatRoomId;
-    private String sender;
+    private Long memberId;
     private String message;
     private LocalDateTime chattedAt;
 
@@ -21,7 +21,7 @@ public class ChatMessageResponse {
         return ChatMessageResponse.builder()
                 .chatMessageId(chatMessage.getChatMessageId())
                 .chatRoomId(chatMessage.getChatRoom().getChatRoomId())
-                .sender(chatMessage.getSender())
+                .memberId(chatMessage.getMemberId())
                 .message(chatMessage.getMessage())
                 .chattedAt(chatMessage.getChattedAt())
                 .build();

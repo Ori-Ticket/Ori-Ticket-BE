@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/chatroom")
 @RequiredArgsConstructor
@@ -41,13 +43,25 @@ public class ChatRoomController {
     }
 
     @GetMapping("/transaction")
-    public ResponseEntity<ChatRoomResponse> getChatroom(
+    public ResponseEntity<ChatRoomResponse> getByTransaction(
             @RequestParam("id") Long transactionId
     ){
         ChatRoom chatRoom = chatRoomService.getByTransaction(transactionId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ChatRoomResponse.fromEntity(chatRoom));
+    }
+
+    @GetMapping("/member")
+    public ResponseEntity<List<ChatRoomResponse>> getByMember(
+            @RequestParam("id") Long memberId
+    ){
+        List<ChatRoom> chatRooms = chatRoomService.getByMember(memberId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(chatRooms.stream()
+                        .map(ChatRoomResponse::fromEntity)
+                        .toList());
     }
 
 }

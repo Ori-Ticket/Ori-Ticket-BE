@@ -1,21 +1,23 @@
 package com.zerobase.oriticket.domain.chat.entity;
 
+import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoom {
+public class ChatRoom extends BaseChatRoom{
 
     @Id
     @Column(name = "id")
@@ -25,8 +27,8 @@ public class ChatRoom {
     @OneToOne
     private Transaction transaction;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Long> members;
 
     private LocalDateTime endedAt;
 
@@ -34,9 +36,14 @@ public class ChatRoom {
         this.endedAt = LocalDateTime.now();
     }
 
-    public static ChatRoom createChatRoom(Transaction transaction){
+    public static ChatRoom createChatRoom(Transaction transaction, Post salePost){
+        Set<Long> members = new HashSet<>();
+        members.add(transaction.getMemberId());
+        members.add(salePost.getMemberId());
+
         return ChatRoom.builder()
                 .transaction(transaction)
+                .members(members)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
