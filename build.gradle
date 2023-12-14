@@ -24,20 +24,15 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+  
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-
-	implementation 'org.springframework.security:spring-security-taglibs'
-
-	implementation 'com.google.code.gson:gson:2.9.0'
-
 }
+
 tasks.named('bootBuildImage') {
 	builder = 'paketobuildpacks/builder-jammy-base:latest'
 }
