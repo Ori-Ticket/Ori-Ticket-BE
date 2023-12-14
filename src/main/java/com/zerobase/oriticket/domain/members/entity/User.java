@@ -1,7 +1,7 @@
 package com.zerobase.oriticket.domain.members.entity;
 
 import com.zerobase.oriticket.domain.members.constants.MemberStatus;
-import com.zerobase.oriticket.domain.members.constants.UserRole;
+import com.zerobase.oriticket.domain.members.constants.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,55 +11,56 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-
+import org.hibernate.annotations.CreationTimestamp;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
-public class Member {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long membersId;
+    private long id;
 
-    @Column(length = 30)
+    @Column(nullable = false, length = 30, unique = true)
     private String email;
 
     @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 30, unique = true)
     private String nickname;
+
+    @Column(nullable = false, length = 100)
+    private String password;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime birthDate;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 30, unique = true)
     private String phoneNum;
 
-    @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
-    private UserRole roles = UserRole.MEMBER;
+    private RoleType role = RoleType.USER;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private MemberStatus status;
+    private MemberStatus status = MemberStatus.ACTIVE;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime registeredAt;
+    @CreationTimestamp
+    private Timestamp registeredAt;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime modifiedAt;
+    @CreationTimestamp
+    private Timestamp modifiedAt;
+
+    private String oauth; // kakao,naver
 
 }

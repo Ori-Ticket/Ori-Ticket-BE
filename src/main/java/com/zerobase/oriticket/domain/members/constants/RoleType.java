@@ -1,5 +1,5 @@
 package com.zerobase.oriticket.domain.members.constants;
 
-public enum UserRole {
-    ADMIN, MEMBER
+public enum RoleType {
+    ADMIN, USER
 }
