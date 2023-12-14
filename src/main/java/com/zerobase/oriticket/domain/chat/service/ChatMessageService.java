@@ -5,6 +5,7 @@ import com.zerobase.oriticket.domain.chat.entity.ChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ChatMessageRepository;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
+import com.zerobase.oriticket.global.exception.impl.chat.AlreadyEndedChatRoom;
 import com.zerobase.oriticket.global.exception.impl.chat.ChatRoomNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class ChatMessageService {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(ChatRoomNotFoundException::new);
 
+        validateCanSendMessage(chatRoom);
+
         ChatMessage message = request.toEntity(chatRoom);
 
         return chatMessageRepository.save(message);
@@ -32,5 +35,11 @@ public class ChatMessageService {
                 .orElseThrow(ChatRoomNotFoundException::new);
 
         return chatMessageRepository.findByChatRoom(chatRoom);
+    }
+
+    public void validateCanSendMessage(ChatRoom chatRoom){
+        if(chatRoom.getEndedAt() != null){
+            throw new AlreadyEndedChatRoom();
+        }
     }
 }

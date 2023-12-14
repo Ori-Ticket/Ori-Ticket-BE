@@ -2,10 +2,10 @@ package com.zerobase.oriticket.domain.chat.dto;
 
 import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Getter
@@ -14,6 +14,7 @@ public class ChatRoomResponse {
 
     private Long chatRoomId;
     private Long transactionId;
+    private Set<Long> members;
     private LocalDateTime createdAt;
     private LocalDateTime endedAt;
 
@@ -21,6 +22,7 @@ public class ChatRoomResponse {
         return ChatRoomResponse.builder()
                 .chatRoomId(chatRoom.getChatRoomId())
                 .transactionId(chatRoom.getTransaction().getTransactionId())
+                .members(chatRoom.getMembers())
                 .createdAt(chatRoom.getCreatedAt())
                 .endedAt(chatRoom.getEndedAt())
                 .build();
