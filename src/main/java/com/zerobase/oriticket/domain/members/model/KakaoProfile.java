@@ -28,7 +28,6 @@ public class KakaoProfile {
 			public Boolean is_default_image;
 
 		}
-
 	}
 
 	@Data
@@ -37,5 +36,4 @@ public class KakaoProfile {
 		public String profile_image;
 		public String thumbnail_image;
 	}
-
 }

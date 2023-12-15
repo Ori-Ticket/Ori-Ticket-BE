@@ -2,21 +2,24 @@ package com.zerobase.oriticket.domain.members.controller;
 
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.dto.user.UserResponse;
+import com.zerobase.oriticket.domain.members.entity.User;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.members.service.KakaoAuthService;
 import com.zerobase.oriticket.domain.members.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@RestController
+@Controller
 @RequestMapping("/members")
 public class UserController {
 
@@ -26,37 +29,52 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/signup")
-    public String signup(String code) {
+    @GetMapping("/kakao/login")
+    public String handleKakaoSignup(String code) {
 
-        OAuthToken oAuthToken = kakaoAuthService
-                .requestKakaoToken(code);
+        OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
 
-        ResponseEntity<String> kakaoProfileResponse = kakaoAuthService
-                .requestKakaoProfile(oAuthToken);
+        ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
 
-        KakaoProfile kakaoProfile = kakaoAuthService
-                .registerOrUpdateKakaoUser(kakaoProfileResponse);
+        KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
 
-        kakaoAuthService.autoLogin(kakaoProfile, userService);
+        User user = kakaoAuthService.buildKakaoUser(kakaoProfile);
 
-        return null;
+        Boolean isMember = kakaoAuthService.autoLogin(kakaoProfile, userService);
+        System.out.println("isMember = " + isMember);
+
+        if (!isMember) {
+            userService.registerUser(user);
+            return "redirect:/members/signup";
+        }
+        return "redirect:/members/signin";
     }
 
+    @PostMapping("/signup")
+    public String signUp(@RequestBody UserRequest userRQ
 
-    @PostMapping("/sign")
-    public String sign() {
 
-        return null;
+    ) {
+        userService.registerUser(userRQ);
+        return "redirect:/home";
+    }
+
+    @GetMapping("/signup")
+    public String signUp() {
+        System.out.println("로그인정보 없어서 회원가입");
+        return "redirect:/home";
+    }
+
+    @GetMapping("/signin")
+    public String signIn() {
+        System.out.println("로그인정보 있어서 로그인");
+        return "home";
     }
 
 
     @PatchMapping("/modify")
     public ResponseEntity<UserResponse> modify(@RequestBody UserRequest userRequest) {
 
-//        User user = UserService.modif
-
-//        return ResponseEntity.status(HttpStatus.OK).body(UserResponse.fromEntity())
         return null;
 
     }
@@ -68,7 +86,7 @@ public class UserController {
     }
 
     @DeleteMapping("/withdraw")
-    public ResponseEntity<UserResponse> withdraw() {
+    public ResponseEntity<UserResponse> withDraw() {
 
         return null;
     }
