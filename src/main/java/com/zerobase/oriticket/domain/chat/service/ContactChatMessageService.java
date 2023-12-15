@@ -1,6 +1,5 @@
 package com.zerobase.oriticket.domain.chat.service;
 
-import com.zerobase.oriticket.domain.chat.dto.SendChatMessageRequest;
 import com.zerobase.oriticket.domain.chat.dto.SendContactChatMessageRequest;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;

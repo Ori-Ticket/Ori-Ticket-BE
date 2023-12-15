@@ -7,6 +7,7 @@ import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
 import com.zerobase.oriticket.domain.post.dto.UpdateStatusToReportedPostRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.service.PostService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,7 +24,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @WebMvcTest(PostController.class)
 public class PostControllerTest {
@@ -60,6 +60,7 @@ public class PostControllerTest {
     private final static String AWAY_TEAM_NAME = "한화";
 
     @Test
+    @DisplayName("SalePost 등록 성공")
     void successRegister() throws Exception {
         //given
         RegisterPostRequest postRequest =
@@ -142,6 +143,7 @@ public class PostControllerTest {
     }
 
     @Test
+    @DisplayName("SalePost 조회 성공")
     void successGet() throws Exception {
         //given
         Sports sports = Sports.builder()
@@ -207,6 +209,7 @@ public class PostControllerTest {
     }
 
     @Test
+    @DisplayName("SalePost 삭제 성공")
     void successDelete() throws Exception {
         //given
         given(postService.delete(anyLong()))
@@ -221,6 +224,7 @@ public class PostControllerTest {
     }
 
     @Test
+    @DisplayName("SalePost 의 상태를 Reported 로 업데이트 성공")
     void successUpdateToReported() throws Exception {
         //given
         UpdateStatusToReportedPostRequest postRequest =

@@ -6,6 +6,7 @@ import com.zerobase.oriticket.domain.post.dto.RegisterStadiumRequest;
 import com.zerobase.oriticket.domain.post.entity.Sports;
 import com.zerobase.oriticket.domain.post.entity.Stadium;
 import com.zerobase.oriticket.domain.post.service.StadiumService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,6 +46,7 @@ public class StadiumControllerTest {
     private final static String HOME_TEAM_NAME = "한화";
 
     @Test
+    @DisplayName("Stadium 등록 성공")
     void successRegister() throws Exception{
         //given
         RegisterStadiumRequest stadiumRequest =
@@ -81,6 +83,7 @@ public class StadiumControllerTest {
     }
 
     @Test
+    @DisplayName("Stadium 조회 성공")
     void successGet() throws Exception{
         //given
         Sports sports = Sports.builder()
@@ -108,6 +111,7 @@ public class StadiumControllerTest {
     }
 
     @Test
+    @DisplayName("Stadium 모두 조회 성공")
     void successGetAll() throws Exception{
         //given
         Sports sports = Sports.builder()
@@ -164,6 +168,7 @@ public class StadiumControllerTest {
     }
 
     @Test
+    @DisplayName("SportId로 Stadium 조회 성공")
     void successGetBySportId() throws Exception{
         //given
         Sports sports = Sports.builder()
@@ -197,6 +202,7 @@ public class StadiumControllerTest {
     }
 
     @Test
+    @DisplayName("Stadium 삭제 성공")
     void successDelete() throws Exception{
         //given
         given(stadiumService.delete(anyLong()))

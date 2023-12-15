@@ -10,6 +10,7 @@ import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequ
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.service.TransactionService;
 import com.zerobase.oriticket.domain.transaction.service.TransactionUpdateService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -53,6 +54,7 @@ public class    TransactionControllerTest {
     private final static Integer PAY_AMOUNT = 10000;
 
     @Test
+    @DisplayName("Transaction 등록 성공")
     void successRegister() throws Exception {
         //given
         RegisterTransactionRequest transactionRequest =
@@ -90,6 +92,7 @@ public class    TransactionControllerTest {
     }
 
     @Test
+    @DisplayName("Transaction 조회 성공")
     void successGet() throws Exception {
         //given
         Post salePost = Post.builder()
@@ -118,6 +121,7 @@ public class    TransactionControllerTest {
     }
 
     @Test
+    @DisplayName("Transaction 모두 조회 성공")
     void successGetAll() throws Exception {
         //given
         Post salePost1 = Post.builder()
@@ -185,6 +189,7 @@ public class    TransactionControllerTest {
     }
 
     @Test
+    @DisplayName("Transaction 의 상태를 Received 로 업데이트 성공")
     void successUpdateToReceived() throws Exception {
         //given
         UpdateStatusToReceivedTransactionRequest transactionRequest =
@@ -225,6 +230,7 @@ public class    TransactionControllerTest {
     }
 
     @Test
+    @DisplayName("Transaction 의 상태를 Completed 로 업데이트 성공")
     void successUpdateToCompleted() throws Exception {
         //given
         UpdateStatusTransactionRequest transactionRequest =
@@ -262,6 +268,7 @@ public class    TransactionControllerTest {
     }
 
     @Test
+    @DisplayName("Transaction 의 상태를 Canceled 로 업데이트 성공")
     void successUpdateToCanceled() throws Exception {
         //given
         UpdateStatusTransactionRequest transactionRequest =
@@ -299,6 +306,7 @@ public class    TransactionControllerTest {
     }
 
     @Test
+    @DisplayName("Transaction 의 상태를 Reported 로 업데이트 성공")
     void successUpdateToReported() throws Exception {
         //given
         UpdateStatusTransactionRequest transactionRequest =

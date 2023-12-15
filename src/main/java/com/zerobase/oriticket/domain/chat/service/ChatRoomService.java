@@ -2,7 +2,6 @@ package com.zerobase.oriticket.domain.chat.service;
 
 import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
-import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
 import com.zerobase.oriticket.global.exception.impl.chat.ChatRoomNotFoundException;

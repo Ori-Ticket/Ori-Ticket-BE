@@ -4,6 +4,7 @@ import com.zerobase.oriticket.domain.elasticsearch.post.contorller.PostSearchCon
 import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.post.service.PostSearchService;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,6 +37,7 @@ public class PostSearchControllerTest {
     private final static String BASE_URL = "/posts";
 
     @Test
+    @DisplayName("SalePost 검색 성공")
     void successSearch() throws Exception {
         //given
         PostSearchDocument postSearchDocument1 =

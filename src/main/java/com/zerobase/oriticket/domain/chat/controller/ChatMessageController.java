@@ -1,7 +1,6 @@
 package com.zerobase.oriticket.domain.chat.controller;
 
 import com.zerobase.oriticket.domain.chat.dto.ChatMessageResponse;
-import com.zerobase.oriticket.domain.chat.dto.ChatRoomResponse;
 import com.zerobase.oriticket.domain.chat.dto.ContactChatMessageResponse;
 import com.zerobase.oriticket.domain.chat.entity.ChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatMessage;
@@ -26,7 +25,7 @@ public class ChatMessageController {
     private final ContactChatMessageService contactChatMessageService;
 
     @GetMapping
-    public ResponseEntity<List<ChatMessageResponse>> getByChat(
+    public ResponseEntity<List<ChatMessageResponse>> getALlChatMessage(
             @RequestParam("id") Long chatRoomId
     ){
         List<ChatMessage> chatMessages = chatMessageService.getByRoom(chatRoomId);
@@ -38,7 +37,7 @@ public class ChatMessageController {
     }
 
     @GetMapping("/contact")
-    public ResponseEntity<List<ContactChatMessageResponse>> getByContact(
+    public ResponseEntity<List<ContactChatMessageResponse>> getALlContactMessage(
             @RequestParam("id") Long contactChatRoomId
     ){
         List<ContactChatMessage> contactChatMessages = contactChatMessageService.getByRoom(contactChatRoomId);

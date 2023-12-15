@@ -4,6 +4,7 @@ import com.zerobase.oriticket.domain.elasticsearch.transaction.controller.Transa
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.service.TransactionSearchService;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,6 +37,7 @@ public class TransactionSearchControllerTest {
     private final static String BASE_URL = "/transactions";
 
     @Test
+    @DisplayName("Status 로 Transaction 검색 성공")
     void successSearchByStatus() throws Exception {
         //given
         TransactionSearchDocument transactionSearchDocument1 =
