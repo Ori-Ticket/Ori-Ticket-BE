@@ -1,11 +1,9 @@
 package com.zerobase.oriticket.domain.members.service;
 
-import com.zerobase.oriticket.domain.members.constants.RoleType;
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.entity.User;
 import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,21 +19,51 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Boolean findUser(String userEmail) {
-
         return userRepository.existsByEmail(userEmail);
     }
 
     @Transactional
-    public User registerUser(UserRequest userRQ) {
-
-        return User.builder()
-                .name(userRQ.getName())
-                .phoneNum(userRQ.getPhoneNum())
-                .build();
-
-        userRepository.save(User);
+    public User registerUser(UserRequest userRequest) {
+        userRepository.save(userRequest.toEntity());
+        return null;
 
     }
+
+    @Transactional
+    public User registerUserKakao(UserRequest userRequest) {
+        userRepository.save(userRequest.toEntityKakao());
+        return null;
+
+    }
+
+//    @Transactional
+//    public User insert(UserRequest userRequest) {
+//        userRepository.
+//        return null;
+//
+//    }
+
+//    @Transactional
+//    public Transaction register(RegisterTransactionRequest request){
+//
+//        Post salePost = postRepository.findById(request.getSalePostId())
+//                .orElseThrow(SalePostNotFoundException::new);
+//
+//        // 멤버 유효성 체크
+//
+//        boolean exists = transactionRepository.existsCanRegisterByStatus(salePost);
+//
+//        if (!exists){
+//            throw new AlreadyExistTransactionException();
+//        }
+//
+//        Transaction transaction = transactionRepository.save(request.toEntity(salePost));
+//        transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
+//        salePost.updateToTrading();
+//        postRepository.save(salePost);
+//
+//        return transaction;
+//    }
 //
 //    @Transactional
 //    public void 회원수정(User user) {

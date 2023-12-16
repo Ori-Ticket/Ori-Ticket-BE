@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.domain.members.dto.user;
+package com.zerobase.oriticket.domain.members.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,14 +2,20 @@ package com.zerobase.oriticket.domain.members.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.entity.User;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
-import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -142,8 +148,12 @@ public class KakaoAuthService {
     private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
     private static final String CLIENT_ID = "0f5dbcca74a5d4028b0110d4e1201c8d";
     private static final String REDIRECT_URI = "http://localhost:8080/members/kakao/login";
-
     private final RestTemplate restTemplate = new RestTemplate();
+
+    private AuthenticationManager authenticationManager ;
+
+    @Value("${ori.key}")
+    private String oriKey;
 
     public OAuthToken requestKakaoToken(String code) {
         HttpHeaders headers = new HttpHeaders();
@@ -196,29 +206,25 @@ public class KakaoAuthService {
         return kakaoProfile;
     }
 
-    public User buildKakaoUser(KakaoProfile kakaoProfile) {
+    public UserRequest buildKakaoUser(KakaoProfile kakaoProfile) {
         System.out.println("고유식별번호 : " + kakaoProfile.getId());
         System.out.println("이메일 : " + kakaoProfile.getKakao_account().getEmail());
         System.out.println("이름 : " + kakaoProfile.getKakao_account().getProfile().getNickname());
-        System.out.println("패스워드 : " + UUID.randomUUID());
-        return User.builder()
-                .email(kakaoProfile.getKakao_account().getEmail()).oauth("kakao")
+        System.out.println("패스워드 : " + oriKey);
+        return UserRequest.builder()
+                .email(kakaoProfile.getKakao_account().getEmail())
                 .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
+                .password(oriKey)
                 .oauth("kakao")
                 .build();
     }
 
     public Boolean autoLogin(KakaoProfile kakaoProfile, UserService userService) {
         return userService.findUser(kakaoProfile.getKakao_account().getEmail());
-
-//        // 아래 코드에서 "encryption"이 어디서 온 것인지 확인 필요
-//        // 예를 들어, 암호화 모듈을 사용하는 경우 해당 모듈을 주입 받아야 함
-//        String encryption = "your_encryption_logic_here";
-//
 //        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(kakaoUser.getEmail(), encryption));
+//                new UsernamePasswordAuthenticationToken(kakaoProfile.getKakao_account().getEmail(), oriKey));
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
-
+//
 //        return "회원가입완료";
     }
 

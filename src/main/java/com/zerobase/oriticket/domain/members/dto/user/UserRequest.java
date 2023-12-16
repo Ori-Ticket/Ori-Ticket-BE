@@ -16,6 +16,8 @@ import com.zerobase.oriticket.domain.members.entity.*;
 @Builder
 public class UserRequest {
 
+
+
     private String email;
     private String name;
     private String nickname;
@@ -23,6 +25,7 @@ public class UserRequest {
     private String phoneNum;
     private MemberStatus status;
     private String oauth;
+    private String password;
 
     public User toEntity() {
         return User.builder()
@@ -32,6 +35,15 @@ public class UserRequest {
                 .birthDate(this.birthDate)
                 .phoneNum(this.phoneNum)
                 .registeredAt(Timestamp.valueOf(LocalDateTime.now()))
+                .oauth(this.oauth)
+                .build();
+    }
+
+    public User toEntityKakao() {
+        return User.builder()
+                .email(this.email)
+                .nickname(this.nickname)
+                .password(this.password)
                 .oauth(this.oauth)
                 .build();
     }

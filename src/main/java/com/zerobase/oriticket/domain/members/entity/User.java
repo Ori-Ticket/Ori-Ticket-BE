@@ -30,23 +30,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(length = 30, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String name;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(length = 30, unique = true)
     private String nickname;
 
-    @Column(nullable = false, length = 100)
+    @Column( length = 100)
     private String password;
 
-    @Column(nullable = false)
+    @Column()
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime birthDate;
 
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(length = 30, unique = true)
     private String phoneNum;
 
     @Enumerated(EnumType.STRING)
