@@ -10,19 +10,19 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(AbstractException.class)
-    protected ResponseEntity<?> handleCustomException(AbstractException e) {
+    protected ResponseEntity<Void> handleCustomException(AbstractException e) {
 
         return ResponseEntity.status(e.getErrorCode()).build();
     }
 
     @ExceptionHandler(TypeMismatchException.class)
-    protected ResponseEntity<?> handleRuntimeException(TypeMismatchException e) {
+    protected ResponseEntity<Void> handleRuntimeException(TypeMismatchException e) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<?> handleRuntimeException(RuntimeException e) {
+    protected ResponseEntity<Void> handleRuntimeException(RuntimeException e) {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }

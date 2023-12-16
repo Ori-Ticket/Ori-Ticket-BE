@@ -3,7 +3,7 @@ package com.zerobase.oriticket.domain.chat.service;
 import com.zerobase.oriticket.domain.chat.dto.RegisterContactChatRoomRequest;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ContactChatRoomRepository;
-import com.zerobase.oriticket.global.exception.impl.chat.ChatRoomNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.zerobase.oriticket.global.constants.ChatExceptionStatus.CHAT_ROOM_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -29,11 +31,9 @@ public class ContactChatRoomService {
     }
 
     public ContactChatRoom get(Long contactChatRoomId) {
-        ContactChatRoom contactChatRoom =
-                contactChatRoomRepository.findById(contactChatRoomId)
-                        .orElseThrow(ChatRoomNotFoundException::new);
 
-        return contactChatRoom;
+        return contactChatRoomRepository.findById(contactChatRoomId)
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
     }
 
     public Page<ContactChatRoom> getAll(int page, int size) {
@@ -47,6 +47,6 @@ public class ContactChatRoomService {
     public List<ContactChatRoom> getByMember(Long memberId){
         //멤버 유효성 체크
 
-        return contactChatRoomRepository.findByMemberId(memberId);
+        return contactChatRoomRepository.findAllByMemberId(memberId);
     }
 }

@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.chat.controller;
 
 import com.zerobase.oriticket.domain.chat.constants.ContactSenderType;
 import com.zerobase.oriticket.domain.chat.controller.ChatController;
@@ -64,7 +64,7 @@ public class ChatControllerTest {
                         .chattedAt(LocalDateTime.now())
                         .build();
 
-        given(chatMessageService.register(anyLong(), any()))
+        given(chatMessageService.register(anyLong(), any(SendChatMessageRequest.class)))
                 .willReturn(chatMessage);
 
         ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
@@ -106,7 +106,7 @@ public class ChatControllerTest {
                         .chattedAt(LocalDateTime.now())
                         .build();
 
-        given(contactChatMessageService.register(anyLong(), any()))
+        given(contactChatMessageService.register(anyLong(), any(SendContactChatMessageRequest.class)))
                 .willReturn(contactChatMessage);
 
         ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);

@@ -5,12 +5,14 @@ import com.zerobase.oriticket.domain.chat.entity.ChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ChatMessageRepository;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
-import com.zerobase.oriticket.global.exception.impl.chat.AlreadyEndedChatRoom;
-import com.zerobase.oriticket.global.exception.impl.chat.ChatRoomNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.zerobase.oriticket.global.constants.ChatExceptionStatus.ALREADY_ENDED_CHAT_ROOM;
+import static com.zerobase.oriticket.global.constants.ChatExceptionStatus.CHAT_ROOM_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class ChatMessageService {
 
     public ChatMessage register(Long chatRoomId, SendChatMessageRequest request){
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(ChatRoomNotFoundException::new);
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
 
         validateCanSendMessage(chatRoom);
 
@@ -31,15 +33,14 @@ public class ChatMessageService {
     }
 
     public List<ChatMessage> getByRoom(Long chatRoomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(ChatRoomNotFoundException::new);
 
-        return chatMessageRepository.findByChatRoom(chatRoom);
+        return chatMessageRepository.findAllByChatRoom_ChatRoomId(chatRoomId);
     }
 
-    public void validateCanSendMessage(ChatRoom chatRoom){
+    private void validateCanSendMessage(ChatRoom chatRoom){
         if(chatRoom.getEndedAt() != null){
-            throw new AlreadyEndedChatRoom();
+            throw new CustomException(ALREADY_ENDED_CHAT_ROOM.getCode(),
+                    ALREADY_ENDED_CHAT_ROOM.getMessage());
         }
     }
 }

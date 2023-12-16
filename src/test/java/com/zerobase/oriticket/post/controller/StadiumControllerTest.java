@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.post.controller.StadiumController;
@@ -61,7 +61,7 @@ public class StadiumControllerTest {
                 .sportsName(SPORTS_NAME)
                 .build();
         
-        given(stadiumService.register(any()))
+        given(stadiumService.register(any(RegisterStadiumRequest.class)))
                 .willReturn(Stadium.builder()
                         .stadiumId(STADIUM_ID)
                         .sports(sports)

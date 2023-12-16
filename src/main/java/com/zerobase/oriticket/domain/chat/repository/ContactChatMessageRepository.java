@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ContactChatMessageRepository extends JpaRepository<ContactChatMessage, Long> {
-    List<ContactChatMessage> findByContactChatRoom(ContactChatRoom contactChatRoom);
+    List<ContactChatMessage> findAllByContactChatRoom(ContactChatRoom contactChatRoom);
 }

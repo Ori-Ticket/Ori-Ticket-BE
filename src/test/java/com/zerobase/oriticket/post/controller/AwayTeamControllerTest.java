@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.post.controller.AwayTeamController;
@@ -59,7 +59,7 @@ public class    AwayTeamControllerTest {
                 .sportsName(SPORTS_NAME)
                 .build();
 
-        given(awayTeamService.register(any()))
+        given(awayTeamService.register(any(RegisterAwayTeamRequest.class)))
                 .willReturn(AwayTeam.builder()
                         .awayTeamId(AWAY_TEAM_ID)
                         .sports(sports)

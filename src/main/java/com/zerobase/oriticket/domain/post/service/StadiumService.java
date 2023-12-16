@@ -6,13 +6,14 @@ import com.zerobase.oriticket.domain.post.entity.Stadium;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.post.repository.StadiumRepository;
 import com.zerobase.oriticket.domain.post.repository.TicketRepository;
-import com.zerobase.oriticket.global.exception.impl.post.CannotDeleteStadiumExistTicketException;
-import com.zerobase.oriticket.global.exception.impl.post.SportsNotFoundException;
-import com.zerobase.oriticket.global.exception.impl.post.StadiumNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.zerobase.oriticket.global.constants.PostExceptionStatus.CANNOT_DELETE_STADIUM_EXIST_TICKET;
+import static com.zerobase.oriticket.global.constants.PostExceptionStatus.SPORTS_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -24,16 +25,15 @@ public class StadiumService {
 
     public Stadium register(RegisterStadiumRequest request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
-                .orElseThrow(SportsNotFoundException::new);
+                .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));
 
         return stadiumRepository.save(request.toEntity(sports));
     }
 
     public Stadium get(Long stadiumId) {
-        Stadium stadium = stadiumRepository.findById(stadiumId)
-                .orElseThrow(StadiumNotFoundException::new);
 
-        return stadium;
+        return stadiumRepository.findById(stadiumId)
+                .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));
     }
 
     public List<Stadium> getAll() {
@@ -42,21 +42,16 @@ public class StadiumService {
     }
 
     public List<Stadium> getBySportsId(Long sportsId) {
-        Sports sports = sportsRepository.findById(sportsId)
-                .orElseThrow(SportsNotFoundException::new);
 
-
-        return stadiumRepository.findBySports(sports);
+        return stadiumRepository.findAllBySports_SportsId(sportsId);
     }
 
     public Long delete(Long stadiumId){
         Stadium stadium = stadiumRepository.findById(stadiumId)
-                .orElseThrow(StadiumNotFoundException::new);
+                .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));
 
-        boolean exists = ticketRepository.existsByStadium(stadium);
-
-        if(exists){
-            throw new CannotDeleteStadiumExistTicketException();
+        if(ticketRepository.existsByStadium(stadium)){
+            throw new CustomException(CANNOT_DELETE_STADIUM_EXIST_TICKET.getCode(), CANNOT_DELETE_STADIUM_EXIST_TICKET.getMessage());
         }
 
         stadiumRepository.delete(stadium);

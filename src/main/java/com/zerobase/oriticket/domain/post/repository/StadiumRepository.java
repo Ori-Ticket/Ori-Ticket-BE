@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface StadiumRepository extends JpaRepository<Stadium, Long> {
-    List<Stadium> findBySports(Sports sports);
+    List<Stadium> findAllBySports_SportsId(Long sportsId);
 }

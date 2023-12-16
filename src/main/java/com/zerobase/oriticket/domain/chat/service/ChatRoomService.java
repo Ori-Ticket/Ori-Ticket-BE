@@ -2,10 +2,7 @@ package com.zerobase.oriticket.domain.chat.service;
 
 import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
-import com.zerobase.oriticket.domain.transaction.entity.Transaction;
-import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
-import com.zerobase.oriticket.global.exception.impl.chat.ChatRoomNotFoundException;
-import com.zerobase.oriticket.global.exception.impl.transaction.TransactionNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,20 +12,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.zerobase.oriticket.global.constants.ChatExceptionStatus.CHAT_ROOM_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
-    private final TransactionRepository transactionRepository;
 
     private static final String CREATED_AT = "createdAt";
 
     public ChatRoom get(Long chatRoomId){
-        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
-                .orElseThrow(ChatRoomNotFoundException::new);
 
-        return chatRoom;
+        return chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
     }
 
     public Page<ChatRoom> getAll(int page, int size) {
@@ -41,21 +38,15 @@ public class ChatRoomService {
     }
 
     public ChatRoom getByTransaction(Long transactionId){
-        Transaction transaction = transactionRepository.findById(transactionId)
-                .orElseThrow(TransactionNotFoundException::new);
 
-        ChatRoom chatRoom = chatRoomRepository.findByTransaction(transaction)
-                .orElseThrow(ChatRoomNotFoundException::new);
-
-        return chatRoom;
+        return chatRoomRepository.findByTransaction_TransactionId(transactionId)
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
     }
 
     public List<ChatRoom> getByMember(Long memberId){
 
         // 멤버 가져오기
 
-        List<ChatRoom> chatRoom = chatRoomRepository.findAllByMembers(memberId);
-
-        return chatRoom;
+        return chatRoomRepository.findAllByMembers(memberId);
     }
 }

@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.transaction.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.post.entity.Post;
@@ -67,7 +67,7 @@ public class    TransactionControllerTest {
                 .salePostId(POST_ID)
                 .build();
 
-        given(transactionService.register(any()))
+        given(transactionService.register(any(RegisterTransactionRequest.class)))
                 .willReturn(Transaction.builder()
                         .transactionId(POST_ID)
                         .salePost(salePost)

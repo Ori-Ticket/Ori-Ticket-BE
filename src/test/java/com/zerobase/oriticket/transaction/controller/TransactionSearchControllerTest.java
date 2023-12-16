@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.transaction.controller;
 
 import com.zerobase.oriticket.domain.elasticsearch.transaction.controller.TransactionSearchController;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;

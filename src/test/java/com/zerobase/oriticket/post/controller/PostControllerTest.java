@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
@@ -112,7 +112,7 @@ public class PostControllerTest {
                 .note(NOTE)
                 .build();
 
-        given(postService.registerPost(any()))
+        given(postService.registerPost(any(RegisterPostRequest.class)))
                 .willReturn(Post.builder()
                         .salePostId(SALE_POST_ID)
                         .memberId(MEMBER_ID)
@@ -265,7 +265,7 @@ public class PostControllerTest {
                 .note(NOTE)
                 .build();
 
-        given(postService.updateToReported(any()))
+        given(postService.updateToReported(any(UpdateStatusToReportedPostRequest.class)))
                 .willReturn(Post.builder()
                         .salePostId(SALE_POST_ID)
                         .memberId(MEMBER_ID)

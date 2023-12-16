@@ -19,6 +19,6 @@ public enum PostExceptionStatus {
     CANNOT_MODIFY_POST_STATE_OF_SOLD(HttpStatus.BAD_REQUEST.value(), "판매 완료된 글은 상태를 변경할 수 없습니다."),
     CANNOT_MODIFY_POST_STATE_OF_REPORTED(HttpStatus.BAD_REQUEST.value(), "신고된 글은 상태를 변경할 수 없습니다.");
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 }

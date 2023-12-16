@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.chat.controller;
 
 import com.zerobase.oriticket.domain.chat.constants.ContactSenderType;
 import com.zerobase.oriticket.domain.chat.controller.ChatMessageController;

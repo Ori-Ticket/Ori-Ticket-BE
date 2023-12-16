@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.post.controller.SportsController;
@@ -50,7 +50,7 @@ public class SportsControllerTest {
                         .sportsName(SPORTS_NAME)
                         .build();
 
-        given(sportsService.register(any()))
+        given(sportsService.register(any(RegisterSportsRequest.class)))
                 .willReturn(Sports.builder()
                         .sportsId(SPORTS_ID)
                         .sportsName(SPORTS_NAME)

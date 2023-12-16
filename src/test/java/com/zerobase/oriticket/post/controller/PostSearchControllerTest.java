@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.post.controller;
 
 import com.zerobase.oriticket.domain.elasticsearch.post.contorller.PostSearchController;
 import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;

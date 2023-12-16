@@ -1,4 +1,4 @@
-package com.zerobase.oriticket.controller;
+package com.zerobase.oriticket.chat.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.chat.controller.ContactChatRoomController;
@@ -50,7 +50,7 @@ public class ContactChatRoomControllerTest {
                         .memberId(1L)
                         .build();
 
-        given(contactChatRoomService.register(any()))
+        given(contactChatRoomService.register(any(RegisterContactChatRoomRequest.class)))
                 .willReturn(ContactChatRoom.builder()
                         .contactChatRoomId(1L)
                         .memberId(1L)

@@ -5,11 +5,13 @@ import com.zerobase.oriticket.domain.chat.entity.ContactChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ContactChatMessageRepository;
 import com.zerobase.oriticket.domain.chat.repository.ContactChatRoomRepository;
-import com.zerobase.oriticket.global.exception.impl.chat.ChatRoomNotFoundException;
+import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.zerobase.oriticket.global.constants.ChatExceptionStatus.CHAT_ROOM_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class ContactChatMessageService {
     public ContactChatMessage register(Long contactChatRoomId, SendContactChatMessageRequest request){
 
         ContactChatRoom contactChatRoom = contactChatRoomRepository.findById(contactChatRoomId)
-                .orElseThrow(ChatRoomNotFoundException::new);
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
 
         return contactChatMessageRepository.save(request.toEntity(contactChatRoom));
     }
@@ -29,8 +31,8 @@ public class ContactChatMessageService {
     public List<ContactChatMessage> getByRoom(Long contactChatRoomId){
         ContactChatRoom contactChatRoom =
                 contactChatRoomRepository.findById(contactChatRoomId)
-                        .orElseThrow(ChatRoomNotFoundException::new);
+                        .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
 
-        return contactChatMessageRepository.findByContactChatRoom(contactChatRoom);
+        return contactChatMessageRepository.findAllByContactChatRoom(contactChatRoom);
     }
 }
