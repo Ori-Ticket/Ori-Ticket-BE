@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ContactChatRoomService {
 
     private static final String CREATED_AT = "createdAt";
 
+    @Transactional
     public ContactChatRoom register(RegisterContactChatRoomRequest request) {
 
         // 멤버 유효성 체크
@@ -30,12 +32,14 @@ public class ContactChatRoomService {
         return contactChatRoomRepository.save(request.toEntity());
     }
 
+    @Transactional(readOnly = true)
     public ContactChatRoom get(Long contactChatRoomId) {
 
         return contactChatRoomRepository.findById(contactChatRoomId)
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
     }
 
+    @Transactional(readOnly = true)
     public Page<ContactChatRoom> getAll(int page, int size) {
         Sort sort = Sort.by(CREATED_AT).descending();
 
@@ -44,9 +48,11 @@ public class ContactChatRoomService {
         return contactChatRoomRepository.findAll(pageable);
     }
 
-    public List<ContactChatRoom> getByMember(Long memberId){
+    @Transactional(readOnly = true)
+    public ContactChatRoom getByMember(Long memberId){
         //멤버 유효성 체크
 
-        return contactChatRoomRepository.findAllByMemberId(memberId);
+        return contactChatRoomRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
     }
 }

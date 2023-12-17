@@ -54,15 +54,13 @@ public class ContactChatRoomController {
     }
 
     @GetMapping("/member")
-    public ResponseEntity<List<ContactChatRoomResponse>> getByMember(
+    public ResponseEntity<ContactChatRoomResponse> getByMember(
             @RequestParam("id") Long memberId
     ){
-        List<ContactChatRoom> contactChatRooms =
+        ContactChatRoom contactChatRoom =
                 contactChatRoomService.getByMember(memberId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(contactChatRooms.stream()
-                        .map(ContactChatRoomResponse::fromEntity)
-                        .toList());
+                .body(ContactChatRoomResponse.fromEntity(contactChatRoom));
     }
 }

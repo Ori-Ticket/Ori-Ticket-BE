@@ -8,6 +8,7 @@ import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class ChatMessageService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
 
+    @Transactional
     public ChatMessage register(Long chatRoomId, SendChatMessageRequest request){
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
@@ -32,6 +34,7 @@ public class ChatMessageService {
         return chatMessageRepository.save(message);
     }
 
+    @Transactional(readOnly = true)
     public List<ChatMessage> getByRoom(Long chatRoomId) {
 
         return chatMessageRepository.findAllByChatRoom_ChatRoomId(chatRoomId);

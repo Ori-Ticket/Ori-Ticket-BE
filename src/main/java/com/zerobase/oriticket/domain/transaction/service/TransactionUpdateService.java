@@ -122,7 +122,8 @@ public class TransactionUpdateService {
         ChatRoom chatRoom = chatRoomRepository.findByTransaction_TransactionId(transactionId)
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
 
-        chatRoom.endChatRoom();
+        chatRoom.setEndedAt(LocalDateTime.now());
+
         chatRoomRepository.save(chatRoom);
     }
 }

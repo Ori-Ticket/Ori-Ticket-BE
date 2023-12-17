@@ -128,35 +128,25 @@ public class ContactChatRoomControllerTest {
 
     @Test
     @DisplayName("Member 로 ContactChatRoom 조회 성공")
-    void successGetByMember() throws Exception{
+    void successGetByMember() throws Exception {
         //given
-        ContactChatRoom contactChatRoom1 = ContactChatRoom.builder()
+        ContactChatRoom contactChatRoom = ContactChatRoom.builder()
                 .contactChatRoomId(1L)
                 .memberId(1L)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        ContactChatRoom contactChatRoom2 = ContactChatRoom.builder()
-                .contactChatRoomId(2L)
-                .memberId(2L)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        List<ContactChatRoom> contactChatRoomList = Arrays.asList(contactChatRoom1, contactChatRoom2);
-
         given(contactChatRoomService.getByMember(anyLong()))
-                .willReturn(contactChatRoomList);
+                .willReturn(contactChatRoom);
 
         //when
         //then
-        mockMvc.perform(get(BASE_URL+"/member?id=1"))
+        mockMvc.perform(get(BASE_URL + "/member?id=1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[0].contactChatRoomId").value(1L))
-                .andExpect(jsonPath("$.[0].memberId").value(1L))
-                .andExpect(jsonPath("$.[0]createdAt").exists())
-                .andExpect(jsonPath("$.[1].contactChatRoomId").value(2L))
-                .andExpect(jsonPath("$.[1].memberId").value(2L))
-                .andExpect(jsonPath("$.[1]createdAt").exists());
+                .andExpect(jsonPath("$.contactChatRoomId").value(1L))
+                .andExpect(jsonPath("$.memberId").value(1L))
+                .andExpect(jsonPath("$.createdAt").exists());
     }
+
 }

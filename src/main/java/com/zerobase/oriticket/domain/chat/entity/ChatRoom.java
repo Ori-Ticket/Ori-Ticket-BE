@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 @Entity
 @Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,10 +33,6 @@ public class ChatRoom extends BaseChatRoom{
     private Set<Long> members;
 
     private LocalDateTime endedAt;
-
-    public void endChatRoom(){
-        this.endedAt = LocalDateTime.now();
-    }
 
     public static ChatRoom createChatRoom(Transaction transaction, Post salePost){
         Set<Long> members = new HashSet<>();
