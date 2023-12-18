@@ -11,6 +11,7 @@ import com.zerobase.oriticket.domain.transaction.repository.TransactionRepositor
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.zerobase.oriticket.global.constants.PostExceptionStatus.*;
 
@@ -26,6 +27,7 @@ public class PostService {
     private final StadiumRepository stadiumRepository;
     private final AwayTeamRepository awayTeamRepository;
 
+    @Transactional
     public Post registerPost(RegisterPostRequest request) {
 
         // 멤버 객체 가져오도록 수정 예정
@@ -39,12 +41,14 @@ public class PostService {
         return post;
     }
 
+    @Transactional(readOnly = true)
     public Post get(Long salePostId) {
 
         return postRepository.findById(salePostId)
                 .orElseThrow(() -> new CustomException(SALE_POST_NOT_FOUND.getCode(), SALE_POST_NOT_FOUND.getMessage()));
     }
 
+    @Transactional
     public Long delete(Long salePostId) {
         Post salePost = postRepository.findById(salePostId)
                 .orElseThrow(() -> new CustomException(SALE_POST_NOT_FOUND.getCode(), SALE_POST_NOT_FOUND.getMessage()));
@@ -62,20 +66,7 @@ public class PostService {
         return salePost.getSalePostId();
     }
 
-    public Ticket registerTicket(RegisterPostRequest request) {
-
-        Sports sports = sportsRepository.findById(request.getSportsId())
-                .orElseThrow(() -> new CustomException(SALE_POST_NOT_FOUND.getCode(), SALE_POST_NOT_FOUND.getMessage()));
-
-        Stadium stadium = stadiumRepository.findById(request.getStadiumId())
-                .orElseThrow(() -> new CustomException(STADIUM_NOT_FOUND.getCode(), STADIUM_NOT_FOUND.getMessage()));
-
-        AwayTeam awayTeam = awayTeamRepository.findById(request.getAwayTeamId())
-                .orElseThrow(() -> new CustomException(AWAY_TEAM_NOT_FOUND.getCode(), AWAY_TEAM_NOT_FOUND.getMessage()));
-
-        return ticketRepository.save(request.toEntityTicket(sports, stadium, awayTeam));
-    }
-
+    @Transactional
     public Post updateToReported(UpdateStatusToReportedPostRequest request) {
         Post salePost = postRepository.findById(request.getSalePostId())
                 .orElseThrow(() -> new CustomException(SALE_POST_NOT_FOUND.getCode(), SALE_POST_NOT_FOUND.getMessage()));
@@ -85,6 +76,20 @@ public class PostService {
         salePost.setSaleStatus(SaleStatus.REPORTED);
 
         return postRepository.save(salePost);
+    }
+
+    private Ticket registerTicket(RegisterPostRequest request) {
+
+        Sports sports = sportsRepository.findById(request.getSportsId())
+                .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));
+
+        Stadium stadium = stadiumRepository.findById(request.getStadiumId())
+                .orElseThrow(() -> new CustomException(STADIUM_NOT_FOUND.getCode(), STADIUM_NOT_FOUND.getMessage()));
+
+        AwayTeam awayTeam = awayTeamRepository.findById(request.getAwayTeamId())
+                .orElseThrow(() -> new CustomException(AWAY_TEAM_NOT_FOUND.getCode(), AWAY_TEAM_NOT_FOUND.getMessage()));
+
+        return ticketRepository.save(request.toEntityTicket(sports, stadium, awayTeam));
     }
 
     private void validateCanUpdateToReportedStatus(SaleStatus status){

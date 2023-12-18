@@ -28,14 +28,14 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class ContactChatMessageServiceTest {
 
-    @InjectMocks
-    private ContactChatMessageService contactChatMessageService;
-
     @Mock
     private ContactChatRoomRepository contactChatRoomRepository;
 
     @Mock
     private ContactChatMessageRepository contactChatMessageRepository;
+
+    @InjectMocks
+    private ContactChatMessageService contactChatMessageService;
 
     @Test
     @Transactional
@@ -63,14 +63,14 @@ public class ContactChatMessageServiceTest {
                         .build());
 
         //when
-        ContactChatMessage chatMessage = contactChatMessageService.register(11L, sendRequest);
+        ContactChatMessage fetchedChatMessage = contactChatMessageService.register(11L, sendRequest);
 
         //then
-        assertThat(chatMessage.getContactChatMessageId()).isEqualTo(1L);
-        assertThat(chatMessage.getContactChatRoom()).isEqualTo(contactChatRoom);
-        assertThat(chatMessage.getSenderType()).isEqualTo(ContactSenderType.ADMIN);
-        assertThat(chatMessage.getMessage()).isEqualTo("message");
-        assertNotNull(chatMessage.getChattedAt());
+        assertThat(fetchedChatMessage.getContactChatMessageId()).isEqualTo(1L);
+        assertThat(fetchedChatMessage.getContactChatRoom()).isEqualTo(contactChatRoom);
+        assertThat(fetchedChatMessage.getSenderType()).isEqualTo(ContactSenderType.ADMIN);
+        assertThat(fetchedChatMessage.getMessage()).isEqualTo("message");
+        assertNotNull(fetchedChatMessage.getChattedAt());
     }
 
     @Test
@@ -105,20 +105,20 @@ public class ContactChatMessageServiceTest {
 
 
         //when
-        List<ContactChatMessage> contactChatMessages = contactChatMessageService.getByRoom(11L);
+        List<ContactChatMessage> fetchedContactChatMessages = contactChatMessageService.getByRoom(11L);
 
         //then
-        assertThat(contactChatMessages).hasSize(2);
-        assertThat(contactChatMessages.get(0).getContactChatMessageId()).isEqualTo(1L);
-        assertThat(contactChatMessages.get(0).getContactChatRoom()).isEqualTo(contactChatRoom);
-        assertThat(contactChatMessages.get(0).getSenderType()).isEqualTo(ContactSenderType.ADMIN);
-        assertThat(contactChatMessages.get(0).getMessage()).isEqualTo("message");
-        assertNotNull(contactChatMessages.get(0).getChattedAt());
-        assertThat(contactChatMessages.get(1).getContactChatMessageId()).isEqualTo(2L);
-        assertThat(contactChatMessages.get(1).getContactChatRoom()).isEqualTo(contactChatRoom);
-        assertThat(contactChatMessages.get(1).getSenderType()).isEqualTo(ContactSenderType.MEMBER);
-        assertThat(contactChatMessages.get(1).getMessage()).isEqualTo("message");
-        assertNotNull(contactChatMessages.get(1).getChattedAt());
+        assertThat(fetchedContactChatMessages).hasSize(2);
+        assertThat(fetchedContactChatMessages.get(0).getContactChatMessageId()).isEqualTo(1L);
+        assertThat(fetchedContactChatMessages.get(0).getContactChatRoom()).isEqualTo(contactChatRoom);
+        assertThat(fetchedContactChatMessages.get(0).getSenderType()).isEqualTo(ContactSenderType.ADMIN);
+        assertThat(fetchedContactChatMessages.get(0).getMessage()).isEqualTo("message");
+        assertNotNull(fetchedContactChatMessages.get(0).getChattedAt());
+        assertThat(fetchedContactChatMessages.get(1).getContactChatMessageId()).isEqualTo(2L);
+        assertThat(fetchedContactChatMessages.get(1).getContactChatRoom()).isEqualTo(contactChatRoom);
+        assertThat(fetchedContactChatMessages.get(1).getSenderType()).isEqualTo(ContactSenderType.MEMBER);
+        assertThat(fetchedContactChatMessages.get(1).getMessage()).isEqualTo("message");
+        assertNotNull(fetchedContactChatMessages.get(1).getChattedAt());
 
     }
 }

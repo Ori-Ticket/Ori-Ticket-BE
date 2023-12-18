@@ -9,6 +9,7 @@ import com.zerobase.oriticket.domain.post.repository.TicketRepository;
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class AwayTeamService {
     private final SportsRepository sportsRepository;
     private final TicketRepository ticketRepository;
 
+    @Transactional
     public AwayTeam register(RegisterAwayTeamRequest request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
                 .orElseThrow(() -> new CustomException(AWAY_TEAM_NOT_FOUND.getCode(), AWAY_TEAM_NOT_FOUND.getMessage()));
@@ -37,16 +39,19 @@ public class AwayTeamService {
                 .orElseThrow(() -> new CustomException(AWAY_TEAM_NOT_FOUND.getCode(), AWAY_TEAM_NOT_FOUND.getMessage()));
     }
 
+    @Transactional(readOnly = true)
     public List<AwayTeam> getAll() {
 
         return awayTeamRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<AwayTeam> getBySportsId(Long sportsId) {
 
         return awayTeamRepository.findAllBySports_SportsId(sportsId);
     }
 
+    @Transactional
     public Long delete(Long awayTeamId){
         AwayTeam awayTeam = awayTeamRepository.findById(awayTeamId)
                 .orElseThrow(() -> new CustomException(AWAY_TEAM_NOT_FOUND.getCode(), AWAY_TEAM_NOT_FOUND.getMessage()));

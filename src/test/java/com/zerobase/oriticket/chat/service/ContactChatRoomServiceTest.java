@@ -28,11 +28,11 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class ContactChatRoomServiceTest {
 
-    @InjectMocks
-    private ContactChatRoomService contactChatRoomService;
-
     @Mock
     private ContactChatRoomRepository contactChatRoomRepository;
+
+    @InjectMocks
+    private ContactChatRoomService contactChatRoomService;
 
     @Test
     @Transactional
@@ -51,12 +51,12 @@ public class ContactChatRoomServiceTest {
                         .build());
 
         //when
-        ContactChatRoom contactChatRoom = contactChatRoomService.register(registerRequest);
+        ContactChatRoom fetchedContactChatRoom = contactChatRoomService.register(registerRequest);
 
         //then
-        assertThat(contactChatRoom.getContactChatRoomId()).isEqualTo(1L);
-        assertThat(contactChatRoom.getMemberId()).isEqualTo(10L);
-        assertNotNull(contactChatRoom.getCreatedAt());
+        assertThat(fetchedContactChatRoom.getContactChatRoomId()).isEqualTo(1L);
+        assertThat(fetchedContactChatRoom.getMemberId()).isEqualTo(10L);
+        assertNotNull(fetchedContactChatRoom.getCreatedAt());
 
     }
 
@@ -76,12 +76,12 @@ public class ContactChatRoomServiceTest {
                         .build()));
 
         //when
-        ContactChatRoom contactChatRoom = contactChatRoomService.get(1L);
+        ContactChatRoom fetchedContactChatRoom = contactChatRoomService.get(1L);
 
         //then
-        assertThat(contactChatRoom.getContactChatRoomId()).isEqualTo(1L);
-        assertThat(contactChatRoom.getMemberId()).isEqualTo(10L);
-        assertNotNull(contactChatRoom.getCreatedAt());
+        assertThat(fetchedContactChatRoom.getContactChatRoomId()).isEqualTo(1L);
+        assertThat(fetchedContactChatRoom.getMemberId()).isEqualTo(10L);
+        assertNotNull(fetchedContactChatRoom.getCreatedAt());
 
     }
 
@@ -106,16 +106,16 @@ public class ContactChatRoomServiceTest {
                 .willReturn(new PageImpl<>(contactChatRoomList));
 
         //when
-        Page<ContactChatRoom> contactChatRooms = contactChatRoomService.getAll(1, 10);
+        Page<ContactChatRoom> fetchedContactChatRooms = contactChatRoomService.getAll(1, 10);
 
         //then
-        assertThat(contactChatRooms.getContent()).hasSize(2);
-        assertThat(contactChatRooms.getContent().get(0).getContactChatRoomId()).isEqualTo(1L);
-        assertThat(contactChatRooms.getContent().get(0).getMemberId()).isEqualTo(10L);
-        assertNotNull(contactChatRooms.getContent().get(0).getCreatedAt());
-        assertThat(contactChatRooms.getContent().get(1).getContactChatRoomId()).isEqualTo(2L);
-        assertThat(contactChatRooms.getContent().get(1).getMemberId()).isEqualTo(11L);
-        assertNotNull(contactChatRooms.getContent().get(1).getCreatedAt());
+        assertThat(fetchedContactChatRooms.getContent()).hasSize(2);
+        assertThat(fetchedContactChatRooms.getContent().get(0).getContactChatRoomId()).isEqualTo(1L);
+        assertThat(fetchedContactChatRooms.getContent().get(0).getMemberId()).isEqualTo(10L);
+        assertNotNull(fetchedContactChatRooms.getContent().get(0).getCreatedAt());
+        assertThat(fetchedContactChatRooms.getContent().get(1).getContactChatRoomId()).isEqualTo(2L);
+        assertThat(fetchedContactChatRooms.getContent().get(1).getMemberId()).isEqualTo(11L);
+        assertNotNull(fetchedContactChatRooms.getContent().get(1).getCreatedAt());
 
     }
 
@@ -130,11 +130,11 @@ public class ContactChatRoomServiceTest {
                         .build()));
 
         //when
-        ContactChatRoom contactChatRoom = contactChatRoomService.getByMember(10L);
+        ContactChatRoom fetchedContactChatRoom = contactChatRoomService.getByMember(10L);
 
         //then
-        assertThat(contactChatRoom.getContactChatRoomId()).isEqualTo(1L);
-        assertThat(contactChatRoom.getMemberId()).isEqualTo(10L);
-        assertNotNull(contactChatRoom.getCreatedAt());
+        assertThat(fetchedContactChatRoom.getContactChatRoomId()).isEqualTo(1L);
+        assertThat(fetchedContactChatRoom.getMemberId()).isEqualTo(10L);
+        assertNotNull(fetchedContactChatRoom.getCreatedAt());
     }
 }

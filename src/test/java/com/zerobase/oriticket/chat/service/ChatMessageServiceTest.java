@@ -27,14 +27,14 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class ChatMessageServiceTest {
 
-    @InjectMocks
-    private ChatMessageService chatMessageService;
-
     @Mock
     private ChatRoomRepository chatRoomRepository;
 
     @Mock
     private ChatMessageRepository chatMessageRepository;
+
+    @InjectMocks
+    private ChatMessageService chatMessageService;
 
     private final static Long MEMBER_ID = 5L;
     private final static Long CHAT_ROOM_ID = 10L;
@@ -67,14 +67,14 @@ public class ChatMessageServiceTest {
                         .build());
 
         //when
-        ChatMessage chatMessage = chatMessageService.register(CHAT_ROOM_ID, sendRequest);
+        ChatMessage fetchedChatMessage = chatMessageService.register(CHAT_ROOM_ID, sendRequest);
 
         //then
-        assertThat(chatMessage.getChatMessageId()).isEqualTo(4L);
-        assertThat(chatMessage.getChatRoom()).isEqualTo(chatRoom);
-        assertThat(chatMessage.getMemberId()).isEqualTo(5L);
-        assertThat(chatMessage.getMessage()).isEqualTo("message");
-        assertNotNull(chatMessage.getChattedAt());
+        assertThat(fetchedChatMessage.getChatMessageId()).isEqualTo(4L);
+        assertThat(fetchedChatMessage.getChatRoom()).isEqualTo(chatRoom);
+        assertThat(fetchedChatMessage.getMemberId()).isEqualTo(5L);
+        assertThat(fetchedChatMessage.getMessage()).isEqualTo("message");
+        assertNotNull(fetchedChatMessage.getChattedAt());
     }
 
     @Test
@@ -101,26 +101,26 @@ public class ChatMessageServiceTest {
                 .build();
 
 
-        List<ChatMessage> chatMessages = Arrays.asList(chatMessage1, chatMessage2);
+        List<ChatMessage> chatMessageList = Arrays.asList(chatMessage1, chatMessage2);
 
         given(chatMessageRepository.findAllByChatRoom_ChatRoomId(anyLong()))
-                .willReturn(chatMessages);
+                .willReturn(chatMessageList);
 
 
         //when
-        List<ChatMessage> chatMessageList = chatMessageService.getByRoom(1L);
+        List<ChatMessage> fetchedChatMessages = chatMessageService.getByRoom(1L);
 
         //then
-        assertThat(chatMessageList).hasSize(2);
-        assertThat(chatMessageList.get(0).getChatMessageId()).isEqualTo(1L);
-        assertThat(chatMessageList.get(0).getChatRoom()).isEqualTo(chatRoom);
-        assertThat(chatMessageList.get(0).getMemberId()).isEqualTo(40L);
-        assertThat(chatMessageList.get(0).getMessage()).isEqualTo("message1");
-        assertNotNull(chatMessageList.get(0).getChattedAt());
-        assertThat(chatMessageList.get(1).getChatMessageId()).isEqualTo(2L);
-        assertThat(chatMessageList.get(1).getChatRoom()).isEqualTo(chatRoom);
-        assertThat(chatMessageList.get(1).getMemberId()).isEqualTo(50L);
-        assertThat(chatMessageList.get(1).getMessage()).isEqualTo("message2");
-        assertNotNull(chatMessageList.get(1).getChattedAt());
+        assertThat(fetchedChatMessages).hasSize(2);
+        assertThat(fetchedChatMessages.get(0).getChatMessageId()).isEqualTo(1L);
+        assertThat(fetchedChatMessages.get(0).getChatRoom()).isEqualTo(chatRoom);
+        assertThat(fetchedChatMessages.get(0).getMemberId()).isEqualTo(40L);
+        assertThat(fetchedChatMessages.get(0).getMessage()).isEqualTo("message1");
+        assertNotNull(fetchedChatMessages.get(0).getChattedAt());
+        assertThat(fetchedChatMessages.get(1).getChatMessageId()).isEqualTo(2L);
+        assertThat(fetchedChatMessages.get(1).getChatRoom()).isEqualTo(chatRoom);
+        assertThat(fetchedChatMessages.get(1).getMemberId()).isEqualTo(50L);
+        assertThat(fetchedChatMessages.get(1).getMessage()).isEqualTo("message2");
+        assertNotNull(fetchedChatMessages.get(1).getChattedAt());
     }
 }

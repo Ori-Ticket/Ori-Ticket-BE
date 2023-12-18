@@ -9,6 +9,7 @@ import com.zerobase.oriticket.domain.post.repository.TicketRepository;
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class StadiumService {
     private final SportsRepository sportsRepository;
     private final TicketRepository ticketRepository;
 
+    @Transactional
     public Stadium register(RegisterStadiumRequest request) {
         Sports sports = sportsRepository.findById(request.getSportsId())
                 .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));
@@ -30,22 +32,26 @@ public class StadiumService {
         return stadiumRepository.save(request.toEntity(sports));
     }
 
+    @Transactional(readOnly = true)
     public Stadium get(Long stadiumId) {
 
         return stadiumRepository.findById(stadiumId)
                 .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));
     }
 
+    @Transactional(readOnly = true)
     public List<Stadium> getAll() {
 
         return stadiumRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public List<Stadium> getBySportsId(Long sportsId) {
 
         return stadiumRepository.findAllBySports_SportsId(sportsId);
     }
 
+    @Transactional
     public Long delete(Long stadiumId){
         Stadium stadium = stadiumRepository.findById(stadiumId)
                 .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));

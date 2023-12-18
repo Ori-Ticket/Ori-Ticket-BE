@@ -7,6 +7,7 @@ import com.zerobase.oriticket.domain.post.repository.TicketRepository;
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,21 +21,25 @@ public class SportsService {
     private final SportsRepository sportsRepository;
     private final TicketRepository ticketRepository;
 
+    @Transactional
     public Sports register(RegisterSportsRequest request) {
 
         return sportsRepository.save(request.toEntity());
     }
 
+    @Transactional(readOnly = true)
     public Sports get(Long sportsId) {
 
         return sportsRepository.findById(sportsId)
                 .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));
     }
 
+    @Transactional(readOnly = true)
     public List<Sports> getAll() {
         return sportsRepository.findAll();
     }
 
+    @Transactional
     public Long delete(Long sportsId){
         Sports sports = sportsRepository.findById(sportsId)
                 .orElseThrow(() -> new CustomException(SPORTS_NOT_FOUND.getCode(), SPORTS_NOT_FOUND.getMessage()));

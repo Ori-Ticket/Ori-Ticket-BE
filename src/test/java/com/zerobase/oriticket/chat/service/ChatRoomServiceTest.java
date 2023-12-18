@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
@@ -26,11 +25,11 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 public class ChatRoomServiceTest {
 
-    @InjectMocks
-    private ChatRoomService chatRoomService;
-
     @Mock
     private ChatRoomRepository chatRoomRepository;
+
+    @InjectMocks
+    private ChatRoomService chatRoomService;
 
     private Transaction createTransaction(Long transactionId){
         return Transaction.builder()
@@ -54,14 +53,14 @@ public class ChatRoomServiceTest {
                         .build()));
 
         //when
-        ChatRoom chatRoom = chatRoomService.get(5L);
+        ChatRoom fetchedChatRoom = chatRoomService.get(5L);
 
         //then
-        assertThat(chatRoom.getChatRoomId()).isEqualTo(5L);
-        assertThat(chatRoom.getTransaction()).isEqualTo(transaction);
-        assertThat(chatRoom.getMembers()).hasSize(2);
-        assertThat(chatRoom.getMembers()).isEqualTo(members);
-        assertNotNull(chatRoom.getCreatedAt());
+        assertThat(fetchedChatRoom.getChatRoomId()).isEqualTo(5L);
+        assertThat(fetchedChatRoom.getTransaction()).isEqualTo(transaction);
+        assertThat(fetchedChatRoom.getMembers()).hasSize(2);
+        assertThat(fetchedChatRoom.getMembers()).isEqualTo(members);
+        assertNotNull(fetchedChatRoom.getCreatedAt());
     }
 
     @Test
@@ -91,18 +90,18 @@ public class ChatRoomServiceTest {
                 .willReturn(new PageImpl<>(chatRoomList));
 
         //when
-        Page<ChatRoom> chatRooms = chatRoomService.getAll(1, 10);
+        Page<ChatRoom> fetchedChatRooms = chatRoomService.getAll(1, 10);
 
         //then
-        assertThat(chatRooms.getContent()).hasSize(2);
-        assertThat(chatRooms.getContent().get(0).getChatRoomId()).isEqualTo(5L);
-        assertThat(chatRooms.getContent().get(0).getTransaction()).isEqualTo(transaction1);
-        assertThat(chatRooms.getContent().get(0).getMembers()).isEqualTo(members);
-        assertNotNull(chatRooms.getContent().get(0).getCreatedAt());
-        assertThat(chatRooms.getContent().get(1).getChatRoomId()).isEqualTo(6L);
-        assertThat(chatRooms.getContent().get(1).getTransaction()).isEqualTo(transaction2);
-        assertThat(chatRooms.getContent().get(1).getMembers()).isEqualTo(members);
-        assertNotNull(chatRooms.getContent().get(1).getCreatedAt());
+        assertThat(fetchedChatRooms.getContent()).hasSize(2);
+        assertThat(fetchedChatRooms.getContent().get(0).getChatRoomId()).isEqualTo(5L);
+        assertThat(fetchedChatRooms.getContent().get(0).getTransaction()).isEqualTo(transaction1);
+        assertThat(fetchedChatRooms.getContent().get(0).getMembers()).isEqualTo(members);
+        assertNotNull(fetchedChatRooms.getContent().get(0).getCreatedAt());
+        assertThat(fetchedChatRooms.getContent().get(1).getChatRoomId()).isEqualTo(6L);
+        assertThat(fetchedChatRooms.getContent().get(1).getTransaction()).isEqualTo(transaction2);
+        assertThat(fetchedChatRooms.getContent().get(1).getMembers()).isEqualTo(members);
+        assertNotNull(fetchedChatRooms.getContent().get(1).getCreatedAt());
 
     }
 
@@ -121,13 +120,13 @@ public class ChatRoomServiceTest {
                         .build()));
 
         //when
-        ChatRoom chatRoom = chatRoomService.getByTransaction(10L);
+        ChatRoom fetchedChatRoom = chatRoomService.getByTransaction(10L);
 
         //then
-        assertThat(chatRoom.getChatRoomId()).isEqualTo(5L);
-        assertThat(chatRoom.getTransaction()).isEqualTo(transaction);
-        assertThat(chatRoom.getMembers()).isEqualTo(members);
-        assertNotNull(chatRoom.getCreatedAt());
+        assertThat(fetchedChatRoom.getChatRoomId()).isEqualTo(5L);
+        assertThat(fetchedChatRoom.getTransaction()).isEqualTo(transaction);
+        assertThat(fetchedChatRoom.getMembers()).isEqualTo(members);
+        assertNotNull(fetchedChatRoom.getCreatedAt());
 
     }
 
@@ -158,18 +157,18 @@ public class ChatRoomServiceTest {
                 .willReturn(chatRoomList);
 
         //when
-        List<ChatRoom> chatRooms = chatRoomService.getByMember(1L);
+        List<ChatRoom> fetchedChatRooms = chatRoomService.getByMember(1L);
 
         //then
-        assertThat(chatRooms).hasSize(2);
-        assertThat(chatRooms.get(0).getChatRoomId()).isEqualTo(5L);
-        assertThat(chatRooms.get(0).getTransaction()).isEqualTo(transaction1);
-        assertThat(chatRooms.get(0).getMembers()).isEqualTo(members);
-        assertNotNull(chatRooms.get(0).getCreatedAt());
-        assertThat(chatRooms.get(1).getChatRoomId()).isEqualTo(10L);
-        assertThat(chatRooms.get(1).getTransaction()).isEqualTo(transaction2);
-        assertThat(chatRooms.get(1).getMembers()).isEqualTo(members);
-        assertNotNull(chatRooms.get(1).getCreatedAt());
+        assertThat(fetchedChatRooms).hasSize(2);
+        assertThat(fetchedChatRooms.get(0).getChatRoomId()).isEqualTo(5L);
+        assertThat(fetchedChatRooms.get(0).getTransaction()).isEqualTo(transaction1);
+        assertThat(fetchedChatRooms.get(0).getMembers()).isEqualTo(members);
+        assertNotNull(fetchedChatRooms.get(0).getCreatedAt());
+        assertThat(fetchedChatRooms.get(1).getChatRoomId()).isEqualTo(10L);
+        assertThat(fetchedChatRooms.get(1).getTransaction()).isEqualTo(transaction2);
+        assertThat(fetchedChatRooms.get(1).getMembers()).isEqualTo(members);
+        assertNotNull(fetchedChatRooms.get(1).getCreatedAt());
 
     }
 }
