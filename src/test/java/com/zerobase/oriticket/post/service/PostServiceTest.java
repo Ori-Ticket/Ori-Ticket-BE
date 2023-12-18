@@ -87,7 +87,12 @@ public class PostServiceTest {
                 .build();
     }
 
-    private RegisterPostRequest createRegisterPostRequest(Long memberId, Long sportsId, Long stadiumId, Long awayTeamId){
+    private RegisterPostRequest createRegisterPostRequest(
+            Long memberId,
+            Long sportsId,
+            Long stadiumId,
+            Long awayTeamId
+    ){
         return RegisterPostRequest.builder()
                 .memberId(memberId)
                 .sportsId(sportsId)
