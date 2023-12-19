@@ -86,7 +86,7 @@ public class TransactionServiceTest {
 
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(salePost));
-        given(transactionRepository.validateCanRegisterByStatus(any(Post.class)))
+        given(transactionRepository.validateCanRegisterTransaction(any(Post.class)))
                 .willReturn(true);
         given(transactionRepository.save(any(Transaction.class)))
                 .willReturn(transaction);

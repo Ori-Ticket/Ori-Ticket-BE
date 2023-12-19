@@ -38,7 +38,7 @@ public class TransactionService {
 
         // 멤버 유효성 체크
 
-        if (!transactionRepository.validateCanRegisterByStatus(salePost)){
+        if (!transactionRepository.validateCanRegisterTransaction(salePost)){
             throw new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage());
         }
 
