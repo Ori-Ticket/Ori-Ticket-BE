@@ -25,7 +25,7 @@ public class TransactionSearchService {
 
         Pageable pageable = PageRequest.of(page-1, size, sort);
 
-        return transactionSearchRepository.findByStatus(transactionStatus, pageable);
+        return transactionSearchRepository.findAllByStatus(transactionStatus, pageable);
     }
 
 }

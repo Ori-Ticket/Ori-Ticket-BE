@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface AwayTeamRepository extends JpaRepository<AwayTeam, Long> {
 
-    List<AwayTeam> findBySports(Sports sports);
+    List<AwayTeam> findAllBySports_SportsId(Long sportsId);
 }

@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 public interface TransactionSearchRepository extends ElasticsearchRepository<TransactionSearchDocument, Long> {
-    Page<TransactionSearchDocument> findByStatus(TransactionStatus transactionStatus, Pageable pageable);
+    Page<TransactionSearchDocument> findAllByStatus(TransactionStatus transactionStatus, Pageable pageable);
 }
