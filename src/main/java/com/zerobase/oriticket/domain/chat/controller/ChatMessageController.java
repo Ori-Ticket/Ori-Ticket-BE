@@ -25,7 +25,7 @@ public class ChatMessageController {
     private final ContactChatMessageService contactChatMessageService;
 
     @GetMapping
-    public ResponseEntity<List<ChatMessageResponse>> getALlChatMessage(
+    public ResponseEntity<List<ChatMessageResponse>> getAllChatMessage(
             @RequestParam("id") Long chatRoomId
     ){
         List<ChatMessage> chatMessages = chatMessageService.getByRoom(chatRoomId);
@@ -37,7 +37,7 @@ public class ChatMessageController {
     }
 
     @GetMapping("/contact")
-    public ResponseEntity<List<ContactChatMessageResponse>> getALlContactMessage(
+    public ResponseEntity<List<ContactChatMessageResponse>> getAllContactMessage(
             @RequestParam("id") Long contactChatRoomId
     ){
         List<ContactChatMessage> contactChatMessages = contactChatMessageService.getByRoom(contactChatRoomId);
