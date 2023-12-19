@@ -23,24 +23,19 @@ public class PostSearchService {
         return searchByCategoryName(value, page, size);
     }
 
-    public Page<PostSearchDocument> searchAll(int page, int size){
+    private Page<PostSearchDocument> searchAll(int page, int size){
 
         Pageable pageable = PageRequest.of(page-1, size);
 
-        Page<PostSearchDocument> postSearchDocuments = postSearchRepository.findAll(pageable);
-
-        return postSearchDocuments;
+        return postSearchRepository.findAll(pageable);
     }
 
-    public Page<PostSearchDocument> searchByCategoryName(String value, int page, int size){
+    private Page<PostSearchDocument> searchByCategoryName(String value, int page, int size){
 
         Pageable pageable = PageRequest.of(page-1, size);
 
-        Page<PostSearchDocument> postSearchDocuments =
-                postSearchRepository.findAllBySportsNameContainingOrStadiumNameContainingOrHomeTeamNameContainingOrAwayTeamNameContaining
-                        (value, value, value, value, pageable);
-
-        return postSearchDocuments;
+        return postSearchRepository.findAllBySportsNameContainingOrStadiumNameContainingOrHomeTeamNameContainingOrAwayTeamNameContaining
+                (value, value, value, value, pageable);
     }
 
 }

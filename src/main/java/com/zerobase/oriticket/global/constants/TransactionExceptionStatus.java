@@ -14,6 +14,6 @@ public enum TransactionExceptionStatus {
     CANNOT_MODIFY_TRANSACTION_STATE_OF_CANCELED(HttpStatus.BAD_REQUEST.value(), "취소된 거래는 상태를 변경할 수 없습니다."),
     CANNOT_MODIFY_TRANSACTION_STATE_OF_REPORTED(HttpStatus.BAD_REQUEST.value(), "신고된 거래는 상태를 변경할 수 없습니다.");
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 }
