@@ -4,6 +4,7 @@ import com.zerobase.oriticket.domain.chat.dto.RegisterContactChatRoomRequest;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ContactChatRoomRepository;
 import com.zerobase.oriticket.domain.chat.service.ContactChatRoomService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,6 +37,7 @@ public class ContactChatRoomServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("문의 채팅 방 등록 성공")
     void successRegister(){
         //given
         RegisterContactChatRoomRequest registerRequest =
@@ -61,6 +63,7 @@ public class ContactChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("문의 채팅 방 조회 성공")
     void successGet(){
         //given
         RegisterContactChatRoomRequest registerRequest =
@@ -86,6 +89,7 @@ public class ContactChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("모든 문의 채팅 방 조회 성공")
     void successGetAll(){
         //given
         ContactChatRoom contactChatRoom1 = ContactChatRoom.builder()
@@ -120,6 +124,7 @@ public class ContactChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("Member 로 문의 채팅 방 조회 성공")
     void successGetByMember(){
         //given
         given(contactChatRoomRepository.findByMemberId(anyLong()))

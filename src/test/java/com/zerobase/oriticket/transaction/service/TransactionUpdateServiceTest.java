@@ -13,6 +13,7 @@ import com.zerobase.oriticket.domain.transaction.dto.UpdateStatusTransactionRequ
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
 import com.zerobase.oriticket.domain.transaction.service.TransactionUpdateService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -80,6 +81,7 @@ public class TransactionUpdateServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Transaction 상태 Received 로 업데이트 성공")
     void successUpdateToReceived(){
         //given
         UpdateStatusToReceivedTransactionRequest updateRequest =
@@ -126,6 +128,7 @@ public class TransactionUpdateServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Transaction 상태 Completed 로 업데이트 성공")
     void successUpdateToCompleted(){
         //given
         UpdateStatusTransactionRequest updateRequest =
@@ -181,6 +184,7 @@ public class TransactionUpdateServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Transaction 상태 Canceled 로 업데이트 성공")
     void successUpdateToCanceled(){
         //given
         UpdateStatusTransactionRequest updateRequest =
@@ -236,6 +240,7 @@ public class TransactionUpdateServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Transaction 상태 Reported 로 업데이트 성공")
     void successUpdateToReported(){
         //given
         UpdateStatusTransactionRequest updateRequest =

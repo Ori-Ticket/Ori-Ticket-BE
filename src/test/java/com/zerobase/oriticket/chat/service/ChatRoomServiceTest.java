@@ -4,6 +4,7 @@ import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
 import com.zerobase.oriticket.domain.chat.service.ChatRoomService;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,6 +39,7 @@ public class ChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("채팅 방 조회 성공")
     void successGet(){
         //given
         Transaction transaction = createTransaction(10L);
@@ -64,6 +66,7 @@ public class ChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("모든 채팅 방 조회 성공")
     void successGetAll(){
         //given
         Set<Long> members = new HashSet<>(Arrays.asList(1L, 2L));
@@ -106,6 +109,7 @@ public class ChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("Transaction 으로 채팅 방 조회 성공")
     void successGetByTransaction(){
         //given
         Set<Long> members = new HashSet<>(Arrays.asList(1L, 2L));
@@ -131,6 +135,7 @@ public class ChatRoomServiceTest {
     }
 
     @Test
+    @DisplayName("Member 로 채팅 방 조회 성공")
     void successGetByMember(){
         //given
         Set<Long> members = new HashSet<>(Arrays.asList(1L, 2L));

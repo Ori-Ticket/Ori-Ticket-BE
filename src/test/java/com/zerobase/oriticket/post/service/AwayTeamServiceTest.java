@@ -7,6 +7,7 @@ import com.zerobase.oriticket.domain.post.repository.AwayTeamRepository;
 import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.post.repository.TicketRepository;
 import com.zerobase.oriticket.domain.post.service.AwayTeamService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -65,6 +66,7 @@ public class AwayTeamServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("AwayTeam 등록 성공")
     void successRegister(){
         //given
         RegisterAwayTeamRequest registerRequest =
@@ -90,6 +92,7 @@ public class AwayTeamServiceTest {
     }
 
     @Test
+    @DisplayName("AwayTeam 조회 성공")
     void successGet(){
         //given
         AwayTeam awayTeam = createAwayTeam(1L, 1L, "기아");
@@ -107,6 +110,7 @@ public class AwayTeamServiceTest {
     }
 
     @Test
+    @DisplayName("모든 AwayTeam 조회 성공")
     void successGetAll(){
         //given
         AwayTeam awayTeam1 = createAwayTeam(1L, 1L, "기아");
@@ -130,6 +134,7 @@ public class AwayTeamServiceTest {
     }
 
     @Test
+    @DisplayName("SportsId 로 AwayTeam 조회 성공")
     void successGetBySportsId(){
         //given
         AwayTeam awayTeam1 = createAwayTeam(1L, 1L, "기아");
@@ -155,6 +160,7 @@ public class AwayTeamServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("AwayTeam 삭제 성공")
     void successDelete(){
         //given
         AwayTeam awayTeam = createAwayTeam(1L, 1L, "기아");

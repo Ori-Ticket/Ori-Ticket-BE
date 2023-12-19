@@ -9,6 +9,7 @@ import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.*;
 import com.zerobase.oriticket.domain.post.service.PostService;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -138,6 +139,7 @@ public class PostServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Post 등록 성공")
     void successRegisterPost(){
         //given
         RegisterPostRequest registerRequest = createRegisterPostRequest(11L, 1L, 2L, 1L);
@@ -192,6 +194,7 @@ public class PostServiceTest {
     }
 
     @Test
+    @DisplayName("Post 조회 성공")
     void successGet(){
         //given
         Sports sports = createSports(2L, "농구");
@@ -215,6 +218,7 @@ public class PostServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Post 삭제 성공")
     void successDelete(){
         //given
         Sports sports = createSports(2L, "농구");
@@ -280,6 +284,7 @@ public class PostServiceTest {
     }
 
     @Test
+    @DisplayName("Post 상태 Reported 로 업데이트 성공")
     void successUpdateToReported(){
         //given
         UpdateStatusToReportedPostRequest updateRequest =

@@ -7,6 +7,7 @@ import com.zerobase.oriticket.domain.post.repository.SportsRepository;
 import com.zerobase.oriticket.domain.post.repository.StadiumRepository;
 import com.zerobase.oriticket.domain.post.repository.TicketRepository;
 import com.zerobase.oriticket.domain.post.service.StadiumService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -59,6 +60,7 @@ public class StadiumServiceTest {
     
     @Test
     @Transactional
+    @DisplayName("Stadium 등록 성공")
     void successRegister(){
         //given
         RegisterStadiumRequest registerRequest =
@@ -87,6 +89,7 @@ public class StadiumServiceTest {
     }
 
     @Test
+    @DisplayName("Stadium 조회 성공")
     void successGet(){
         //given
         Sports sports = createSports(2L, "농구");
@@ -106,6 +109,7 @@ public class StadiumServiceTest {
     }
 
     @Test
+    @DisplayName("모든 Stadium 조회 성공")
     void successGetAll(){
         //given
         Sports sports = createSports(1L, "야구");
@@ -133,6 +137,7 @@ public class StadiumServiceTest {
     }
 
     @Test
+    @DisplayName("SportsId 로 Stadium 조회 성공")
     void successGetBySportsId(){
         //given
         Sports sports = createSports(1L, "야구");
@@ -161,6 +166,7 @@ public class StadiumServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Stadium 삭제 성공")
     void successDelete(){
         //given
         Sports sports = createSports(1L, "야구");

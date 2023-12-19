@@ -10,6 +10,7 @@ import com.zerobase.oriticket.domain.transaction.dto.RegisterTransactionRequest;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
 import com.zerobase.oriticket.domain.transaction.service.TransactionService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -72,6 +73,7 @@ public class TransactionServiceTest {
 
     @Test
     @Transactional
+    @DisplayName("Transaction 등록 성공")
     void successRegister(){
         //given
         RegisterTransactionRequest registerRequest =
@@ -119,6 +121,7 @@ public class TransactionServiceTest {
     }
 
     @Test
+    @DisplayName("Transaction 조회 성공")
     void successGet(){
         //given
         Post salePost = createPost(10L);
@@ -140,6 +143,7 @@ public class TransactionServiceTest {
     }
 
     @Test
+    @DisplayName("모든 Transaction 조회 성공")
     void successGetAll(){
         //given
         Post salePost1 = createPost(10L);

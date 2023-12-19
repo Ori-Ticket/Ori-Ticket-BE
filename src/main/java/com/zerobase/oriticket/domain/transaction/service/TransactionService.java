@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.zerobase.oriticket.global.constants.PostExceptionStatus.SALE_POST_NOT_FOUND;
 import static com.zerobase.oriticket.global.constants.TransactionExceptionStatus.TRANSACTION_NOT_FOUND;
@@ -29,6 +30,7 @@ public class TransactionService {
 
     private static final String STARTED_AT = "startedAt";
 
+    @Transactional
     public Transaction register(RegisterTransactionRequest request){
 
         Post salePost = postRepository.findById(request.getSalePostId())
@@ -48,12 +50,14 @@ public class TransactionService {
         return transaction;
     }
 
+    @Transactional(readOnly = true)
     public Transaction get(Long transactionId){
 
         return transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage()));
     }
 
+    @Transactional(readOnly = true)
     public Page<Transaction> getAll(int page, int size) {
         Sort sort = Sort.by(STARTED_AT).descending();
 

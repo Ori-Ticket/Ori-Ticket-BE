@@ -15,6 +15,7 @@ import com.zerobase.oriticket.domain.transaction.repository.TransactionRepositor
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +31,7 @@ public class TransactionUpdateService {
     private final TransactionSearchRepository transactionSearchRepository;
     private final ChatRoomRepository chatRoomRepository;
 
+    @Transactional
     public Transaction updateToReceived(UpdateStatusToReceivedTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
                 .orElseThrow(() -> new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage()));
@@ -46,6 +48,7 @@ public class TransactionUpdateService {
         return transactionRepository.save(transaction);
     }
 
+    @Transactional
     public Transaction updateToCompleted(UpdateStatusTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
                 .orElseThrow(() -> new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage()));
@@ -65,6 +68,7 @@ public class TransactionUpdateService {
         return transactionRepository.save(transaction);
     }
 
+    @Transactional
     public Transaction updateToCanceled(UpdateStatusTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
                 .orElseThrow(() -> new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage()));
@@ -84,6 +88,7 @@ public class TransactionUpdateService {
         return transactionRepository.save(transaction);
     }
 
+    @Transactional
     public Transaction updateToReported(UpdateStatusTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
                 .orElseThrow(() -> new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage()));
