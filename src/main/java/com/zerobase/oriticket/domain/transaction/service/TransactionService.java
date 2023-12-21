@@ -1,5 +1,7 @@
 package com.zerobase.oriticket.domain.transaction.service;
 
+import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
+import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
@@ -27,6 +29,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionSearchRepository transactionSearchRepository;
     private final PostRepository postRepository;
+    private final PostSearchRepository postSearchRepository;
 
     private static final String STARTED_AT = "startedAt";
 
@@ -46,6 +49,7 @@ public class TransactionService {
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
         salePost.setSaleStatus(SaleStatus.TRADING);
         postRepository.save(salePost);
+        postSearchRepository.save(PostSearchDocument.fromEntity(salePost));
 
         return transaction;
     }

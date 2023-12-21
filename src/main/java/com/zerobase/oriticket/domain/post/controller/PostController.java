@@ -38,14 +38,14 @@ public class PostController {
     }
 
     @DeleteMapping
-    private Long delete(
+    public Long delete(
             @RequestParam("id") Long salePostId
     ) {
         return postService.delete(salePostId);
     }
 
     @PatchMapping("/report")
-    private ResponseEntity<PostResponse> updateToReported(
+    public ResponseEntity<PostResponse> updateToReported(
             @RequestBody UpdateStatusToReportedPostRequest request
     ){
         Post salePost = postService.updateToReported(request);
