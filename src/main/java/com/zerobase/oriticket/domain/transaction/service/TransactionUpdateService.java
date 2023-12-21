@@ -2,6 +2,8 @@ package com.zerobase.oriticket.domain.transaction.service;
 
 import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
+import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
+import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
@@ -28,6 +30,7 @@ public class TransactionUpdateService {
 
     private final TransactionRepository transactionRepository;
     private final PostRepository postRepository;
+    private final PostSearchRepository postSearchRepository;
     private final TransactionSearchRepository transactionSearchRepository;
     private final ChatRoomRepository chatRoomRepository;
 
@@ -62,6 +65,7 @@ public class TransactionUpdateService {
         Post salePost = transaction.getSalePost();
         salePost.setSaleStatus(SaleStatus.SOLD);
         postRepository.save(salePost);
+        postSearchRepository.save(PostSearchDocument.fromEntity(salePost));
 
         endChatRoom(transaction.getTransactionId());
 
@@ -82,6 +86,7 @@ public class TransactionUpdateService {
         Post salePost = transaction.getSalePost();
         salePost.setSaleStatus(SaleStatus.FOR_SALE);
         postRepository.save(salePost);
+        postSearchRepository.save(PostSearchDocument.fromEntity(salePost));
 
         endChatRoom(transaction.getTransactionId());
 
@@ -102,6 +107,7 @@ public class TransactionUpdateService {
         Post salePost = transaction.getSalePost();
         salePost.setSaleStatus(SaleStatus.REPORTED);
         postRepository.save(salePost);
+        postSearchRepository.save(PostSearchDocument.fromEntity(salePost));
 
         endChatRoom(transaction.getTransactionId());
 

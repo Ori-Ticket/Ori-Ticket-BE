@@ -305,14 +305,36 @@ public class PostServiceTest {
         given(postRepository.save(any(Post.class)))
                 .willReturn(reportedPost);
 
+        ArgumentCaptor<PostSearchDocument> captor =
+                ArgumentCaptor.forClass(PostSearchDocument.class);
+
         //when
         Post fetchedPost = postService.updateToReported(updateRequest);
 
         //then
+        then(postSearchRepository).should(times(1)).save(captor.capture());
+        PostSearchDocument fetchedPostDocumentCaptor = captor.getValue();
+
         assertThat(fetchedPost.getSalePostId()).isEqualTo(3L);
         assertThat(fetchedPost.getMemberId()).isEqualTo(2L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.REPORTED);
+
+        assertThat(fetchedPostDocumentCaptor.getSalePostId()).isEqualTo(3L);
+        assertThat(fetchedPostDocumentCaptor.getMemberName()).isEqualTo("seller name");
+        assertThat(fetchedPostDocumentCaptor.getSportsName()).isEqualTo("농구");
+        assertThat(fetchedPostDocumentCaptor.getStadiumName()).isEqualTo("고척돔");
+        assertThat(fetchedPostDocumentCaptor.getHomeTeamName()).isEqualTo("키움");
+        assertThat(fetchedPostDocumentCaptor.getAwayTeamName()).isEqualTo("기아");
+        assertThat(fetchedPostDocumentCaptor.getQuantity()).isEqualTo(1);
+        assertThat(fetchedPostDocumentCaptor.getSalePrice()).isEqualTo(10000);
+        assertThat(fetchedPostDocumentCaptor.getOriginalPrice()).isEqualTo(15000);
+        assertNotNull(fetchedPostDocumentCaptor.getExpirationAt());
+        assertThat(fetchedPostDocumentCaptor.getIsSuccessive()).isEqualTo(false);
+        assertThat(fetchedPostDocumentCaptor.getSeatInfo()).isEqualTo("A열 4석");
+        assertThat(fetchedPostDocumentCaptor.getImgUrl()).isEqualTo("image url");
+        assertThat(fetchedPostDocumentCaptor.getNote()).isEqualTo("note");
+        assertThat(fetchedPostDocumentCaptor.getSaleStatus()).isEqualTo(SaleStatus.REPORTED);
         assertNotNull(fetchedPost.getCreatedAt());
     }
 }
