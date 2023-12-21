@@ -74,8 +74,10 @@ public class PostService {
         validateCanUpdateToReportedStatus(salePost.getSaleStatus());
 
         salePost.setSaleStatus(SaleStatus.REPORTED);
+        Post updatedPost = postRepository.save(salePost);
+        postSearchRepository.save(PostSearchDocument.fromEntity(updatedPost));
 
-        return postRepository.save(salePost);
+        return updatedPost;
     }
 
     private Ticket registerTicket(RegisterPostRequest request) {
