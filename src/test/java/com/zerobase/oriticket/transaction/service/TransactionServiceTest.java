@@ -178,7 +178,8 @@ public class TransactionServiceTest {
 
         assertThat(fetchedTransactionDocument.getTransactionId()).isEqualTo(10L);
         assertThat(fetchedTransactionDocument.getSalePostId()).isEqualTo(1L);
-        assertThat(fetchedTransactionDocument.getMemberName()).isEqualTo("buyer name");
+        assertThat(fetchedTransactionDocument.getSellerName()).isEqualTo("seller name");
+        assertThat(fetchedTransactionDocument.getBuyerName()).isEqualTo("buyer name");
         assertThat(fetchedTransactionDocument.getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransactionDocument.getStartedAt());
 
