@@ -1,6 +1,5 @@
 package com.zerobase.oriticket.transaction.service;
 
-import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
@@ -180,7 +179,8 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransactionDocument.getTransactionId()).isEqualTo(11L);
         assertThat(fetchedTransactionDocument.getSalePostId()).isEqualTo(1L);
-        assertThat(fetchedTransactionDocument.getMemberName()).isEqualTo("buyer name");
+        assertThat(fetchedTransactionDocument.getSellerName()).isEqualTo("seller name");
+        assertThat(fetchedTransactionDocument.getBuyerName()).isEqualTo("buyer name");
         assertThat(fetchedTransactionDocument.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactionDocument.getStatus()).isEqualTo(TransactionStatus.RECEIVED);
         assertNotNull(fetchedTransactionDocument.getReceivedAt());
@@ -206,9 +206,6 @@ public class TransactionUpdateServiceTest {
 
         given(transactionRepository.findById(anyLong()))
                 .willReturn(Optional.of(transaction));
-
-        given(chatRoomRepository.findByTransaction_TransactionId(anyLong()))
-                .willReturn(Optional.of(ChatRoom.builder().build()));
 
         given(transactionRepository.save(any(Transaction.class)))
                 .willReturn(transaction);
@@ -237,7 +234,8 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransactionDocument.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransactionDocument.getSalePostId()).isEqualTo(2L);
-        assertThat(fetchedTransactionDocument.getMemberName()).isEqualTo("buyer name");
+        assertThat(fetchedTransactionDocument.getSellerName()).isEqualTo("seller name");
+        assertThat(fetchedTransactionDocument.getBuyerName()).isEqualTo("buyer name");
         assertThat(fetchedTransactionDocument.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactionDocument.getStatus()).isEqualTo(TransactionStatus.COMPLETED);
         assertNotNull(fetchedTransactionDocument.getReceivedAt());
@@ -267,9 +265,6 @@ public class TransactionUpdateServiceTest {
         given(transactionRepository.findById(anyLong()))
                 .willReturn(Optional.of(transaction));
 
-        given(chatRoomRepository.findByTransaction_TransactionId(anyLong()))
-                .willReturn(Optional.of(ChatRoom.builder().build()));
-
         given(transactionRepository.save(any(Transaction.class)))
                 .willReturn(transaction);
 
@@ -297,7 +292,8 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransactionDocument.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransactionDocument.getSalePostId()).isEqualTo(2L);
-        assertThat(fetchedTransactionDocument.getMemberName()).isEqualTo("buyer name");
+        assertThat(fetchedTransactionDocument.getSellerName()).isEqualTo("seller name");
+        assertThat(fetchedTransactionDocument.getBuyerName()).isEqualTo("buyer name");
         assertThat(fetchedTransactionDocument.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactionDocument.getStatus()).isEqualTo(TransactionStatus.CANCELED);
         assertNotNull(fetchedTransactionDocument.getReceivedAt());
@@ -327,9 +323,6 @@ public class TransactionUpdateServiceTest {
         given(transactionRepository.findById(anyLong()))
                 .willReturn(Optional.of(transaction));
 
-        given(chatRoomRepository.findByTransaction_TransactionId(anyLong()))
-                .willReturn(Optional.of(ChatRoom.builder().build()));
-
         given(transactionRepository.save(any(Transaction.class)))
                 .willReturn(transaction);
 
@@ -357,7 +350,8 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransactionDocument.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransactionDocument.getSalePostId()).isEqualTo(2L);
-        assertThat(fetchedTransactionDocument.getMemberName()).isEqualTo("buyer name");
+        assertThat(fetchedTransactionDocument.getSellerName()).isEqualTo("seller name");
+        assertThat(fetchedTransactionDocument.getBuyerName()).isEqualTo("buyer name");
         assertThat(fetchedTransactionDocument.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactionDocument.getStatus()).isEqualTo(TransactionStatus.REPORTED);
         assertNotNull(fetchedTransactionDocument.getReceivedAt());

@@ -130,11 +130,13 @@ public class TransactionUpdateService {
     }
 
     private void endChatRoom(Long transactionId){
-        ChatRoom chatRoom = chatRoomRepository.findByTransaction_TransactionId(transactionId)
-                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
+        if(chatRoomRepository.existsByTransaction_TransactionId(transactionId)){
+            ChatRoom chatRoom = chatRoomRepository.findByTransaction_TransactionId(transactionId)
+                    .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
 
-        chatRoom.setEndedAt(LocalDateTime.now());
+            chatRoom.setEndedAt(LocalDateTime.now());
 
-        chatRoomRepository.save(chatRoom);
+            chatRoomRepository.save(chatRoom);
+        }
     }
 }

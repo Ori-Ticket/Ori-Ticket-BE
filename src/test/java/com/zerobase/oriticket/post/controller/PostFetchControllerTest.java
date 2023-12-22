@@ -1,6 +1,5 @@
 package com.zerobase.oriticket.post.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.controller.PostFetchController;
 import com.zerobase.oriticket.domain.post.entity.*;
@@ -19,7 +18,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,9 +31,6 @@ public class PostFetchControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private final static Integer QUANTITY = 1;
     private final static Integer SALE_PRICE = 10000;
