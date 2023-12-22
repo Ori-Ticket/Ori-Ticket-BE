@@ -69,7 +69,7 @@ public class    TransactionControllerTest {
 
         given(transactionService.register(any(RegisterTransactionRequest.class)))
                 .willReturn(Transaction.builder()
-                        .transactionId(POST_ID)
+                        .transactionId(TRANSACTION_ID)
                         .salePost(salePost)
                         .memberId(BUYER_ID)
                         .status(TransactionStatus.PENDING)

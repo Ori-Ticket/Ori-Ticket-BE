@@ -12,7 +12,8 @@ public class TransactionResponse {
 
     private Long transactionId;
     private Long salePostId;
-    private Long memberId;
+    private Long sellerId;
+    private Long buyerId;
     private Integer payAmount;
     private String status;
     private LocalDateTime receivedAt;
@@ -23,7 +24,8 @@ public class TransactionResponse {
         return TransactionResponse.builder()
                 .transactionId(transaction.getTransactionId())
                 .salePostId(transaction.getSalePost().getSalePostId())
-                .memberId(transaction.getMemberId())
+                .sellerId(transaction.getSalePost().getMemberId())
+                .buyerId(transaction.getMemberId())
                 .payAmount(transaction.getPayAmount())
                 .status(transaction.getStatus().getState())
                 .receivedAt(transaction.getReceivedAt())
