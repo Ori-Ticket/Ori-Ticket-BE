@@ -41,6 +41,13 @@ public class SportsControllerTest {
     private final static Long SPORTS_ID = 1L;
     private final static String SPORTS_NAME = "야구";
 
+    private Sports createSports(Long sportsId, String sportsName){
+        return Sports.builder()
+                .sportsId(sportsId)
+                .sportsName(sportsName)
+                .build();
+    }
+
     @Test
     @DisplayName("Sports 등록 성공")
     void successRegister() throws Exception{
@@ -49,12 +56,10 @@ public class SportsControllerTest {
                 RegisterSportsRequest.builder()
                         .sportsName(SPORTS_NAME)
                         .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
 
         given(sportsService.register(any(RegisterSportsRequest.class)))
-                .willReturn(Sports.builder()
-                        .sportsId(SPORTS_ID)
-                        .sportsName(SPORTS_NAME)
-                        .build());
+                .willReturn(sports);
 
         //when
         //then
@@ -71,11 +76,10 @@ public class SportsControllerTest {
     @DisplayName("Sports 조회 성공")
     void successGet() throws Exception{
         //given
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+
         given(sportsService.get(anyLong()))
-                .willReturn(Sports.builder()
-                        .sportsId(SPORTS_ID)
-                        .sportsName(SPORTS_NAME)
-                        .build());
+                .willReturn(sports);
 
         //when
         //then
@@ -90,21 +94,9 @@ public class SportsControllerTest {
     @DisplayName("Sports 모두 조회 성공")
     void successGetAll() throws Exception{
         //given
-        Sports sports1 = Sports.builder()
-                .sportsId(1L)
-                .sportsName("야구")
-                .build();
-
-        Sports sports2 = Sports.builder()
-                .sportsId(2L)
-                .sportsName("축구")
-                .build();
-
-        Sports sports3 = Sports.builder()
-                .sportsId(3L)
-                .sportsName("농구")
-                .build();
-
+        Sports sports1 = createSports(1L, "야구");
+        Sports sports2 = createSports(2L, "축구");
+        Sports sports3 = createSports(3L, "농구");
         List<Sports> sportsList 
                 = Arrays.asList(sports1, sports2, sports3);
 

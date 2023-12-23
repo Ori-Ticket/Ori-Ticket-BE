@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -104,7 +104,7 @@ public class PostFetchControllerTest {
         Post post2 = createPost(2L, 1L, SaleStatus.TRADING, ticket2);
         List<Post> postList = Arrays.asList(post1, post2);
 
-        given(postFetchService.get(anyLong(), any(List.class)))
+        given(postFetchService.get(anyLong(), anyList()))
                 .willReturn(postList);
 
         //when
@@ -114,9 +114,10 @@ public class PostFetchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].salePostId").value(1L))
                 .andExpect(jsonPath("$.[0].memberId").value(1L))
-                .andExpect(jsonPath("$.[0].ticket.sportsId").value(1L))
-                .andExpect(jsonPath("$.[0].ticket.stadiumId").value(1L))
-                .andExpect(jsonPath("$.[0].ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.[0].ticket.sportsName").value("야구"))
+                .andExpect(jsonPath("$.[0].ticket.stadiumName").value("고척돔"))
+                .andExpect(jsonPath("$.[0].ticket.homeTeamName").value("키움"))
+                .andExpect(jsonPath("$.[0].ticket.awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.[0].ticket.quantity").value(1))
                 .andExpect(jsonPath("$.[0].ticket.salePrice").value(10000))
                 .andExpect(jsonPath("$.[0].ticket.originalPrice").value(15000))
@@ -129,9 +130,10 @@ public class PostFetchControllerTest {
                 .andExpect(jsonPath("$.[0].createdAt").exists())
                 .andExpect(jsonPath("$.[1].salePostId").value(2L))
                 .andExpect(jsonPath("$.[1].memberId").value(1L))
-                .andExpect(jsonPath("$.[1].ticket.sportsId").value(1L))
-                .andExpect(jsonPath("$.[1].ticket.stadiumId").value(1L))
-                .andExpect(jsonPath("$.[1].ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.[1].ticket.sportsName").value("야구"))
+                .andExpect(jsonPath("$.[1].ticket.stadiumName").value("고척돔"))
+                .andExpect(jsonPath("$.[1].ticket.homeTeamName").value("키움"))
+                .andExpect(jsonPath("$.[1].ticket.awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.[1].ticket.quantity").value(1))
                 .andExpect(jsonPath("$.[1].ticket.salePrice").value(10000))
                 .andExpect(jsonPath("$.[1].ticket.originalPrice").value(15000))
@@ -157,7 +159,7 @@ public class PostFetchControllerTest {
         Post post2 = createPost(2L, 1L, SaleStatus.REPORTED, ticket2);
         List<Post> postList = Arrays.asList(post1, post2);
 
-        given(postFetchService.get(anyLong(), any(List.class)))
+        given(postFetchService.get(anyLong(), anyList()))
                 .willReturn(postList);
 
         //when
@@ -167,9 +169,10 @@ public class PostFetchControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].salePostId").value(1L))
                 .andExpect(jsonPath("$.[0].memberId").value(1L))
-                .andExpect(jsonPath("$.[0].ticket.sportsId").value(1L))
-                .andExpect(jsonPath("$.[0].ticket.stadiumId").value(1L))
-                .andExpect(jsonPath("$.[0].ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.[0].ticket.sportsName").value("야구"))
+                .andExpect(jsonPath("$.[0].ticket.stadiumName").value("고척돔"))
+                .andExpect(jsonPath("$.[0].ticket.homeTeamName").value("키움"))
+                .andExpect(jsonPath("$.[0].ticket.awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.[0].ticket.quantity").value(1))
                 .andExpect(jsonPath("$.[0].ticket.salePrice").value(10000))
                 .andExpect(jsonPath("$.[0].ticket.originalPrice").value(15000))
@@ -182,9 +185,10 @@ public class PostFetchControllerTest {
                 .andExpect(jsonPath("$.[0].createdAt").exists())
                 .andExpect(jsonPath("$.[1].salePostId").value(2L))
                 .andExpect(jsonPath("$.[1].memberId").value(1L))
-                .andExpect(jsonPath("$.[1].ticket.sportsId").value(1L))
-                .andExpect(jsonPath("$.[1].ticket.stadiumId").value(1L))
-                .andExpect(jsonPath("$.[1].ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.[1].ticket.sportsName").value("야구"))
+                .andExpect(jsonPath("$.[1].ticket.stadiumName").value("고척돔"))
+                .andExpect(jsonPath("$.[1].ticket.homeTeamName").value("키움"))
+                .andExpect(jsonPath("$.[1].ticket.awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.[1].ticket.quantity").value(1))
                 .andExpect(jsonPath("$.[1].ticket.salePrice").value(10000))
                 .andExpect(jsonPath("$.[1].ticket.originalPrice").value(15000))

@@ -56,8 +56,59 @@ public class PostControllerTest {
 
     private final static String SPORTS_NAME = "야구";
     private final static String STADIUM_NAME = "고척돔";
-    private final static String HOME_TEAM_NAME = "두산";
+    private final static String HOME_TEAM_NAME = "키움";
     private final static String AWAY_TEAM_NAME = "한화";
+
+    private Sports createSports(Long sportsId, String sportsName){
+        return Sports.builder()
+                .sportsId(sportsId)
+                .sportsName(sportsName)
+                .build();
+    }
+
+    private Stadium createStadium(Long stadiumId, Sports sports, String stadiumName, String homeTeamName){
+        return Stadium.builder()
+                .stadiumId(stadiumId)
+                .sports(sports)
+                .stadiumName(stadiumName)
+                .homeTeamName(homeTeamName)
+                .build();
+    }
+
+    private AwayTeam createAwayTeam(Long awayTeamId, Sports sports, String awayTeamName){
+        return AwayTeam.builder()
+                .awayTeamId(awayTeamId)
+                .sports(sports)
+                .awayTeamName(awayTeamName)
+                .build();
+    }
+
+    private Ticket createTicket(Long ticketId, Sports sports, Stadium stadium, AwayTeam awayTeam){
+        return Ticket.builder()
+                .ticketId(ticketId)
+                .sports(sports)
+                .stadium(stadium)
+                .awayTeam(awayTeam)
+                .quantity(QUANTITY)
+                .salePrice(SALE_PRICE)
+                .originalPrice(ORIGINAL_PRICE)
+                .expirationAt(LocalDateTime.now().plusDays(5))
+                .isSuccessive(IS_SUCCESSIVE)
+                .seatInfo(SEAT_INFO)
+                .imgUrl(IMG_URL)
+                .note(NOTE)
+                .build();
+    }
+
+    private Post createPost(Long salePostId, Long memberId, Ticket ticket, SaleStatus status){
+        return Post.builder()
+                .salePostId(salePostId)
+                .memberId(memberId)
+                .ticket(ticket)
+                .saleStatus(status)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 
     @Test
     @DisplayName("SalePost 등록 성공")
@@ -78,48 +129,14 @@ public class PostControllerTest {
                         .imgUrl(IMG_URL)
                         .note(NOTE)
                         .build();
-
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
-
-        Stadium stadium = Stadium.builder()
-                .stadiumId(STADIUM_ID)
-                .sports(sports)
-                .stadiumName(STADIUM_NAME)
-                .homeTeamName(HOME_TEAM_NAME)
-                .build();
-
-        AwayTeam awayTeam = AwayTeam.builder()
-                .awayTeamId(AWAY_TEAM_ID)
-                .sports(sports)
-                .awayTeamName(AWAY_TEAM_NAME)
-                .build();
-
-        Ticket ticket = Ticket.builder()
-                .ticketId(TICKET_ID)
-                .sports(sports)
-                .stadium(stadium)
-                .awayTeam(awayTeam)
-                .quantity(QUANTITY)
-                .salePrice(SALE_PRICE)
-                .originalPrice(ORIGINAL_PRICE)
-                .expirationAt(EXPIRATION_AT)
-                .isSuccessive(IS_SUCCESSIVE)
-                .seatInfo(SEAT_INFO)
-                .imgUrl(IMG_URL)
-                .note(NOTE)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+        Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
+        AwayTeam awayTeam = createAwayTeam(AWAY_TEAM_ID, sports, AWAY_TEAM_NAME);
+        Ticket ticket = createTicket(TICKET_ID, sports, stadium, awayTeam);
+        Post salePost = createPost(SALE_POST_ID, MEMBER_ID, ticket, SaleStatus.FOR_SALE);
 
         given(postService.registerPost(any(RegisterPostRequest.class)))
-                .willReturn(Post.builder()
-                        .salePostId(SALE_POST_ID)
-                        .memberId(MEMBER_ID)
-                        .ticket(ticket)
-                        .saleStatus(SaleStatus.FOR_SALE)
-                        .createdAt(LocalDateTime.now())
-                        .build());
+                .willReturn(salePost);
         //when
         //then
         mockMvc.perform(post(BASE_URL)
@@ -129,9 +146,10 @@ public class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(1L))
-                .andExpect(jsonPath("$.ticket.sportsId").value(1L))
-                .andExpect(jsonPath("$.ticket.stadiumId").value(1L))
-                .andExpect(jsonPath("$.ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.ticket.sportsName").value("야구"))
+                .andExpect(jsonPath("$.ticket.stadiumName").value("고척돔"))
+                .andExpect(jsonPath("$.ticket.homeTeamName").value("키움"))
+                .andExpect(jsonPath("$.ticket.awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.ticket.quantity").value(1))
                 .andExpect(jsonPath("$.ticket.salePrice").value(10000))
                 .andExpect(jsonPath("$.ticket.originalPrice").value(20000))
@@ -146,47 +164,14 @@ public class PostControllerTest {
     @DisplayName("SalePost 조회 성공")
     void successGet() throws Exception {
         //given
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
-
-        Stadium stadium = Stadium.builder()
-                .stadiumId(STADIUM_ID)
-                .sports(sports)
-                .stadiumName(STADIUM_NAME)
-                .homeTeamName(HOME_TEAM_NAME)
-                .build();
-
-        AwayTeam awayTeam = AwayTeam.builder()
-                .awayTeamId(AWAY_TEAM_ID)
-                .sports(sports)
-                .awayTeamName(AWAY_TEAM_NAME)
-                .build();
-
-        Ticket ticket = Ticket.builder()
-                .ticketId(TICKET_ID)
-                .sports(sports)
-                .stadium(stadium)
-                .awayTeam(awayTeam)
-                .quantity(QUANTITY)
-                .salePrice(SALE_PRICE)
-                .originalPrice(ORIGINAL_PRICE)
-                .expirationAt(EXPIRATION_AT)
-                .isSuccessive(IS_SUCCESSIVE)
-                .seatInfo(SEAT_INFO)
-                .imgUrl(IMG_URL)
-                .note(NOTE)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+        Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
+        AwayTeam awayTeam = createAwayTeam(AWAY_TEAM_ID, sports, AWAY_TEAM_NAME);
+        Ticket ticket = createTicket(TICKET_ID, sports, stadium, awayTeam);
+        Post salePost = createPost(SALE_POST_ID, MEMBER_ID, ticket, SaleStatus.FOR_SALE);
 
         given(postService.get(anyLong()))
-                .willReturn(Post.builder()
-                        .salePostId(SALE_POST_ID)
-                        .memberId(MEMBER_ID)
-                        .ticket(ticket)
-                        .saleStatus(SaleStatus.FOR_SALE)
-                        .createdAt(LocalDateTime.now())
-                        .build());
+                .willReturn(salePost);
 
         //when
         //then
@@ -195,9 +180,10 @@ public class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(1L))
-                .andExpect(jsonPath("$.ticket.sportsId").value(1L))
-                .andExpect(jsonPath("$.ticket.stadiumId").value(1L))
-                .andExpect(jsonPath("$.ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.ticket.sportsName").value("야구"))
+                .andExpect(jsonPath("$.ticket.stadiumName").value("고척돔"))
+                .andExpect(jsonPath("$.ticket.homeTeamName").value("키움"))
+                .andExpect(jsonPath("$.ticket.awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.ticket.quantity").value(1))
                 .andExpect(jsonPath("$.ticket.salePrice").value(10000))
                 .andExpect(jsonPath("$.ticket.originalPrice").value(20000))
@@ -231,48 +217,14 @@ public class PostControllerTest {
                 UpdateStatusToReportedPostRequest.builder()
                         .salePostId(SALE_POST_ID)
                         .build();
-
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
-
-        Stadium stadium = Stadium.builder()
-                .stadiumId(STADIUM_ID)
-                .sports(sports)
-                .stadiumName(STADIUM_NAME)
-                .homeTeamName(HOME_TEAM_NAME)
-                .build();
-
-        AwayTeam awayTeam = AwayTeam.builder()
-                .awayTeamId(AWAY_TEAM_ID)
-                .sports(sports)
-                .awayTeamName(AWAY_TEAM_NAME)
-                .build();
-
-        Ticket ticket = Ticket.builder()
-                .ticketId(TICKET_ID)
-                .sports(sports)
-                .stadium(stadium)
-                .awayTeam(awayTeam)
-                .quantity(QUANTITY)
-                .salePrice(SALE_PRICE)
-                .originalPrice(ORIGINAL_PRICE)
-                .expirationAt(EXPIRATION_AT)
-                .isSuccessive(IS_SUCCESSIVE)
-                .seatInfo(SEAT_INFO)
-                .imgUrl(IMG_URL)
-                .note(NOTE)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+        Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
+        AwayTeam awayTeam = createAwayTeam(AWAY_TEAM_ID, sports, AWAY_TEAM_NAME);
+        Ticket ticket = createTicket(TICKET_ID, sports, stadium, awayTeam);
+        Post salePost = createPost(SALE_POST_ID, MEMBER_ID, ticket, SaleStatus.REPORTED);
 
         given(postService.updateToReported(any(UpdateStatusToReportedPostRequest.class)))
-                .willReturn(Post.builder()
-                        .salePostId(SALE_POST_ID)
-                        .memberId(MEMBER_ID)
-                        .ticket(ticket)
-                        .saleStatus(SaleStatus.REPORTED)
-                        .createdAt(LocalDateTime.now())
-                        .build());
+                .willReturn(salePost);
 
         //when
         //then
@@ -283,9 +235,10 @@ public class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.memberId").value(1L))
-                .andExpect(jsonPath("$.ticket.sportsId").value(1L))
-                .andExpect(jsonPath("$.ticket.stadiumId").value(1L))
-                .andExpect(jsonPath("$.ticket.awayTeamId").value(1L))
+                .andExpect(jsonPath("$.ticket.sportsName").value("야구"))
+                .andExpect(jsonPath("$.ticket.stadiumName").value("고척돔"))
+                .andExpect(jsonPath("$.ticket.homeTeamName").value("키움"))
+                .andExpect(jsonPath("$.ticket.awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.ticket.quantity").value(1))
                 .andExpect(jsonPath("$.ticket.salePrice").value(10000))
                 .andExpect(jsonPath("$.ticket.originalPrice").value(20000))
