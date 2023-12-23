@@ -44,6 +44,21 @@ public class    AwayTeamControllerTest {
     private final static String SPORTS_NAME = "야구";
     private final static String AWAY_TEAM_NAME = "두산";
 
+    private Sports createSports(Long sportsId, String sportsName) {
+        return Sports.builder()
+                .sportsId(sportsId)
+                .sportsName(sportsName)
+                .build();
+    }
+
+    private AwayTeam createAwayTeam(Long awayTeamId, Sports sports, String awayTeamName){
+        return AwayTeam.builder()
+                .awayTeamId(awayTeamId)
+                .sports(sports)
+                .awayTeamName(awayTeamName)
+                .build();
+    }
+
     @Test
     @DisplayName("AwayTeam 등록 성공")
     void successRegister() throws Exception{
@@ -54,10 +69,7 @@ public class    AwayTeamControllerTest {
                         .awayTeamName(AWAY_TEAM_NAME)
                         .build();
 
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
 
         given(awayTeamService.register(any(RegisterAwayTeamRequest.class)))
                 .willReturn(AwayTeam.builder()
@@ -82,10 +94,7 @@ public class    AwayTeamControllerTest {
     @DisplayName("AwayTeam 조회 성공")
     void successGet() throws Exception{
         //given
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
 
         given(awayTeamService.get(anyLong()))
                 .willReturn(AwayTeam.builder()
@@ -108,30 +117,11 @@ public class    AwayTeamControllerTest {
     @DisplayName("AwayTeam 모두 조회 성공")
     void successGetAll() throws Exception{
         //given
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
 
-        AwayTeam awayTeam1 = AwayTeam.builder()
-                .awayTeamId(1L)
-                .sports(sports)
-                .awayTeamName("기아")
-                .build();
-
-        AwayTeam awayTeam2 = AwayTeam.builder()
-                .awayTeamId(2L)
-                .sports(sports)
-                .awayTeamName("한화")
-                .build();
-
-        AwayTeam awayTeam3 = AwayTeam.builder()
-                .awayTeamId(3L)
-                .sports(sports)
-                .awayTeamName("두산")
-                .build();
-
-
+        AwayTeam awayTeam1 = createAwayTeam(1L, sports, "기아");
+        AwayTeam awayTeam2 = createAwayTeam(2L, sports, "한화");
+        AwayTeam awayTeam3 = createAwayTeam(3L, sports, "두산");
 
         List<AwayTeam> awayTeamList
                 = Arrays.asList(awayTeam1, awayTeam2, awayTeam3);
@@ -160,16 +150,9 @@ public class    AwayTeamControllerTest {
     @DisplayName("SportId로 AwayTeam 조회 성공")
     void successGetBySportId() throws Exception{
         //given
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
 
-        AwayTeam awayTeam = AwayTeam.builder()
-                .awayTeamId(AWAY_TEAM_ID)
-                .sports(sports)
-                .awayTeamName(AWAY_TEAM_NAME)
-                .build();
+        AwayTeam awayTeam = createAwayTeam(AWAY_TEAM_ID, sports, AWAY_TEAM_NAME);
 
         List<AwayTeam> awayTeamList
                 = Arrays.asList(awayTeam);

@@ -19,7 +19,7 @@ public class RegisterAwayTeamRequest {
     public AwayTeam toEntity(Sports sports){
         return AwayTeam.builder()
                 .sports(sports)
-                .awayTeamName(awayTeamName)
+                .awayTeamName(this.awayTeamName)
                 .build();
     }
 }

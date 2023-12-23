@@ -1,18 +1,19 @@
 package com.zerobase.oriticket.domain.post.dto;
 
 import com.zerobase.oriticket.domain.post.entity.Ticket;
-
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
 public class TicketResponse {
 
-    private Long sportsId;
-    private Long stadiumId;
-    private Long awayTeamId;
+    private String sportsName;
+    private String stadiumName;
+    private String homeTeamName;
+    private String awayTeamName;
 
     private int quantity;
     private int salePrice;
@@ -27,9 +28,10 @@ public class TicketResponse {
 
     public static TicketResponse fromEntity(Ticket ticket) {
         return TicketResponse.builder()
-                .sportsId(ticket.getSports().getSportsId())
-                .stadiumId(ticket.getStadium().getStadiumId())
-                .awayTeamId(ticket.getAwayTeam().getAwayTeamId())
+                .sportsName(ticket.getSports().getSportsName())
+                .stadiumName(ticket.getStadium().getStadiumName())
+                .homeTeamName(ticket.getStadium().getHomeTeamName())
+                .awayTeamName(ticket.getAwayTeam().getAwayTeamName())
                 .quantity(ticket.getQuantity())
                 .salePrice(ticket.getSalePrice())
                 .originalPrice(ticket.getOriginalPrice())

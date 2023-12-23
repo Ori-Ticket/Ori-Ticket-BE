@@ -19,8 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,7 +74,7 @@ public class TransactionFetchServiceTest {
         List<TransactionStatus> transactionStatusList =
                 Arrays.asList(TransactionStatus.PENDING, TransactionStatus.RECEIVED);
 
-        given(transactionRepository.findAllBySellerOrBuyerIdAndStatusList(anyLong(), any(List.class)))
+        given(transactionRepository.findAllBySellerOrBuyerIdAndStatusList(anyLong(), anyList()))
                 .willReturn(transactionList);
 
         //when
@@ -117,7 +116,7 @@ public class TransactionFetchServiceTest {
         List<TransactionStatus> transactionStatusList =
                 Arrays.asList(TransactionStatus.COMPLETED, TransactionStatus.CANCELED);
 
-        given(transactionRepository.findAllBySellerOrBuyerIdAndStatusList(anyLong(), any(List.class)))
+        given(transactionRepository.findAllBySellerOrBuyerIdAndStatusList(anyLong(), anyList()))
                 .willReturn(transactionList);
 
         //when
