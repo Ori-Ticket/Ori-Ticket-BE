@@ -13,5 +13,5 @@ public enum TransactionStatus {
     CANCELED("Canceled"),
     REPORTED("Reported");
 
-    private String state;
+    private final String state;
 }

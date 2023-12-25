@@ -20,7 +20,7 @@ public class TransactionFetchController {
 
     private final TransactionFetchService transactionFetchService;
 
-    @GetMapping("/members/{memberId}/transaction")
+    @GetMapping("/members/{memberId}/transactions")
     public ResponseEntity<List<TransactionResponse>> get(
             @PathVariable("memberId") Long memberId,
             @RequestParam("status") List<String> statusList

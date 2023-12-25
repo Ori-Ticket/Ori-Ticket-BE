@@ -78,7 +78,7 @@ public class TransactionFetchControllerTest {
 
         //when
         //then
-        mockMvc.perform(get("/members/1/transaction?status=pending, received"))
+        mockMvc.perform(get("/members/1/transactions?status=pending, received"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].transactionId").value(1L))
@@ -121,7 +121,7 @@ public class TransactionFetchControllerTest {
 
         //when
         //then
-        mockMvc.perform(get("/members/1/transaction?status=completed, canceled"))
+        mockMvc.perform(get("/members/1/transactions?status=completed, canceled"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].transactionId").value(1L))
