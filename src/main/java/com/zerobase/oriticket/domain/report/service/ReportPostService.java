@@ -1,5 +1,7 @@
 package com.zerobase.oriticket.domain.report.service;
 
+import com.zerobase.oriticket.domain.elasticsearch.report.entity.ReportPostSearchDocument;
+import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportPostSearchRepository;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 public class ReportPostService {
 
     private final ReportPostRepository reportPostRepository;
+    private final ReportPostSearchRepository reportPostSearchRepository;
     private final PostRepository postRepository;
 
     public ReportPost register(Long salePostId, RegisterReportPostRequest request) {
@@ -27,7 +30,10 @@ public class ReportPostService {
                 .orElseThrow(() -> new CustomException(PostExceptionStatus.SALE_POST_NOT_FOUND.getCode(),
                         PostExceptionStatus.SALE_POST_NOT_FOUND.getMessage()));
 
-        return reportPostRepository.save(request.toEntity(salePost));
+        ReportPost reportPost = reportPostRepository.save(request.toEntity(salePost));
+        reportPostSearchRepository.save(ReportPostSearchDocument.fromEntity(reportPost));
+
+        return reportPost;
     }
 
     public ReportPost updateToReacted(Long reportPostId, UpdateReportRequest request) {
@@ -38,6 +44,7 @@ public class ReportPostService {
         reportPost.setStatus(ReportReactStatus.REACTED);
         reportPost.setReactedAt(LocalDateTime.now());
         reportPost.setNote(request.getNote());
+        reportPostSearchRepository.save(ReportPostSearchDocument.fromEntity(reportPost));
 
         return reportPostRepository.save(reportPost);
     }

@@ -1,5 +1,7 @@
 package com.zerobase.oriticket.domain.report.service;
 
+import com.zerobase.oriticket.domain.elasticsearch.report.entity.ReportTransactionSearchDocument;
+import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportTransactionSearchRepository;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
 import com.zerobase.oriticket.domain.report.dto.RegisterReportTransactionRequest;
 import com.zerobase.oriticket.domain.report.dto.UpdateReportRequest;
@@ -21,13 +23,17 @@ public class ReportTransactionService {
 
     private final ReportTransactionRepository reportTransactionRepository;
     private final TransactionRepository transactionRepository;
+    private final ReportTransactionSearchRepository reportTransactionSearchRepository;
 
     public ReportTransaction register(Long transactionId, RegisterReportTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(transactionId)
                 .orElseThrow(() -> new CustomException(TransactionExceptionStatus.TRANSACTION_NOT_FOUND.getCode(),
                         TransactionExceptionStatus.TRANSACTION_NOT_FOUND.getMessage()));
 
-        return reportTransactionRepository.save(request.toEntity(transaction));
+        ReportTransaction reportTransaction = reportTransactionRepository.save(request.toEntity(transaction));
+        reportTransactionSearchRepository.save(ReportTransactionSearchDocument.fromEntity(reportTransaction));
+
+        return reportTransaction;
     }
 
     public ReportTransaction updateToReacted(Long reportTransactionId, UpdateReportRequest request) {
@@ -38,6 +44,7 @@ public class ReportTransactionService {
         reportTransaction.setStatus(ReportReactStatus.REACTED);
         reportTransaction.setReactedAt(LocalDateTime.now());
         reportTransaction.setNote(request.getNote());
+        reportTransactionSearchRepository.save(ReportTransactionSearchDocument.fromEntity(reportTransaction));
 
         return reportTransactionRepository.save(reportTransaction);
     }
