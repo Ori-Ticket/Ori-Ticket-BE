@@ -42,7 +42,7 @@ public class ChatRoomController {
                 .body(chatRoom.map(ChatRoomResponse::fromEntity));
     }
 
-    @GetMapping("/transaction")
+    @GetMapping("/transactions")
     public ResponseEntity<ChatRoomResponse> getByTransaction(
             @RequestParam("id") Long transactionId
     ){

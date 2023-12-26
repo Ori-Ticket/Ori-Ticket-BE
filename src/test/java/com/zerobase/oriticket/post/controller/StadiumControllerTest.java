@@ -117,8 +117,8 @@ public class StadiumControllerTest {
         //given
         Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
         Stadium stadium1 = createStadium(1L, sports, "고척 돔", "한화");
-        Stadium stadium2 = createStadium(1L, sports, "잠실 야구장", "두산");
-        Stadium stadium3 = createStadium(1L, sports, "챔피언스 필드", "기아");
+        Stadium stadium2 = createStadium(2L, sports, "잠실 야구장", "두산");
+        Stadium stadium3 = createStadium(3L, sports, "챔피언스 필드", "기아");
         List<Stadium> stadiumList
                 = Arrays.asList(stadium1, stadium2, stadium3);
 
