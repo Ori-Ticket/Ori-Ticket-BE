@@ -20,7 +20,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Admin {
+public class AdminEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,7 +40,7 @@ public class Admin {
 
     @Column(length = 10)
     @Enumerated(EnumType.STRING)
-    private RoleType roles = RoleType.ADMIN;
+    private RoleType roles = RoleType.ROLE_ADMIN;
 
     @Column(nullable = false)
     @CreationTimestamp

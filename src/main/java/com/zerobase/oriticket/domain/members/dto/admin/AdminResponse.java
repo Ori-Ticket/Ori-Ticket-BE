@@ -7,11 +7,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class AdminResponse {
 
     private String email;
@@ -20,16 +22,5 @@ public class AdminResponse {
     private Long adminId;
     private RoleType roles;
     private LocalDateTime registeredAt;
-
-    public AdminResponse fromEntity() {
-        return AdminResponse.builder()
-                .adminId(this.adminId)
-                .email(this.email)
-                .name(this.name)
-                .nickname(this.nickname)
-                .roles(this.roles)
-                .registeredAt(this.registeredAt)
-                .build();
-    }
 }
 

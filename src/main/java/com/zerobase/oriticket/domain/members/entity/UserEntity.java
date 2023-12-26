@@ -24,7 +24,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +50,7 @@ public class User {
     private String phoneNum;
 
     @Enumerated(EnumType.STRING)
-    private RoleType role = RoleType.USER;
+    private RoleType role = RoleType.ROLE_USER;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status = MemberStatus.ACTIVE;
