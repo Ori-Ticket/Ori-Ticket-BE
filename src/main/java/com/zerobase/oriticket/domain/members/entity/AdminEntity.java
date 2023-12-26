@@ -1,6 +1,5 @@
 package com.zerobase.oriticket.domain.members.entity;
 
-import com.zerobase.oriticket.domain.members.constants.MemberStatus;
 import com.zerobase.oriticket.domain.members.constants.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,10 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,43 +20,30 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-public class User {
+public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long adminId;
 
-    @Column(length = 30, unique = true)
+    @Column(nullable = false, length = 30, unique = true)
     private String email;
 
-    @Column(length = 30)
+    @Column(nullable = false, length = 30)
     private String name;
 
-    @Column(length = 30, unique = true)
+    @Column(nullable = false, length = 30, unique = true)
     private String nickname;
 
-    @Column( length = 100)
+    @Column(nullable = false, length = 100)
     private String password;
 
-    @Column()
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime birthDate;
-
-    @Column(length = 30, unique = true)
-    private String phoneNum;
-
+    @Column(length = 10)
     @Enumerated(EnumType.STRING)
-    private RoleType role = RoleType.USER;
+    private RoleType roles = RoleType.ROLE_ADMIN;
 
-    @Enumerated(EnumType.STRING)
-    private MemberStatus status = MemberStatus.ACTIVE;
-
+    @Column(nullable = false)
     @CreationTimestamp
     private Timestamp registeredAt;
-
-    @CreationTimestamp
-    private Timestamp modifiedAt;
-
-    private String oauth; // kakao,naver
 
 }
