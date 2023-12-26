@@ -22,7 +22,7 @@ public class ReportTransaction {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reportTradeId;
+    private Long reportTransactionId;
 
 //    @ManyToOne
     private Long memberId;

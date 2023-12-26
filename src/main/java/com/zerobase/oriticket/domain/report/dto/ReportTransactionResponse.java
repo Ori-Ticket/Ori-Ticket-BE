@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ReportTransactionResponse {
 
-    private Long reportTradeId;
+    private Long reportTransactionId;
     private Long memberId;
     private TransactionResponse transaction;
     private String reason;
@@ -24,8 +24,8 @@ public class ReportTransactionResponse {
     public static ReportTransactionResponse fromEntity(ReportTransaction reportTransaction){
 
         return ReportTransactionResponse.builder()
-                .reportTradeId(reportTransaction.getReportTradeId())
-                .memberId(reportTransaction.getReportTradeId())
+                .reportTransactionId(reportTransaction.getReportTransactionId())
+                .memberId(reportTransaction.getMemberId())
                 .transaction(TransactionResponse.fromEntity(reportTransaction.getTransaction()))
                 .reason(reportTransaction.getReason().getReportType())
                 .reportedAt(reportTransaction.getReportedAt())

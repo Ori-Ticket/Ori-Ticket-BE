@@ -32,14 +32,14 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class ChatControllerTest {
 
-    @InjectMocks
-    private ChatController chatController;
-
     @Mock
     private ChatMessageService chatMessageService;
 
     @Mock
     private ContactChatMessageService contactChatMessageService;
+
+    @InjectMocks
+    private ChatController chatController;
 
     @Test
     @DisplayName("1:1 채팅 보내기 성공")
