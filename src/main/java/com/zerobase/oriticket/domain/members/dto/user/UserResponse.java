@@ -29,33 +29,4 @@ public class UserResponse {
     private Timestamp modifiedAt;
     private String oauth;
 
-//    public UserResponse fromEntity() {
-//        return UserResponse.builder()
-//                .email(this.email)
-//                .name(this.name)
-//                .nickname(this.nickname)
-//                .birthDate(this.birthDate)
-//                .phoneNum(this.phoneNum)
-//                .role(this.role)
-//                .status(this.status)
-//                .registeredAt(this.registeredAt)
-//                .modifiedAt(Timestamp.valueOf(LocalDateTime.now()))
-//                .oauth(this.oauth)
-//                .build();
-//    }
-
-    public static UserResponse fromEntity(UserEntity userEntity) {
-        return UserResponse.builder()
-                .email(userEntity.getEmail())
-                .name(userEntity.getName())
-                .nickname(userEntity.getNickname())
-                .birthDate(userEntity.getBirthDate())
-                .phoneNum(userEntity.getPhoneNum())
-                .role(userEntity.getRole())
-                .status(userEntity.getStatus())
-                .registeredAt(userEntity.getRegisteredAt().toLocalDateTime())
-                .modifiedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .oauth(userEntity.getOauth())
-                .build();
-    }
 }

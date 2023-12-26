@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/members")
-public class
-UserController {
+public class UserController {
 
     @Autowired
     KakaoAuthService kakaoAuthService;
