@@ -56,7 +56,7 @@ public class ReportPostService {
     }
 
     private void validateCanRegister(Long salePostId, RegisterReportPostRequest request){
-        if(reportPostRepository.existsBySalePostIdAndMemberIdAndReason(
+        if(reportPostRepository.existsBySalePost_SalePostIdAndMemberIdAndReason(
                 salePostId, request.getMemberId(), ReportPostType.valueOf(request.getReason().toUpperCase()))
         ){
             throw new CustomException(ReportExceptionStatus.CANNOT_REGISTER_REPORT_POST.getCode(),

@@ -56,7 +56,7 @@ public class ReportTransactionService {
     }
 
     private void validateCanRegister(Long transactionId, RegisterReportTransactionRequest request){
-        if(reportTransactionRepository.existsBySalePostIdAndMemberIdAndReason(
+        if(reportTransactionRepository.existsByTransaction_TransactionIdAndMemberIdAndReason(
                 transactionId, request.getMemberId(), ReportTransactionType.valueOf(request.getReason().toUpperCase()))
         ){
             throw new CustomException(ReportExceptionStatus.CANNOT_REGISTER_REPORT_TRANSACTION.getCode(),
