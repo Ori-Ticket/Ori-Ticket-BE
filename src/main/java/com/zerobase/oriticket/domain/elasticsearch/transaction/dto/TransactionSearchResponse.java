@@ -12,7 +12,8 @@ public class TransactionSearchResponse {
 
     private Long transactionId;
     private Long salePostId;
-    private String memberName;
+    private String sellerName;
+    private String buyerName;
     private Integer payAmount;
     private String status;
     private LocalDateTime receivedAt;
@@ -23,7 +24,8 @@ public class TransactionSearchResponse {
         return TransactionSearchResponse.builder()
                 .transactionId(transaction.getTransactionId())
                 .salePostId(transaction.getSalePostId())
-                .memberName(transaction.getMemberName())
+                .sellerName(transaction.getSellerName())
+                .buyerName(transaction.getBuyerName())
                 .payAmount(transaction.getPayAmount())
                 .status(transaction.getStatus().getState())
                 .receivedAt(transaction.getReceivedAt())

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -20,7 +21,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(TypeMismatchException.class)
-    protected ResponseEntity<Void> handleRuntimeException(TypeMismatchException e) {
+    protected ResponseEntity<Void> handleTypeMismatchException(TypeMismatchException e) {
         log.error("TypeMismatchException..........");
         log.error(e.getMessage());
 
@@ -33,6 +34,14 @@ public class CustomExceptionHandler {
         log.error(e.getMessage());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    protected ResponseEntity<Void> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        log.error("HttpRequestMethodNotSupportedException..........");
+        log.error(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
     }
 
 }

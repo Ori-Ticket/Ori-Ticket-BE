@@ -36,53 +36,54 @@ public class PostSearchControllerTest {
 
     private final static String BASE_URL = "/posts";
 
+    private final static Integer QUANTITY = 1;
+    private final static Integer SALE_PRICE = 10000;
+    private final static Integer ORIGINAL_PRICE = 15000;
+    private final static Boolean IS_SUCCESSIVE = false;
+    private final static String SEAT_INFO = "A열 4석";
+    private final static String IMG_URL = "image url";
+    private final static String NOTE = "note";
+
+    private PostSearchDocument createPostDocument(
+            Long salePostId,
+            String memberName,
+            String sportsName,
+            String stadiumName,
+            String homeTeamName,
+            String awayTeamName
+    ){
+        return PostSearchDocument.builder()
+                .salePostId(salePostId)
+                .memberName(memberName)
+                .sportsName(sportsName)
+                .stadiumName(stadiumName)
+                .homeTeamName(homeTeamName)
+                .awayTeamName(awayTeamName)
+                .quantity(QUANTITY)
+                .salePrice(SALE_PRICE)
+                .originalPrice(ORIGINAL_PRICE)
+                .expirationAt(LocalDateTime.now().plusDays(1))
+                .isSuccessive(IS_SUCCESSIVE)
+                .seatInfo(SEAT_INFO)
+                .imgUrl(IMG_URL)
+                .note(NOTE)
+                .saleStatus(SaleStatus.FOR_SALE)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
     @Test
     @DisplayName("SalePost 검색 성공")
     void successSearch() throws Exception {
         //given
         PostSearchDocument postSearchDocument1 =
-                PostSearchDocument.builder()
-                        .salePostId(1L)
-                        .memberName("member1")
-                        .sportsName("야구")
-                        .stadiumName("잠실 경기장")
-                        .homeTeamName("두산")
-                        .awayTeamName("기아")
-                        .quantity(1)
-                        .salePrice(10000)
-                        .originalPrice(15000)
-                        .expirationAt(LocalDateTime.now().plusDays(1))
-                        .isSuccessive(false)
-                        .seatInfo("A열 21")
-                        .imgUrl("image url1")
-                        .note("note1")
-                        .saleStatus(SaleStatus.FOR_SALE)
-                        .createdAt(LocalDateTime.now())
-                        .build();
-
+                createPostDocument(1L, "member1", "야구",
+                        "잠실 경기장", "두산", "기아");
         PostSearchDocument postSearchDocument2 =
-                PostSearchDocument.builder()
-                        .salePostId(2L)
-                        .memberName("member2")
-                        .sportsName("야구")
-                        .stadiumName("잠실 경기장")
-                        .homeTeamName("두산")
-                        .awayTeamName("한화")
-                        .quantity(1)
-                        .salePrice(15000)
-                        .originalPrice(20000)
-                        .expirationAt(LocalDateTime.now().plusDays(2))
-                        .isSuccessive(false)
-                        .seatInfo("C열 21")
-                        .imgUrl("image url2")
-                        .note("note2")
-                        .saleStatus(SaleStatus.FOR_SALE)
-                        .createdAt(LocalDateTime.now())
-                        .build();
-
+                createPostDocument(2L, "member2", "야구",
+                        "잠실 경기장", "두산", "한화");
         List<PostSearchDocument> postSearchDocumentList =
                 Arrays.asList(postSearchDocument1, postSearchDocument2);
-
         Page<PostSearchDocument> postSearchDocuments =
                 new PageImpl<>(postSearchDocumentList);
 
@@ -105,9 +106,9 @@ public class PostSearchControllerTest {
                 .andExpect(jsonPath("$.content[0].originalPrice").value(15000))
                 .andExpect(jsonPath("$.content[0].expirationAt").exists())
                 .andExpect(jsonPath("$.content[0].isSuccessive").value(false))
-                .andExpect(jsonPath("$.content[0].seatInfo").value("A열 21"))
-                .andExpect(jsonPath("$.content[0].imgUrl").value("image url1"))
-                .andExpect(jsonPath("$.content[0].note").value("note1"))
+                .andExpect(jsonPath("$.content[0].seatInfo").value("A열 4석"))
+                .andExpect(jsonPath("$.content[0].imgUrl").value("image url"))
+                .andExpect(jsonPath("$.content[0].note").value("note"))
                 .andExpect(jsonPath("$.content[0].saleStatus").value("FOR_SALE"))
                 .andExpect(jsonPath("$.content[0].createdAt").exists())
                 .andExpect(jsonPath("$.content[1].salePostId").value(2L))
@@ -117,13 +118,13 @@ public class PostSearchControllerTest {
                 .andExpect(jsonPath("$.content[1].homeTeamName").value("두산"))
                 .andExpect(jsonPath("$.content[1].awayTeamName").value("한화"))
                 .andExpect(jsonPath("$.content[1].quantity").value(1))
-                .andExpect(jsonPath("$.content[1].salePrice").value(15000))
-                .andExpect(jsonPath("$.content[1].originalPrice").value(20000))
+                .andExpect(jsonPath("$.content[1].salePrice").value(10000))
+                .andExpect(jsonPath("$.content[1].originalPrice").value(15000))
                 .andExpect(jsonPath("$.content[1].expirationAt").exists())
                 .andExpect(jsonPath("$.content[1].isSuccessive").value(false))
-                .andExpect(jsonPath("$.content[1].seatInfo").value("C열 21"))
-                .andExpect(jsonPath("$.content[1].imgUrl").value("image url2"))
-                .andExpect(jsonPath("$.content[1].note").value("note2"))
+                .andExpect(jsonPath("$.content[1].seatInfo").value("A열 4석"))
+                .andExpect(jsonPath("$.content[1].imgUrl").value("image url"))
+                .andExpect(jsonPath("$.content[1].note").value("note"))
                 .andExpect(jsonPath("$.content[1].saleStatus").value("FOR_SALE"))
                 .andExpect(jsonPath("$.content[1].createdAt").exists());
 

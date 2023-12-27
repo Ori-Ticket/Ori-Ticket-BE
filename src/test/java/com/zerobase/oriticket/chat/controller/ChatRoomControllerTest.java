@@ -141,7 +141,7 @@ public class ChatRoomControllerTest {
 
         //when
         //then
-        mockMvc.perform(get(BASE_URL+"/transaction?id=1"))
+        mockMvc.perform(get(BASE_URL+"/transactions?id=1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.chatRoomId").value(1L))

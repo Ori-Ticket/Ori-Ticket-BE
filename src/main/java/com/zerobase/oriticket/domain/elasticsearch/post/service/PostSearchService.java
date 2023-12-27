@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 public class PostSearchService {
 
     private final PostSearchRepository postSearchRepository;
+
+    private final static String CREATED_AT = "createdAt";
+    private final Sort sort = Sort.by(CREATED_AT).descending();
 
     public Page<PostSearchDocument> search(String value, int page, int size) {
 
@@ -25,14 +29,14 @@ public class PostSearchService {
 
     private Page<PostSearchDocument> searchAll(int page, int size){
 
-        Pageable pageable = PageRequest.of(page-1, size);
+        Pageable pageable = PageRequest.of(page-1, size, sort);
 
         return postSearchRepository.findAll(pageable);
     }
 
     private Page<PostSearchDocument> searchByCategoryName(String value, int page, int size){
 
-        Pageable pageable = PageRequest.of(page-1, size);
+        Pageable pageable = PageRequest.of(page-1, size, sort);
 
         return postSearchRepository.findAllBySportsNameContainingOrStadiumNameContainingOrHomeTeamNameContainingOrAwayTeamNameContaining
                 (value, value, value, value, pageable);

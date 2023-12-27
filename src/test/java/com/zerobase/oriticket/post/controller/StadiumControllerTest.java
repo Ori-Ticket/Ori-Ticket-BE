@@ -45,6 +45,22 @@ public class StadiumControllerTest {
     private final static String STADIUM_NAME = "고척 돔";
     private final static String HOME_TEAM_NAME = "한화";
 
+    private Sports createSports(Long sportsId, String sportsName){
+        return Sports.builder()
+                .sportsId(sportsId)
+                .sportsName(sportsName)
+                .build();
+    }
+
+    private Stadium createStadium(Long stadiumId, Sports sports, String stadiumName, String homeTeamName){
+        return Stadium.builder()
+                .stadiumId(stadiumId)
+                .sports(sports)
+                .stadiumName(stadiumName)
+                .homeTeamName(homeTeamName)
+                .build();
+    }
+
     @Test
     @DisplayName("Stadium 등록 성공")
     void successRegister() throws Exception{
@@ -55,19 +71,11 @@ public class StadiumControllerTest {
                         .stadiumName(STADIUM_NAME)
                         .homeTeamName(HOME_TEAM_NAME)
                         .build();
-        
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
-        
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+        Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
+
         given(stadiumService.register(any(RegisterStadiumRequest.class)))
-                .willReturn(Stadium.builder()
-                        .stadiumId(STADIUM_ID)
-                        .sports(sports)
-                        .stadiumName(STADIUM_NAME)
-                        .homeTeamName(HOME_TEAM_NAME)
-                        .build());
+                .willReturn(stadium);
 
         //when
         //then
@@ -86,18 +94,11 @@ public class StadiumControllerTest {
     @DisplayName("Stadium 조회 성공")
     void successGet() throws Exception{
         //given
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+        Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
 
         given(stadiumService.get(anyLong()))
-                .willReturn(Stadium.builder()
-                        .stadiumId(STADIUM_ID)
-                        .sports(sports)
-                        .stadiumName(STADIUM_NAME)
-                        .homeTeamName(HOME_TEAM_NAME)
-                        .build());
+                .willReturn(stadium);
 
         //when
         //then
@@ -114,33 +115,10 @@ public class StadiumControllerTest {
     @DisplayName("Stadium 모두 조회 성공")
     void successGetAll() throws Exception{
         //given
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
-
-        Stadium stadium1 = Stadium.builder()
-                .stadiumId(1L)
-                .sports(sports)
-                .stadiumName("고척 돔")
-                .homeTeamName("한화")
-                .build();
-
-        Stadium stadium2 = Stadium.builder()
-                .stadiumId(2L)
-                .sports(sports)
-                .stadiumName("잠실 야구장")
-                .homeTeamName("두산")
-                .build();
-
-        Stadium stadium3 = Stadium.builder()
-                .stadiumId(3L)
-                .sports(sports)
-                .stadiumName("챔피언스 필드")
-                .homeTeamName("기아")
-                .build();
-
-
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+        Stadium stadium1 = createStadium(1L, sports, "고척 돔", "한화");
+        Stadium stadium2 = createStadium(2L, sports, "잠실 야구장", "두산");
+        Stadium stadium3 = createStadium(3L, sports, "챔피언스 필드", "기아");
         List<Stadium> stadiumList
                 = Arrays.asList(stadium1, stadium2, stadium3);
 
@@ -171,20 +149,10 @@ public class StadiumControllerTest {
     @DisplayName("SportId로 Stadium 조회 성공")
     void successGetBySportId() throws Exception{
         //given
-        Sports sports = Sports.builder()
-                .sportsId(SPORTS_ID)
-                .sportsName(SPORTS_NAME)
-                .build();
+        Sports sports = createSports(SPORTS_ID, SPORTS_NAME);
+        Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
 
-        Stadium stadium = Stadium.builder()
-                .stadiumId(STADIUM_ID)
-                .sports(sports)
-                .stadiumName(STADIUM_NAME)
-                .homeTeamName(HOME_TEAM_NAME)
-                .build();
-
-        List<Stadium> stadiumList
-                = Arrays.asList(stadium);
+        List<Stadium> stadiumList = List.of(stadium);
 
         given(stadiumService.getBySportsId(SPORTS_ID))
                 .willReturn(stadiumList);

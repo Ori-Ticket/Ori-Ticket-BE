@@ -24,16 +24,12 @@ public class PostFetchController {
             @PathVariable("memberId") Long memberId,
             @RequestParam("status") List<String> statusList
     ){
-
         List<SaleStatus> saleStatusList = statusList.stream()
                 .map(String::toUpperCase)
                 .map(SaleStatus::valueOf)
                 .toList();
 
-        System.out.println(saleStatusList);
-
         List<Post> postList = postFetchService.get(memberId, saleStatusList);
-
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(postList.stream()

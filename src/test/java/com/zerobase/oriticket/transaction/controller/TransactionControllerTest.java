@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TransactionController.class)
-public class    TransactionControllerTest {
+public class TransactionControllerTest {
 
     @MockBean
     private TransactionService transactionService;
@@ -50,8 +50,38 @@ public class    TransactionControllerTest {
     private final static String BASE_URL = "/transactions";
     private final static Long TRANSACTION_ID = 1L;
     private final static Long POST_ID = 1L;
+    private final static Long SELLER_ID = 1L;
     private final static Long BUYER_ID = 2L;
     private final static Integer PAY_AMOUNT = 10000;
+
+    private Post createPost(Long salePostId, Long memberId){
+        return Post.builder()
+                .salePostId(salePostId)
+                .memberId(memberId)
+                .build();
+    }
+
+    private Transaction createTransaction(
+            Long transactionId,
+            Post salePost,
+            Long memberId,
+            Integer payAmount,
+            TransactionStatus status,
+            LocalDateTime receivedAt,
+            LocalDateTime endedAt
+    ){
+        return Transaction.builder()
+                .transactionId(transactionId)
+                .salePost(salePost)
+                .memberId(memberId)
+                .payAmount(payAmount)
+                .status(status)
+                .receivedAt(receivedAt)
+                .startedAt(LocalDateTime.now())
+                .endedAt(endedAt)
+                .build();
+    }
+
 
     @Test
     @DisplayName("Transaction 등록 성공")
@@ -63,18 +93,13 @@ public class    TransactionControllerTest {
                         .memberId(BUYER_ID)
                         .build();
 
-        Post salePost = Post.builder()
-                .salePostId(POST_ID)
-                .build();
+        Post salePost = createPost(POST_ID, SELLER_ID);
+        Transaction transaction =
+                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, null,
+                        TransactionStatus.PENDING, null, null);
 
         given(transactionService.register(any(RegisterTransactionRequest.class)))
-                .willReturn(Transaction.builder()
-                        .transactionId(POST_ID)
-                        .salePost(salePost)
-                        .memberId(BUYER_ID)
-                        .status(TransactionStatus.PENDING)
-                        .startedAt(LocalDateTime.now())
-                        .build());
+                .willReturn(transaction);
 
         //when
         //then
@@ -85,7 +110,8 @@ public class    TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
-                .andExpect(jsonPath("$.memberId").value(2L))
+                .andExpect(jsonPath("$.sellerId").value(1L))
+                .andExpect(jsonPath("$.buyerId").value(2L))
                 .andExpect(jsonPath("$.status").value("Pending"))
                 .andExpect(jsonPath("$.startedAt").exists());
 
@@ -95,18 +121,14 @@ public class    TransactionControllerTest {
     @DisplayName("Transaction 조회 성공")
     void successGet() throws Exception {
         //given
-        Post salePost = Post.builder()
-                .salePostId(POST_ID)
-                .build();
+        Post salePost = createPost(POST_ID, SELLER_ID);
+
+        Transaction transaction =
+                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, null,
+                        TransactionStatus.PENDING, null, null);
 
         given(transactionService.get(anyLong()))
-                .willReturn(Transaction.builder()
-                        .transactionId(TRANSACTION_ID)
-                        .salePost(salePost)
-                        .memberId(BUYER_ID)
-                        .status(TransactionStatus.PENDING)
-                        .startedAt(LocalDateTime.now())
-                        .build());
+                .willReturn(transaction);
 
         //when
         //then
@@ -115,7 +137,8 @@ public class    TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
-                .andExpect(jsonPath("$.memberId").value(2L))
+                .andExpect(jsonPath("$.sellerId").value(1L))
+                .andExpect(jsonPath("$.buyerId").value(2L))
                 .andExpect(jsonPath("$.status").value("Pending"))
                 .andExpect(jsonPath("$.startedAt").exists());
     }
@@ -124,39 +147,19 @@ public class    TransactionControllerTest {
     @DisplayName("Transaction 모두 조회 성공")
     void successGetAll() throws Exception {
         //given
-        Post salePost1 = Post.builder()
-                .salePostId(1L)
-                .build();
-        Post salePost2 = Post.builder()
-                .salePostId(2L)
-                .build();
-        Post salePost3 = Post.builder()
-                .salePostId(3L)
-                .build();
+        Post salePost1 = createPost(1L, 1L);
+        Post salePost2 = createPost(2L, 2L);
+        Post salePost3 = createPost(3L, 3L);
 
-        Transaction transaction1 = Transaction.builder()
-                .transactionId(1L)
-                .salePost(salePost1)
-                .memberId(BUYER_ID)
-                .status(TransactionStatus.PENDING)
-                .startedAt(LocalDateTime.now())
-                .build();
-
-        Transaction transaction2 = Transaction.builder()
-                .transactionId(2L)
-                .salePost(salePost2)
-                .memberId(BUYER_ID)
-                .status(TransactionStatus.PENDING)
-                .startedAt(LocalDateTime.now())
-                .build();
-
-        Transaction transaction3 = Transaction.builder()
-                .transactionId(3L)
-                .salePost(salePost3)
-                .memberId(BUYER_ID)
-                .status(TransactionStatus.PENDING)
-                .startedAt(LocalDateTime.now())
-                .build();
+        Transaction transaction1 =
+                createTransaction(1L, salePost1, BUYER_ID, null,
+                        TransactionStatus.PENDING, null, null);
+        Transaction transaction2 =
+                createTransaction(2L, salePost2, BUYER_ID, null,
+                        TransactionStatus.PENDING, null, null);
+        Transaction transaction3 =
+                createTransaction(3L, salePost3, BUYER_ID, null,
+                        TransactionStatus.PENDING, null, null);
 
         List<Transaction> transactionList =
                 Arrays.asList(transaction1, transaction2, transaction3);
@@ -173,17 +176,20 @@ public class    TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].transactionId").value(1L))
                 .andExpect(jsonPath("$.content[0].salePostId").value(1L))
-                .andExpect(jsonPath("$.content[0].memberId").value(2L))
+                .andExpect(jsonPath("$.content[0].sellerId").value(1L))
+                .andExpect(jsonPath("$.content[0].buyerId").value(2L))
                 .andExpect(jsonPath("$.content[0].status").value("Pending"))
                 .andExpect(jsonPath("$.content[0].startedAt").exists())
                 .andExpect(jsonPath("$.content[1].transactionId").value(2L))
                 .andExpect(jsonPath("$.content[1].salePostId").value(2L))
-                .andExpect(jsonPath("$.content[1].memberId").value(2L))
+                .andExpect(jsonPath("$.content[1].sellerId").value(2L))
+                .andExpect(jsonPath("$.content[1].buyerId").value(2L))
                 .andExpect(jsonPath("$.content[1].status").value("Pending"))
                 .andExpect(jsonPath("$.content[1].startedAt").exists())
                 .andExpect(jsonPath("$.content[2].transactionId").value(3L))
                 .andExpect(jsonPath("$.content[2].salePostId").value(3L))
-                .andExpect(jsonPath("$.content[2].memberId").value(2L))
+                .andExpect(jsonPath("$.content[2].sellerId").value(3L))
+                .andExpect(jsonPath("$.content[2].buyerId").value(2L))
                 .andExpect(jsonPath("$.content[2].status").value("Pending"))
                 .andExpect(jsonPath("$.content[2].startedAt").exists());
     }
@@ -198,20 +204,13 @@ public class    TransactionControllerTest {
                         .payAmount(PAY_AMOUNT)
                         .build();
 
-        Post salePost = Post.builder()
-                .salePostId(POST_ID)
-                .build();
+        Post salePost = createPost(POST_ID, SELLER_ID);
+        Transaction transaction =
+                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                        TransactionStatus.RECEIVED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToReceived(transactionRequest))
-                .willReturn(Transaction.builder()
-                        .transactionId(TRANSACTION_ID)
-                        .salePost(salePost)
-                        .memberId(BUYER_ID)
-                        .payAmount(PAY_AMOUNT)
-                        .status(TransactionStatus.RECEIVED)
-                        .receivedAt(LocalDateTime.now())
-                        .startedAt(LocalDateTime.now())
-                        .build());
+                .willReturn(transaction);
 
         //when
         //then
@@ -222,7 +221,8 @@ public class    TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
-                .andExpect(jsonPath("$.memberId").value(2L))
+                .andExpect(jsonPath("$.sellerId").value(1L))
+                .andExpect(jsonPath("$.buyerId").value(2L))
                 .andExpect(jsonPath("$.payAmount").value(10000))
                 .andExpect(jsonPath("$.status").value("Received"))
                 .andExpect(jsonPath("$.receivedAt").exists())
@@ -238,19 +238,13 @@ public class    TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Post salePost = Post.builder()
-                .salePostId(POST_ID)
-                .build();
+        Post salePost = createPost(POST_ID, SELLER_ID);
+        Transaction transaction =
+                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                        TransactionStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToCompleted(transactionRequest))
-                .willReturn(Transaction.builder()
-                        .transactionId(TRANSACTION_ID)
-                        .salePost(salePost)
-                        .memberId(BUYER_ID)
-                        .status(TransactionStatus.COMPLETED)
-                        .startedAt(LocalDateTime.now())
-                        .endedAt(LocalDateTime.now())
-                        .build());
+                .willReturn(transaction);
 
         //when
         //then
@@ -261,7 +255,8 @@ public class    TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
-                .andExpect(jsonPath("$.memberId").value(2L))
+                .andExpect(jsonPath("$.sellerId").value(1L))
+                .andExpect(jsonPath("$.buyerId").value(2L))
                 .andExpect(jsonPath("$.status").value("Completed"))
                 .andExpect(jsonPath("$.startedAt").exists())
                 .andExpect(jsonPath("$.endedAt").exists());
@@ -276,19 +271,13 @@ public class    TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Post salePost = Post.builder()
-                .salePostId(POST_ID)
-                .build();
+        Post salePost = createPost(POST_ID, SELLER_ID);
+        Transaction transaction =
+                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                        TransactionStatus.CANCELED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToCanceled(transactionRequest))
-                .willReturn(Transaction.builder()
-                        .transactionId(TRANSACTION_ID)
-                        .salePost(salePost)
-                        .memberId(BUYER_ID)
-                        .status(TransactionStatus.CANCELED)
-                        .startedAt(LocalDateTime.now())
-                        .endedAt(LocalDateTime.now())
-                        .build());
+                .willReturn(transaction);
 
         //when
         //then
@@ -299,7 +288,8 @@ public class    TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
-                .andExpect(jsonPath("$.memberId").value(2L))
+                .andExpect(jsonPath("$.sellerId").value(1L))
+                .andExpect(jsonPath("$.buyerId").value(2L))
                 .andExpect(jsonPath("$.status").value("Canceled"))
                 .andExpect(jsonPath("$.startedAt").exists())
                 .andExpect(jsonPath("$.endedAt").exists());
@@ -314,19 +304,13 @@ public class    TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Post salePost = Post.builder()
-                .salePostId(POST_ID)
-                .build();
+        Post salePost = createPost(POST_ID, SELLER_ID);
+        Transaction transaction =
+                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                        TransactionStatus.REPORTED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToReported(transactionRequest))
-                .willReturn(Transaction.builder()
-                        .transactionId(TRANSACTION_ID)
-                        .salePost(salePost)
-                        .memberId(BUYER_ID)
-                        .status(TransactionStatus.REPORTED)
-                        .startedAt(LocalDateTime.now())
-                        .endedAt(LocalDateTime.now())
-                        .build());
+                .willReturn(transaction);
 
         //when
         //then
@@ -337,7 +321,8 @@ public class    TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.transactionId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
-                .andExpect(jsonPath("$.memberId").value(2L))
+                .andExpect(jsonPath("$.sellerId").value(1L))
+                .andExpect(jsonPath("$.buyerId").value(2L))
                 .andExpect(jsonPath("$.status").value("Reported"))
                 .andExpect(jsonPath("$.startedAt").exists())
                 .andExpect(jsonPath("$.endedAt").exists());
