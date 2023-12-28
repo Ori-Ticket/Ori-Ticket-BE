@@ -8,6 +8,7 @@ import com.zerobase.oriticket.domain.chat.entity.ContactChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.service.ChatMessageService;
 import com.zerobase.oriticket.domain.chat.service.ContactChatMessageService;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,33 +43,40 @@ public class ChatMessageControllerTest {
 
     private final static String MESSAGE = "message";
 
+    private ChatRoom createChatRoom(Long chatRoomId){
+        return ChatRoom.builder()
+                .chatRoomId(chatRoomId)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    private ChatMessage createChatMessage(Long chatMessageId, ChatRoom chatRoom, Member member, String message){
+        return ChatMessage.builder()
+                .chatMessageId(chatMessageId)
+                .chatRoom(chatRoom)
+                .member(member)
+                .message(message)
+                .chattedAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
+                .build();
+    }
+
     @Test
     @DisplayName("ChatRoom 에 있는 모든 ChatMessage 조회 성공")
     void successGetAllChatMessage() throws Exception {
         //given
-        ChatRoom chatRoom = ChatRoom.builder()
-                .chatRoomId(1L)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Member member1 = createMember(1L);
+        Member member2 = createMember(2L);
+        ChatRoom chatRoom = createChatRoom(1L);
+        ChatMessage chatMessage1 = createChatMessage(1L, chatRoom, member1, MESSAGE);
+        ChatMessage chatMessage2 = createChatMessage(2L, chatRoom, member2, MESSAGE);
 
-        ChatMessage chatMessage1 = ChatMessage.builder()
-                .chatMessageId(1L)
-                .chatRoom(chatRoom)
-                .memberId(1L)
-                .message(MESSAGE)
-                .chattedAt(LocalDateTime.now())
-                .build();
-
-        ChatMessage chatMessage2 = ChatMessage.builder()
-                .chatMessageId(2L)
-                .chatRoom(chatRoom)
-                .memberId(2L)
-                .message(MESSAGE)
-                .chattedAt(LocalDateTime.now())
-                .build();
-
-        List<ChatMessage> chatMessages =
-                Arrays.asList(chatMessage1, chatMessage2);
+        List<ChatMessage> chatMessages = Arrays.asList(chatMessage1, chatMessage2);
 
         given(chatMessageService.getByRoom(anyLong()))
                 .willReturn(chatMessages);

@@ -18,7 +18,7 @@ public class ContactChatRoomResponse {
     public static ContactChatRoomResponse fromEntity(ContactChatRoom contactChatRoom){
         return ContactChatRoomResponse.builder()
                 .contactChatRoomId(contactChatRoom.getContactChatRoomId())
-                .memberId(contactChatRoom.getMemberId())
+                .memberId(contactChatRoom.getMember().getMembersId())
                 .createdAt(contactChatRoom.getCreatedAt())
                 .build();
     }

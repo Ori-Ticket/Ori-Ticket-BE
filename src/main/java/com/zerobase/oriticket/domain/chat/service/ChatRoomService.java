@@ -50,8 +50,6 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public List<ChatRoom> getByMember(Long memberId){
 
-        // 멤버 가져오기
-
-        return chatRoomRepository.findAllByMembers(memberId);
+        return chatRoomRepository.findAllByMembers_MembersId(memberId);
     }
 }

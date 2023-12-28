@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ContactChatRoomRepository extends JpaRepository<ContactChatRoom, Long> {
-    Optional<ContactChatRoom> findByMemberId(Long memberId);
+    Optional<ContactChatRoom> findByMember_MembersId(Long memberId);
 }

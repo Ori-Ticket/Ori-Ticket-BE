@@ -4,6 +4,8 @@ import com.zerobase.oriticket.domain.chat.dto.RegisterContactChatRoomRequest;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ContactChatRoomRepository;
 import com.zerobase.oriticket.domain.chat.service.ContactChatRoomService;
+import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.MembersRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,8 +34,25 @@ public class ContactChatRoomServiceTest {
     @Mock
     private ContactChatRoomRepository contactChatRoomRepository;
 
+    @Mock
+    private MembersRepository membersRepository;
+
     @InjectMocks
     private ContactChatRoomService contactChatRoomService;
+
+    private ContactChatRoom createContactChatRoom(Long contactChatRoomId, Member member){
+        return ContactChatRoom.builder()
+                .contactChatRoomId(contactChatRoomId)
+                .member(member)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
+                .build();
+    }
 
     @Test
     @Transactional
@@ -44,20 +63,20 @@ public class ContactChatRoomServiceTest {
                 RegisterContactChatRoomRequest.builder()
                         .memberId(10L)
                         .build();
+        Member member = createMember(10L);
+        ContactChatRoom contactChatRoom = createContactChatRoom(1L, member);
 
+        given(membersRepository.findById(anyLong()))
+                .willReturn(Optional.of(member));
         given(contactChatRoomRepository.save(any(ContactChatRoom.class)))
-                .willReturn(ContactChatRoom.builder()
-                        .contactChatRoomId(1L)
-                        .memberId(10L)
-                        .createdAt(LocalDateTime.now())
-                        .build());
+                .willReturn(contactChatRoom);
 
         //when
         ContactChatRoom fetchedContactChatRoom = contactChatRoomService.register(registerRequest);
 
         //then
         assertThat(fetchedContactChatRoom.getContactChatRoomId()).isEqualTo(1L);
-        assertThat(fetchedContactChatRoom.getMemberId()).isEqualTo(10L);
+        assertThat(fetchedContactChatRoom.getMember().getMembersId()).isEqualTo(10L);
         assertNotNull(fetchedContactChatRoom.getCreatedAt());
 
     }
@@ -66,24 +85,18 @@ public class ContactChatRoomServiceTest {
     @DisplayName("문의 채팅 방 조회 성공")
     void successGet(){
         //given
-        RegisterContactChatRoomRequest registerRequest =
-                RegisterContactChatRoomRequest.builder()
-                        .memberId(10L)
-                        .build();
+        Member member = createMember(10L);
+        ContactChatRoom contactChatRoom = createContactChatRoom(1L, member);
 
         given(contactChatRoomRepository.findById(anyLong()))
-                .willReturn(Optional.of(ContactChatRoom.builder()
-                        .contactChatRoomId(1L)
-                        .memberId(10L)
-                        .createdAt(LocalDateTime.now())
-                        .build()));
+                .willReturn(Optional.of(contactChatRoom));
 
         //when
         ContactChatRoom fetchedContactChatRoom = contactChatRoomService.get(1L);
 
         //then
         assertThat(fetchedContactChatRoom.getContactChatRoomId()).isEqualTo(1L);
-        assertThat(fetchedContactChatRoom.getMemberId()).isEqualTo(10L);
+        assertThat(fetchedContactChatRoom.getMember().getMembersId()).isEqualTo(10L);
         assertNotNull(fetchedContactChatRoom.getCreatedAt());
 
     }
@@ -92,17 +105,10 @@ public class ContactChatRoomServiceTest {
     @DisplayName("모든 문의 채팅 방 조회 성공")
     void successGetAll(){
         //given
-        ContactChatRoom contactChatRoom1 = ContactChatRoom.builder()
-                .contactChatRoomId(1L)
-                .memberId(10L)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        ContactChatRoom contactChatRoom2 = ContactChatRoom.builder()
-                .contactChatRoomId(2L)
-                .memberId(11L)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Member member1 = createMember(10L);
+        Member member2 = createMember(11L);
+        ContactChatRoom contactChatRoom1 = createContactChatRoom(1L, member1);
+        ContactChatRoom contactChatRoom2 = createContactChatRoom(2L, member2);
 
         List<ContactChatRoom> contactChatRoomList = Arrays.asList(contactChatRoom1, contactChatRoom2);
 
@@ -115,10 +121,10 @@ public class ContactChatRoomServiceTest {
         //then
         assertThat(fetchedContactChatRooms.getContent()).hasSize(2);
         assertThat(fetchedContactChatRooms.getContent().get(0).getContactChatRoomId()).isEqualTo(1L);
-        assertThat(fetchedContactChatRooms.getContent().get(0).getMemberId()).isEqualTo(10L);
+        assertThat(fetchedContactChatRooms.getContent().get(0).getMember().getMembersId()).isEqualTo(10L);
         assertNotNull(fetchedContactChatRooms.getContent().get(0).getCreatedAt());
         assertThat(fetchedContactChatRooms.getContent().get(1).getContactChatRoomId()).isEqualTo(2L);
-        assertThat(fetchedContactChatRooms.getContent().get(1).getMemberId()).isEqualTo(11L);
+        assertThat(fetchedContactChatRooms.getContent().get(1).getMember().getMembersId()).isEqualTo(11L);
         assertNotNull(fetchedContactChatRooms.getContent().get(1).getCreatedAt());
 
     }
@@ -127,19 +133,18 @@ public class ContactChatRoomServiceTest {
     @DisplayName("Member 로 문의 채팅 방 조회 성공")
     void successGetByMember(){
         //given
+        Member member = createMember(10L);
+        ContactChatRoom contactChatRoom = createContactChatRoom(1L, member);
+
         given(contactChatRoomRepository.findByMemberId(anyLong()))
-                .willReturn(Optional.of(ContactChatRoom.builder()
-                        .contactChatRoomId(1L)
-                        .memberId(10L)
-                        .createdAt(LocalDateTime.now())
-                        .build()));
+                .willReturn(Optional.of(contactChatRoom));
 
         //when
         ContactChatRoom fetchedContactChatRoom = contactChatRoomService.getByMember(10L);
 
         //then
         assertThat(fetchedContactChatRoom.getContactChatRoomId()).isEqualTo(1L);
-        assertThat(fetchedContactChatRoom.getMemberId()).isEqualTo(10L);
+        assertThat(fetchedContactChatRoom.getMember().getMembersId()).isEqualTo(10L);
         assertNotNull(fetchedContactChatRoom.getCreatedAt());
     }
 }

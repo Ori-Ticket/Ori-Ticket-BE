@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.chat.entity;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import jakarta.persistence.*;
@@ -30,14 +31,14 @@ public class ChatRoom extends BaseChatRoom{
     private Transaction transaction;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Long> members;
+    private Set<Member> members;
 
     private LocalDateTime endedAt;
 
     public static ChatRoom createChatRoom(Transaction transaction, Post salePost){
-        Set<Long> members = new HashSet<>();
-        members.add(transaction.getMember().getMembersId());
-        members.add(salePost.getMember().getMembersId());
+        Set<Member> members = new HashSet<>();
+        members.add(transaction.getMember());
+        members.add(salePost.getMember());
 
         return ChatRoom.builder()
                 .transaction(transaction)
