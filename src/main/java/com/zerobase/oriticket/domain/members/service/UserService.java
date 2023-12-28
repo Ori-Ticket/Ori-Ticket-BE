@@ -4,6 +4,7 @@ import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.entity.UserEntity;
 import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import jakarta.persistence.EntityManager;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,9 @@ public class UserService {
 
     @Transactional
     public void updateUserByEmail(UserRequest userKakao, UserRequest userRequest) {
+        if (!Objects.equals(userKakao.getEmail(), userRequest.getEmail())) {
+            throw new RuntimeException("카카오 토큰인증이 없는 회원입니다. 새로고침 후 다시 진행해주시길 바랍니다.");
+        }
         userKakao.setName(userRequest.getName());
         userKakao.setBirthDate(userRequest.getBirthDate());
         userKakao.setPhoneNum(userRequest.getPhoneNum());
