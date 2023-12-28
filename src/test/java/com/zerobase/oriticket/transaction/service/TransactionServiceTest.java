@@ -108,9 +108,10 @@ public class TransactionServiceTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Ticket ticket){
+    private Post createPost(Long salePostId, Member member, Ticket ticket){
         return Post.builder()
                 .salePostId(salePostId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(SaleStatus.FOR_SALE)
                 .build();
@@ -137,9 +138,10 @@ public class TransactionServiceTest {
                 .build();
     }
 
-    private Member createMember(Long membersId){
+    private Member createMember(Long membersId, String nickname){
         return Member.builder()
                 .membersId(membersId)
+                .nickname(nickname)
                 .build();
     }
 
@@ -157,14 +159,15 @@ public class TransactionServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Member member = createMember(2L);
-        Post salePost = createPost(1L, ticket);
-        Transaction transaction = createTransaction(10L, salePost, member);
+        Member member1 = createMember(1L, "seller name");
+        Member member2 = createMember(2L, "buyer name");
+        Post salePost = createPost(1L, member1, ticket);
+        Transaction transaction = createTransaction(10L, salePost, member2);
 
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(salePost));
         given(membersRepository.findById(anyLong()))
-                .willReturn(Optional.of(member));
+                .willReturn(Optional.of(member2));
         given(transactionRepository.validateCanRegisterTransaction(any(Post.class)))
                 .willReturn(true);
         given(transactionRepository.save(any(Transaction.class)))
@@ -204,7 +207,7 @@ public class TransactionServiceTest {
     @DisplayName("Transaction 조회 성공")
     void successGet(){
         //given
-        Member member = createMember(3L);
+        Member member = createMember(3L, "buyer name");
         Post salePost = createPost(10L);
         Transaction transaction = createTransaction(15L, salePost, member);
 
@@ -227,8 +230,8 @@ public class TransactionServiceTest {
     @DisplayName("모든 Transaction 조회 성공")
     void successGetAll(){
         //given
-        Member member1 = createMember(3L);
-        Member member2 = createMember(4L);
+        Member member1 = createMember(3L, "buyer1 name");
+        Member member2 = createMember(4L, "buyer2 name");
         Post salePost1 = createPost(10L);
         Post salePost2 = createPost(11L);
         Transaction transaction1 = createTransaction(15L, salePost1, member1);

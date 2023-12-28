@@ -25,7 +25,7 @@ public class ReportTransactionResponse {
 
         return ReportTransactionResponse.builder()
                 .reportTransactionId(reportTransaction.getReportTransactionId())
-                .memberId(reportTransaction.getMemberId())
+                .memberId(reportTransaction.getMember().getMembersId())
                 .transaction(TransactionResponse.fromEntity(reportTransaction.getTransaction()))
                 .reason(reportTransaction.getReason().getReportType())
                 .reportedAt(reportTransaction.getReportedAt())

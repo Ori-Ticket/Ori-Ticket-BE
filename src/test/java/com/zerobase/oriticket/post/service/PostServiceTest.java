@@ -142,9 +142,10 @@ public class PostServiceTest {
                 .build();
     }
 
-    private Member createMember(Long membersId){
+    private Member createMember(Long membersId, String nickname){
         return Member.builder()
                 .membersId(membersId)
+                .nickname(nickname)
                 .build();
     }
 
@@ -158,7 +159,7 @@ public class PostServiceTest {
         Stadium stadium = createStadium(2L, sports, "잠실 주경기장", "두산");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Member member = createMember(11L);
+        Member member = createMember(11L, "seller name");
         Post post = createPost(10L, member, ticket);
 
         given(membersRepository.findById(anyLong()))
@@ -215,7 +216,7 @@ public class PostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(3L, sports, "기아");
         Ticket ticket = createTicket(11L, sports, stadium, awayTeam);
-        Member member = createMember(2L);
+        Member member = createMember(2L, "seller name");
         Post post = createPost(3L, member, ticket);
 
         given(postRepository.findById(anyLong()))
@@ -240,7 +241,7 @@ public class PostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(3L, sports, "기아");
         Ticket ticket = createTicket(11L, sports, stadium, awayTeam);
-        Member member = createMember(2L);
+        Member member = createMember(2L, "seller name");
         Post post = createPost(3L, member, ticket);
 
         given(postRepository.findById(anyLong()))
@@ -312,7 +313,7 @@ public class PostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(3L, sports, "기아");
         Ticket ticket = createTicket(11L, sports, stadium, awayTeam);
-        Member member = createMember(2L);
+        Member member = createMember(2L, "seller name");
         Post post = createPost(3L, member, ticket);
         Post reportedPost = createPost(3L, member, ticket);
         reportedPost.setSaleStatus(SaleStatus.REPORTED);

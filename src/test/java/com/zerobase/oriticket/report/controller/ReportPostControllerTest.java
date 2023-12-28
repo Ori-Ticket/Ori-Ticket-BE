@@ -105,7 +105,7 @@ public class ReportPostControllerTest {
 
     private ReportPost createReportPost(
             Long reportPostId,
-            Long memberId,
+            Member member,
             Post salePost,
             ReportReactStatus status,
             LocalDateTime reactedAt,
@@ -113,7 +113,7 @@ public class ReportPostControllerTest {
     ){
         return ReportPost.builder()
                 .reportPostId(reportPostId)
-                .memberId(memberId)
+                .member(member)
                 .salePost(salePost)
                 .reason(ReportPostType.OTHER_ISSUES)
                 .reportedAt(LocalDateTime.now())
@@ -142,9 +142,10 @@ public class ReportPostControllerTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Member member = createMember(11L);
-        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
-        ReportPost reportPost = createReportPost(5L, 2L, salePost,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        ReportPost reportPost = createReportPost(5L, member2, salePost,
                 ReportReactStatus.PROCESSING, null, null);
 
         given(reportPostService.register(anyLong(), any(RegisterReportPostRequest.class)))
@@ -194,9 +195,10 @@ public class ReportPostControllerTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Member member = createMember(11L);
-        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
-        ReportPost reportPost = createReportPost(5L, 2L, salePost,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        ReportPost reportPost = createReportPost(5L, member2, salePost,
                 ReportReactStatus.REACTED, LocalDateTime.now(), "react note");
 
         given(reportPostService.updateToReacted(anyLong(), any(UpdateReportRequest.class)))

@@ -136,7 +136,7 @@ public class ContactChatRoomServiceTest {
         Member member = createMember(10L);
         ContactChatRoom contactChatRoom = createContactChatRoom(1L, member);
 
-        given(contactChatRoomRepository.findByMemberId(anyLong()))
+        given(contactChatRoomRepository.findByMember_MembersId(anyLong()))
                 .willReturn(Optional.of(contactChatRoom));
 
         //when

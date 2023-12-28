@@ -2,6 +2,7 @@ package com.zerobase.oriticket.report.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportTransactionSearchRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.MembersRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
@@ -43,6 +44,9 @@ public class ReportTransactionServiceTest {
 
     @Mock
     private ReportTransactionSearchRepository reportTransactionSearchRepository;
+
+    @Mock
+    private MembersRepository membersRepository;
 
     @InjectMocks
     private ReportTransactionService reportTransactionService;
@@ -122,7 +126,7 @@ public class ReportTransactionServiceTest {
 
     private ReportTransaction createReportTransaction(
             Long reportTransactionId,
-            Long memberId,
+            Member member,
             Transaction transaction,
             ReportReactStatus status,
             LocalDateTime reactedAt,
@@ -130,7 +134,7 @@ public class ReportTransactionServiceTest {
     ){
         return ReportTransaction.builder()
                 .reportTransactionId(reportTransactionId)
-                .memberId(memberId)
+                .member(member)
                 .transaction(transaction)
                 .reason(ReportTransactionType.ECONOMIC_LOSS)
                 .reportedAt(LocalDateTime.now())
@@ -163,10 +167,11 @@ public class ReportTransactionServiceTest {
         Member member2 = createMember(2L);
         Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
         Transaction transaction = createTransaction(19L, salePost, member2);
-        ReportTransaction reportTransaction =
-                createReportTransaction(5L, 2L, transaction,
+        ReportTransaction reportTransaction = createReportTransaction(5L, member2, transaction,
                         ReportReactStatus.PROCESSING, null, null);
 
+        given(membersRepository.findById(anyLong()))
+                .willReturn(Optional.of(member2));
         given(transactionRepository.findById(anyLong()))
                 .willReturn(Optional.of(transaction));
         given(reportTransactionRepository.save(any(ReportTransaction.class)))
@@ -177,7 +182,7 @@ public class ReportTransactionServiceTest {
 
         //then
         assertThat(fetchedReportTransaction.getReportTransactionId()).isEqualTo(5L);
-        assertThat(fetchedReportTransaction.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedReportTransaction.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedReportTransaction.getTransaction()).isEqualTo(transaction);
         assertThat(fetchedReportTransaction.getReason()).isEqualTo(ReportTransactionType.ECONOMIC_LOSS);
         assertNotNull(fetchedReportTransaction.getReportedAt());
@@ -203,8 +208,7 @@ public class ReportTransactionServiceTest {
         Member member2 = createMember(2L);
         Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
         Transaction transaction = createTransaction(19L, salePost, member2);
-        ReportTransaction reportTransaction =
-                createReportTransaction(5L, 2L, transaction,
+        ReportTransaction reportTransaction = createReportTransaction(5L, member2, transaction,
                         ReportReactStatus.REACTED, LocalDateTime.now(), "react note");
 
         given(reportTransactionRepository.findById(anyLong()))
@@ -218,7 +222,7 @@ public class ReportTransactionServiceTest {
 
         //then
         assertThat(fetchedReportTransaction.getReportTransactionId()).isEqualTo(5L);
-        assertThat(fetchedReportTransaction.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedReportTransaction.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedReportTransaction.getTransaction()).isEqualTo(transaction);
         assertThat(fetchedReportTransaction.getReason()).isEqualTo(ReportTransactionType.ECONOMIC_LOSS);
         assertNotNull(fetchedReportTransaction.getReportedAt());

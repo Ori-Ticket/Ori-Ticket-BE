@@ -2,6 +2,7 @@ package com.zerobase.oriticket.report.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportPostSearchRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.MembersRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -41,6 +42,9 @@ public class ReportPostServiceTest {
 
     @Mock
     private PostRepository postRepository;
+
+    @Mock
+    private MembersRepository membersRepository;
 
     @InjectMocks
     private ReportPostService reportPostService;
@@ -106,7 +110,7 @@ public class ReportPostServiceTest {
 
     private ReportPost createReportPost(
             Long reportPostId,
-            Long memberId,
+            Member member,
             Post salePost,
             ReportReactStatus status,
             LocalDateTime reactedAt,
@@ -114,7 +118,7 @@ public class ReportPostServiceTest {
     ){
         return ReportPost.builder()
                 .reportPostId(reportPostId)
-                .memberId(memberId)
+                .member(member)
                 .salePost(salePost)
                 .reason(ReportPostType.OTHER_ISSUES)
                 .reportedAt(LocalDateTime.now())
@@ -144,11 +148,14 @@ public class ReportPostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Member member = createMember(11L);
-        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
-        ReportPost reportPost = createReportPost(5L, 2L, salePost,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        ReportPost reportPost = createReportPost(5L, member2, salePost,
                 ReportReactStatus.PROCESSING, null, null);
 
+        given(membersRepository.findById(anyLong()))
+                .willReturn(Optional.of(member2));
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(salePost));
         given(reportPostRepository.save(any(ReportPost.class)))
@@ -159,7 +166,7 @@ public class ReportPostServiceTest {
 
         //then
         assertThat(fetchedReportPost.getReportPostId()).isEqualTo(5L);
-        assertThat(fetchedReportPost.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedReportPost.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedReportPost.getSalePost()).isEqualTo(salePost);
         assertThat(fetchedReportPost.getReason()).isEqualTo(ReportPostType.OTHER_ISSUES);
         assertNotNull(fetchedReportPost.getReportedAt());
@@ -182,9 +189,10 @@ public class ReportPostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Member member = createMember(11L);
-        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
-        ReportPost reportPost = createReportPost(5L, 2L, salePost,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        ReportPost reportPost = createReportPost(5L, member2, salePost,
                 ReportReactStatus.PROCESSING, LocalDateTime.now(), "react note");
 
         given(reportPostRepository.findById(anyLong()))
@@ -197,7 +205,7 @@ public class ReportPostServiceTest {
 
         //then
         assertThat(fetchedReportPost.getReportPostId()).isEqualTo(5L);
-        assertThat(fetchedReportPost.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedReportPost.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedReportPost.getSalePost()).isEqualTo(salePost);
         assertThat(fetchedReportPost.getReason()).isEqualTo(ReportPostType.OTHER_ISSUES);
         assertNotNull(fetchedReportPost.getReportedAt());

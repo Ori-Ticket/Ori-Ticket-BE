@@ -104,9 +104,10 @@ public class TransactionUpdateServiceTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, SaleStatus status, Ticket ticket){
+    private Post createPost(Long salePostId, Member member, SaleStatus status, Ticket ticket){
         return Post.builder()
                 .salePostId(salePostId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(status)
                 .build();
@@ -120,9 +121,10 @@ public class TransactionUpdateServiceTest {
                 .build();
     }
 
-    private Member createMember(Long membersId){
+    private Member createMember(Long membersId, String nickname){
         return Member.builder()
                 .membersId(membersId)
+                .nickname(nickname)
                 .build();
     }
 
@@ -157,8 +159,8 @@ public class TransactionUpdateServiceTest {
                         .transactionId(11L)
                         .payAmount(10000)
                         .build();
-        Member member1 = createMember(1L);
-        Member member2 = createMember(2L);
+        Member member1 = createMember(1L, "seller name");
+        Member member2 = createMember(2L, "buyer name");
         Post salePost = createPost(1L, member1, SaleStatus.TRADING);
         Transaction transaction = createTransaction(11L, salePost, member2,
                 null, TransactionStatus.PENDING, null, null);
@@ -210,9 +212,10 @@ public class TransactionUpdateServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Member member = createMember(3L);
-        Post salePost = createPost(2L, SaleStatus.TRADING, ticket);
-        Transaction transaction = createTransaction(12L, salePost, member,
+        Member member1 = createMember(2L, "seller name");
+        Member member2 = createMember(3L, "buyer name");
+        Post salePost = createPost(2L, member1, SaleStatus.TRADING, ticket);
+        Transaction transaction = createTransaction(12L, salePost, member2,
                 10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         given(transactionRepository.findById(anyLong()))
@@ -269,9 +272,10 @@ public class TransactionUpdateServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Member member = createMember(3L);
-        Post salePost = createPost(2L, SaleStatus.TRADING, ticket);
-        Transaction transaction = createTransaction(12L, salePost, member,
+        Member member1 = createMember(2L, "seller name");
+        Member member2 = createMember(3L, "buyer name");
+        Post salePost = createPost(2L, member1, SaleStatus.TRADING, ticket);
+        Transaction transaction = createTransaction(12L, salePost, member2,
                 10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         given(transactionRepository.findById(anyLong()))
@@ -328,9 +332,10 @@ public class TransactionUpdateServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Member member = createMember(3L);
-        Post salePost = createPost(2L, SaleStatus.TRADING, ticket);
-        Transaction transaction = createTransaction(12L, salePost, member,
+        Member member1 = createMember(2L, "seller name");
+        Member member2 = createMember(3L, "buyer name");
+        Post salePost = createPost(2L, member1, SaleStatus.TRADING, ticket);
+        Transaction transaction = createTransaction(12L, salePost, member2,
                 10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         given(transactionRepository.findById(anyLong()))

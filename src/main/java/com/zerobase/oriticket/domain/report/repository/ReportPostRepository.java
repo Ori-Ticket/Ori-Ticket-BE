@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReportPostRepository extends JpaRepository<ReportPost, Long> {
-    boolean existsBySalePost_SalePostIdAndMemberIdAndReason(Long salePostId, Long memberId, ReportPostType reason);
+    boolean existsBySalePost_SalePostIdAndMember_MembersIdAndReason
+            (Long salePostId, Long memberId, ReportPostType reason);
 }

@@ -121,7 +121,7 @@ public class ReportTransactionControllerTest {
 
     private ReportTransaction createReportTransaction(
             Long reportTransactionId,
-            Long memberId,
+            Member member,
             Transaction transaction,
             ReportReactStatus status,
             LocalDateTime reactedAt,
@@ -129,7 +129,7 @@ public class ReportTransactionControllerTest {
     ){
         return ReportTransaction.builder()
                 .reportTransactionId(reportTransactionId)
-                .memberId(memberId)
+                .member(member)
                 .transaction(transaction)
                 .reason(ReportTransactionType.ECONOMIC_LOSS)
                 .reportedAt(LocalDateTime.now())
@@ -162,8 +162,7 @@ public class ReportTransactionControllerTest {
         Member member2 = createMember(2L);
         Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
         Transaction transaction = createTransaction(19L, salePost, member2);
-        ReportTransaction reportTransaction =
-                createReportTransaction(5L, 2L, transaction,
+        ReportTransaction reportTransaction = createReportTransaction(5L, member2, transaction,
                         ReportReactStatus.PROCESSING, null, null);
 
         given(reportTransactionService.register(anyLong(), any(RegisterReportTransactionRequest.class)))
@@ -210,8 +209,7 @@ public class ReportTransactionControllerTest {
         Member member2 = createMember(2L);
         Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
         Transaction transaction = createTransaction(19L, salePost, member2);
-        ReportTransaction reportTransaction =
-                createReportTransaction(5L, 2L, transaction,
+        ReportTransaction reportTransaction = createReportTransaction(5L, member2, transaction,
                         ReportReactStatus.REACTED, LocalDateTime.now(), "react note");
 
         given(reportTransactionService.updateToReacted(anyLong(), any(UpdateReportRequest.class)))
