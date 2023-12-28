@@ -49,7 +49,7 @@ public class TransactionFetchControllerTest {
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
-            Long buyerId,
+            Member buyer,
             Integer payAmount,
             TransactionStatus status,
             LocalDateTime receivedAt,
@@ -58,7 +58,7 @@ public class TransactionFetchControllerTest {
         return Transaction.builder()
                 .transactionId(transactionId)
                 .salePost(salePost)
-                .memberId(buyerId)
+                .member(buyer)
                 .payAmount(payAmount)
                 .status(status)
                 .receivedAt(receivedAt)
@@ -76,9 +76,9 @@ public class TransactionFetchControllerTest {
         Post salePost1 = createPost(1L, member1);
         Post salePost2 = createPost(2L, member2);
 
-        Transaction transaction1 = createTransaction(1L, salePost1, 2L,
+        Transaction transaction1 = createTransaction(1L, salePost1, member2,
                         null, TransactionStatus.PENDING, null, null);
-        Transaction transaction2 = createTransaction(2L, salePost2, 1L,
+        Transaction transaction2 = createTransaction(2L, salePost2, member1,
                         10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         List<Transaction> transactionList = Arrays.asList(transaction1, transaction2);
@@ -121,9 +121,9 @@ public class TransactionFetchControllerTest {
         Post salePost1 = createPost(1L, member1);
         Post salePost2 = createPost(2L, member2);
 
-        Transaction transaction1 = createTransaction(1L, salePost1, 2L,
+        Transaction transaction1 = createTransaction(1L, salePost1, member2,
                 10000, TransactionStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
-        Transaction transaction2 = createTransaction(2L, salePost2, 1L,
+        Transaction transaction2 = createTransaction(2L, salePost2, member1,
                 10000, TransactionStatus.CANCELED, LocalDateTime.now() ,LocalDateTime.now());
 
         List<Transaction> transactionList = Arrays.asList(transaction1, transaction2);

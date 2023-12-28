@@ -109,12 +109,12 @@ public class ReportTransactionServiceTest {
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
-            Long memberId
+            Member member
     ){
         return Transaction.builder()
                 .transactionId(transactionId)
                 .salePost(salePost)
-                .memberId(memberId)
+                .member(member)
                 .startedAt(LocalDateTime.now())
                 .status(TransactionStatus.PENDING)
                 .build();
@@ -159,9 +159,10 @@ public class ReportTransactionServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Member member = createMember(11L);
-        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
-        Transaction transaction = createTransaction(19L, salePost, 2L);
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        Transaction transaction = createTransaction(19L, salePost, member2);
         ReportTransaction reportTransaction =
                 createReportTransaction(5L, 2L, transaction,
                         ReportReactStatus.PROCESSING, null, null);
@@ -198,9 +199,10 @@ public class ReportTransactionServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Member member = createMember(11L);
-        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
-        Transaction transaction = createTransaction(19L, salePost, 2L);
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        Transaction transaction = createTransaction(19L, salePost, member2);
         ReportTransaction reportTransaction =
                 createReportTransaction(5L, 2L, transaction,
                         ReportReactStatus.REACTED, LocalDateTime.now(), "react note");

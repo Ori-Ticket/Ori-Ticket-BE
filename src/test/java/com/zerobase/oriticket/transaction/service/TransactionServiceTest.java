@@ -3,6 +3,8 @@ package com.zerobase.oriticket.transaction.service;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.MembersRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -50,6 +52,9 @@ public class TransactionServiceTest {
 
     @Mock
     private PostSearchRepository postSearchRepository;
+
+    @Mock
+    private MembersRepository membersRepository;
 
     @InjectMocks
     private TransactionService transactionService;
@@ -121,14 +126,20 @@ public class TransactionServiceTest {
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
-            Long memberId
+            Member member
     ){
         return Transaction.builder()
                 .transactionId(transactionId)
                 .salePost(salePost)
-                .memberId(memberId)
+                .member(member)
                 .status(TransactionStatus.PENDING)
                 .startedAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
                 .build();
     }
 
@@ -146,11 +157,14 @@ public class TransactionServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
+        Member member = createMember(2L);
         Post salePost = createPost(1L, ticket);
-        Transaction transaction = createTransaction(10L, salePost, 2L);
+        Transaction transaction = createTransaction(10L, salePost, member);
 
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(salePost));
+        given(membersRepository.findById(anyLong()))
+                .willReturn(Optional.of(member));
         given(transactionRepository.validateCanRegisterTransaction(any(Post.class)))
                 .willReturn(true);
         given(transactionRepository.save(any(Transaction.class)))
@@ -172,7 +186,7 @@ public class TransactionServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(10L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransaction.getStartedAt());
 
@@ -190,8 +204,9 @@ public class TransactionServiceTest {
     @DisplayName("Transaction 조회 성공")
     void successGet(){
         //given
+        Member member = createMember(3L);
         Post salePost = createPost(10L);
-        Transaction transaction = createTransaction(15L, salePost, 3L);
+        Transaction transaction = createTransaction(15L, salePost, member);
 
         given(transactionRepository.findById(anyLong()))
                 .willReturn(Optional.of(transaction));
@@ -202,7 +217,7 @@ public class TransactionServiceTest {
         //then
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(15L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMemberId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransaction.getStartedAt());
 
@@ -212,10 +227,12 @@ public class TransactionServiceTest {
     @DisplayName("모든 Transaction 조회 성공")
     void successGetAll(){
         //given
+        Member member1 = createMember(3L);
+        Member member2 = createMember(4L);
         Post salePost1 = createPost(10L);
         Post salePost2 = createPost(11L);
-        Transaction transaction1 = createTransaction(15L, salePost1, 3L);
-        Transaction transaction2 = createTransaction(16L, salePost2, 4L);
+        Transaction transaction1 = createTransaction(15L, salePost1, member1);
+        Transaction transaction2 = createTransaction(16L, salePost2, member2);
 
         List<Transaction> transactionList = Arrays.asList(transaction1, transaction2);
 
@@ -228,12 +245,12 @@ public class TransactionServiceTest {
         //then
         assertThat(fetchedTransactions.getContent().get(0).getTransactionId()).isEqualTo(15L);
         assertThat(fetchedTransactions.getContent().get(0).getSalePost()).isEqualTo(salePost1);
-        assertThat(fetchedTransactions.getContent().get(0).getMemberId()).isEqualTo(3L);
+        assertThat(fetchedTransactions.getContent().get(0).getMember().getMembersId()).isEqualTo(3L);
         assertThat(fetchedTransactions.getContent().get(0).getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransactions.getContent().get(0).getStartedAt());
         assertThat(fetchedTransactions.getContent().get(1).getTransactionId()).isEqualTo(16L);
         assertThat(fetchedTransactions.getContent().get(1).getSalePost()).isEqualTo(salePost2);
-        assertThat(fetchedTransactions.getContent().get(1).getMemberId()).isEqualTo(4L);
+        assertThat(fetchedTransactions.getContent().get(1).getMember().getMembersId()).isEqualTo(4L);
         assertThat(fetchedTransactions.getContent().get(1).getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransactions.getContent().get(1).getStartedAt());
 

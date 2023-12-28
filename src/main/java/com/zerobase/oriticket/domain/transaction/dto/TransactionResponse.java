@@ -25,7 +25,7 @@ public class TransactionResponse {
                 .transactionId(transaction.getTransactionId())
                 .salePostId(transaction.getSalePost().getSalePostId())
                 .sellerId(transaction.getSalePost().getMember().getMembersId())
-                .buyerId(transaction.getMemberId())
+                .buyerId(transaction.getMember().getMembersId())
                 .payAmount(transaction.getPayAmount())
                 .status(transaction.getStatus().getState())
                 .receivedAt(transaction.getReceivedAt())

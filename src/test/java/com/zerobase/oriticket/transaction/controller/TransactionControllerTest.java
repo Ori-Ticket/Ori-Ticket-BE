@@ -71,7 +71,7 @@ public class TransactionControllerTest {
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
-            Long memberId,
+            Member member,
             Integer payAmount,
             TransactionStatus status,
             LocalDateTime receivedAt,
@@ -80,7 +80,7 @@ public class TransactionControllerTest {
         return Transaction.builder()
                 .transactionId(transactionId)
                 .salePost(salePost)
-                .memberId(memberId)
+                .member(member)
                 .payAmount(payAmount)
                 .status(status)
                 .receivedAt(receivedAt)
@@ -100,10 +100,11 @@ public class TransactionControllerTest {
                         .memberId(BUYER_ID)
                         .build();
 
-        Member member = createMember(SELLER_ID);
-        Post salePost = createPost(POST_ID, member);
+        Member member1 = createMember(SELLER_ID);
+        Member member2 = createMember(BUYER_ID);
+        Post salePost = createPost(POST_ID, member1);
         Transaction transaction =
-                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, null,
+                createTransaction(TRANSACTION_ID, salePost, member2, null,
                         TransactionStatus.PENDING, null, null);
 
         given(transactionService.register(any(RegisterTransactionRequest.class)))
@@ -129,11 +130,11 @@ public class TransactionControllerTest {
     @DisplayName("Transaction 조회 성공")
     void successGet() throws Exception {
         //given
-        Member member = createMember(SELLER_ID);
-        Post salePost = createPost(POST_ID, member);
-
+        Member member1 = createMember(SELLER_ID);
+        Member member2 = createMember(BUYER_ID);
+        Post salePost = createPost(POST_ID, member1);
         Transaction transaction =
-                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, null,
+                createTransaction(TRANSACTION_ID, salePost, member2, null,
                         TransactionStatus.PENDING, null, null);
 
         given(transactionService.get(anyLong()))
@@ -159,18 +160,19 @@ public class TransactionControllerTest {
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
         Member member3 = createMember(3L);
+        Member member4 = createMember(BUYER_ID);
         Post salePost1 = createPost(1L, member1);
         Post salePost2 = createPost(2L, member2);
         Post salePost3 = createPost(3L, member3);
 
         Transaction transaction1 =
-                createTransaction(1L, salePost1, BUYER_ID, null,
+                createTransaction(1L, salePost1, member4, null,
                         TransactionStatus.PENDING, null, null);
         Transaction transaction2 =
-                createTransaction(2L, salePost2, BUYER_ID, null,
+                createTransaction(2L, salePost2, member4, null,
                         TransactionStatus.PENDING, null, null);
         Transaction transaction3 =
-                createTransaction(3L, salePost3, BUYER_ID, null,
+                createTransaction(3L, salePost3, member4, null,
                         TransactionStatus.PENDING, null, null);
 
         List<Transaction> transactionList =
@@ -216,10 +218,11 @@ public class TransactionControllerTest {
                         .payAmount(PAY_AMOUNT)
                         .build();
 
-        Member member = createMember(SELLER_ID);
-        Post salePost = createPost(POST_ID, member);
+        Member member1 = createMember(SELLER_ID);
+        Member member2 = createMember(BUYER_ID);
+        Post salePost = createPost(POST_ID, member1);
         Transaction transaction =
-                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                createTransaction(TRANSACTION_ID, salePost, member2, 10000,
                         TransactionStatus.RECEIVED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToReceived(transactionRequest))
@@ -251,10 +254,11 @@ public class TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Member member = createMember(SELLER_ID);
-        Post salePost = createPost(POST_ID, member);
+        Member member1 = createMember(SELLER_ID);
+        Member member2 = createMember(BUYER_ID);
+        Post salePost = createPost(POST_ID, member1);
         Transaction transaction =
-                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                createTransaction(TRANSACTION_ID, salePost, member2, 10000,
                         TransactionStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToCompleted(transactionRequest))
@@ -285,10 +289,11 @@ public class TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Member member = createMember(SELLER_ID);
-        Post salePost = createPost(POST_ID, member);
+        Member member1 = createMember(SELLER_ID);
+        Member member2 = createMember(BUYER_ID);
+        Post salePost = createPost(POST_ID, member1);
         Transaction transaction =
-                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                createTransaction(TRANSACTION_ID, salePost, member2, 10000,
                         TransactionStatus.CANCELED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToCanceled(transactionRequest))
@@ -319,10 +324,11 @@ public class TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Member member = createMember(SELLER_ID);
-        Post salePost = createPost(POST_ID, member);
+        Member member1 = createMember(SELLER_ID);
+        Member member2 = createMember(BUYER_ID);
+        Post salePost = createPost(POST_ID, member1);
         Transaction transaction =
-                createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
+                createTransaction(TRANSACTION_ID, salePost, member2, 10000,
                         TransactionStatus.REPORTED, LocalDateTime.now(), LocalDateTime.now());
 
         given(transactionUpdateService.updateToReported(transactionRequest))

@@ -36,7 +36,7 @@ public class ChatRoom extends BaseChatRoom{
 
     public static ChatRoom createChatRoom(Transaction transaction, Post salePost){
         Set<Long> members = new HashSet<>();
-        members.add(transaction.getMemberId());
+        members.add(transaction.getMember().getMembersId());
         members.add(salePost.getMember().getMembersId());
 
         return ChatRoom.builder()
