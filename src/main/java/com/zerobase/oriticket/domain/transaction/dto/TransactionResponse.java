@@ -24,7 +24,7 @@ public class TransactionResponse {
         return TransactionResponse.builder()
                 .transactionId(transaction.getTransactionId())
                 .salePostId(transaction.getSalePost().getSalePostId())
-                .sellerId(transaction.getSalePost().getMemberId())
+                .sellerId(transaction.getSalePost().getMember().getMembersId())
                 .buyerId(transaction.getMemberId())
                 .payAmount(transaction.getPayAmount())
                 .status(transaction.getStatus().getState())

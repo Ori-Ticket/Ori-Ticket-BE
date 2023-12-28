@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.transaction.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.controller.TransactionController;
@@ -54,10 +55,16 @@ public class TransactionControllerTest {
     private final static Long BUYER_ID = 2L;
     private final static Integer PAY_AMOUNT = 10000;
 
-    private Post createPost(Long salePostId, Long memberId){
+    private Post createPost(Long salePostId, Member member){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
                 .build();
     }
 
@@ -93,7 +100,8 @@ public class TransactionControllerTest {
                         .memberId(BUYER_ID)
                         .build();
 
-        Post salePost = createPost(POST_ID, SELLER_ID);
+        Member member = createMember(SELLER_ID);
+        Post salePost = createPost(POST_ID, member);
         Transaction transaction =
                 createTransaction(TRANSACTION_ID, salePost, BUYER_ID, null,
                         TransactionStatus.PENDING, null, null);
@@ -121,7 +129,8 @@ public class TransactionControllerTest {
     @DisplayName("Transaction 조회 성공")
     void successGet() throws Exception {
         //given
-        Post salePost = createPost(POST_ID, SELLER_ID);
+        Member member = createMember(SELLER_ID);
+        Post salePost = createPost(POST_ID, member);
 
         Transaction transaction =
                 createTransaction(TRANSACTION_ID, salePost, BUYER_ID, null,
@@ -147,9 +156,12 @@ public class TransactionControllerTest {
     @DisplayName("Transaction 모두 조회 성공")
     void successGetAll() throws Exception {
         //given
-        Post salePost1 = createPost(1L, 1L);
-        Post salePost2 = createPost(2L, 2L);
-        Post salePost3 = createPost(3L, 3L);
+        Member member1 = createMember(1L);
+        Member member2 = createMember(2L);
+        Member member3 = createMember(3L);
+        Post salePost1 = createPost(1L, member1);
+        Post salePost2 = createPost(2L, member2);
+        Post salePost3 = createPost(3L, member3);
 
         Transaction transaction1 =
                 createTransaction(1L, salePost1, BUYER_ID, null,
@@ -204,7 +216,8 @@ public class TransactionControllerTest {
                         .payAmount(PAY_AMOUNT)
                         .build();
 
-        Post salePost = createPost(POST_ID, SELLER_ID);
+        Member member = createMember(SELLER_ID);
+        Post salePost = createPost(POST_ID, member);
         Transaction transaction =
                 createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
                         TransactionStatus.RECEIVED, LocalDateTime.now(), LocalDateTime.now());
@@ -238,7 +251,8 @@ public class TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Post salePost = createPost(POST_ID, SELLER_ID);
+        Member member = createMember(SELLER_ID);
+        Post salePost = createPost(POST_ID, member);
         Transaction transaction =
                 createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
                         TransactionStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
@@ -271,7 +285,8 @@ public class TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Post salePost = createPost(POST_ID, SELLER_ID);
+        Member member = createMember(SELLER_ID);
+        Post salePost = createPost(POST_ID, member);
         Transaction transaction =
                 createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
                         TransactionStatus.CANCELED, LocalDateTime.now(), LocalDateTime.now());
@@ -304,7 +319,8 @@ public class TransactionControllerTest {
                         .transactionId(TRANSACTION_ID)
                         .build();
 
-        Post salePost = createPost(POST_ID, SELLER_ID);
+        Member member = createMember(SELLER_ID);
+        Post salePost = createPost(POST_ID, member);
         Transaction transaction =
                 createTransaction(TRANSACTION_ID, salePost, BUYER_ID, 10000,
                         TransactionStatus.REPORTED, LocalDateTime.now(), LocalDateTime.now());

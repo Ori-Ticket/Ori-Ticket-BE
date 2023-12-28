@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    List<Post> findAllByMemberIdAndSaleStatusIn(Long memberId, List<SaleStatus> saleStatusList);
+    List<Post> findAllByMember_MembersIdAndSaleStatusIn(Long memberId, List<SaleStatus> saleStatusList);
 }

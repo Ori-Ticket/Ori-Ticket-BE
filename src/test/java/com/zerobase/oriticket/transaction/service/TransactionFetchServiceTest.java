@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.transaction.service;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
@@ -31,12 +32,19 @@ public class TransactionFetchServiceTest {
     @InjectMocks
     private TransactionFetchService transactionFetchService;
 
-    private Post createPost(Long salePostId, Long sellerId){
+    private Post createPost(Long salePostId, Member member){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(sellerId)
+                .member(member)
                 .build();
     }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
+                .build();
+    }
+
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
@@ -62,8 +70,10 @@ public class TransactionFetchServiceTest {
     @DisplayName("특정 멤버의 거래중인 Transaction 조회 성공")
     void successGetTransaction(){
         //given
-        Post salePost1 = createPost(1L, 1L);
-        Post salePost2 = createPost(2L, 2L);
+        Member member1 = createMember(1L);
+        Member member2 = createMember(2L);
+        Post salePost1 = createPost(1L, member1);
+        Post salePost2 = createPost(2L, member2);
 
         Transaction transaction1 = createTransaction(1L, salePost1, 2L,
                 null, TransactionStatus.PENDING, null, null);
@@ -104,8 +114,10 @@ public class TransactionFetchServiceTest {
     @DisplayName("특정 멤버의 거래완료 된 Transaction 조회 성공")
     void successGetEnd(){
         //given
-        Post salePost1 = createPost(1L, 1L);
-        Post salePost2 = createPost(2L, 2L);
+        Member member1 = createMember(1L);
+        Member member2 = createMember(2L);
+        Post salePost1 = createPost(1L, member1);
+        Post salePost2 = createPost(2L, member2);
 
         Transaction transaction1 = createTransaction(1L, salePost1, 2L,
                 10000, TransactionStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());

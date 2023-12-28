@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.controller.PostController;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
@@ -100,13 +101,19 @@ public class PostControllerTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Long memberId, Ticket ticket, SaleStatus status){
+    private Post createPost(Long salePostId, Member member, Ticket ticket, SaleStatus status){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(status)
                 .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
                 .build();
     }
 
@@ -133,7 +140,8 @@ public class PostControllerTest {
         Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
         AwayTeam awayTeam = createAwayTeam(AWAY_TEAM_ID, sports, AWAY_TEAM_NAME);
         Ticket ticket = createTicket(TICKET_ID, sports, stadium, awayTeam);
-        Post salePost = createPost(SALE_POST_ID, MEMBER_ID, ticket, SaleStatus.FOR_SALE);
+        Member member = createMember(MEMBER_ID);
+        Post salePost = createPost(SALE_POST_ID, member, ticket, SaleStatus.FOR_SALE);
 
         given(postService.registerPost(any(RegisterPostRequest.class)))
                 .willReturn(salePost);
@@ -168,7 +176,8 @@ public class PostControllerTest {
         Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
         AwayTeam awayTeam = createAwayTeam(AWAY_TEAM_ID, sports, AWAY_TEAM_NAME);
         Ticket ticket = createTicket(TICKET_ID, sports, stadium, awayTeam);
-        Post salePost = createPost(SALE_POST_ID, MEMBER_ID, ticket, SaleStatus.FOR_SALE);
+        Member member = createMember(MEMBER_ID);
+        Post salePost = createPost(SALE_POST_ID, member, ticket, SaleStatus.FOR_SALE);
 
         given(postService.get(anyLong()))
                 .willReturn(salePost);
@@ -221,7 +230,8 @@ public class PostControllerTest {
         Stadium stadium = createStadium(STADIUM_ID, sports, STADIUM_NAME, HOME_TEAM_NAME);
         AwayTeam awayTeam = createAwayTeam(AWAY_TEAM_ID, sports, AWAY_TEAM_NAME);
         Ticket ticket = createTicket(TICKET_ID, sports, stadium, awayTeam);
-        Post salePost = createPost(SALE_POST_ID, MEMBER_ID, ticket, SaleStatus.REPORTED);
+        Member member = createMember(MEMBER_ID);
+        Post salePost = createPost(SALE_POST_ID, member, ticket, SaleStatus.REPORTED);
 
         given(postService.updateToReported(any(UpdateStatusToReportedPostRequest.class)))
                 .willReturn(salePost);

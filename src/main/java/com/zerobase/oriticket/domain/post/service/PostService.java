@@ -2,17 +2,22 @@ package com.zerobase.oriticket.domain.post.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.MembersRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
 import com.zerobase.oriticket.domain.post.dto.UpdateStatusToReportedPostRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.*;
 import com.zerobase.oriticket.domain.transaction.repository.TransactionRepository;
+import com.zerobase.oriticket.global.constants.MemberExceptionStatus;
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.zerobase.oriticket.global.constants.MemberExceptionStatus.MEMBER_NOT_FOUND;
 import static com.zerobase.oriticket.global.constants.PostExceptionStatus.*;
 
 @Service
@@ -26,15 +31,17 @@ public class PostService {
     private final SportsRepository sportsRepository;
     private final StadiumRepository stadiumRepository;
     private final AwayTeamRepository awayTeamRepository;
+    private final MembersRepository membersRepository;
 
     @Transactional
     public Post registerPost(RegisterPostRequest request) {
 
-        // 멤버 객체 가져오도록 수정 예정
+        Member member = membersRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND.getCode(), MEMBER_NOT_FOUND.getMessage()));
 
         Ticket ticket = registerTicket(request);
 
-        Post post = postRepository.save(request.toEntityPost(ticket));
+        Post post = postRepository.save(request.toEntityPost(member, ticket));
 
         postSearchRepository.save(PostSearchDocument.fromEntity(post));
 

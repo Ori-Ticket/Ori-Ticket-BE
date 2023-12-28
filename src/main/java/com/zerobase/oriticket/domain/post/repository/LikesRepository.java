@@ -12,9 +12,9 @@ import java.util.Optional;
 @Repository
 public interface LikesRepository extends JpaRepository<Likes, Long> {
 
-    boolean existsByMemberIdAndSalePost(Long memberId, Post salePost);
+    boolean existsByMember_MembersIdAndSalePost(Long memberId, Post salePost);
 
-    Optional<Likes> findBySalePost_SalePostIdAndMemberId(Long salePostId, Long memberId);
+    Optional<Likes> findBySalePost_SalePostIdAndMember_MembersId(Long salePostId, Long memberId);
 
-    List<Likes> findAllByMemberIdAndSalePost_SaleStatusNotIn(Long memberId, List<SaleStatus> saleStatusList);
+    List<Likes> findAllByMember_MembersIdAndSalePost_SaleStatusNotIn(Long memberId, List<SaleStatus> saleStatusList);
 }

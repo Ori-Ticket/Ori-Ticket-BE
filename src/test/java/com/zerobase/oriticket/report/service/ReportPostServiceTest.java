@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.report.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportPostSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -93,10 +94,10 @@ public class ReportPostServiceTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Long memberId, Ticket ticket, SaleStatus status){
+    private Post createPost(Long salePostId, Member member, Ticket ticket, SaleStatus status){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(status)
                 .createdAt(LocalDateTime.now())
@@ -123,6 +124,12 @@ public class ReportPostServiceTest {
                 .build();
     }
 
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
+                .build();
+    }
+
     @Test
     @Transactional
     @DisplayName("Report Post 등록 성공")
@@ -137,7 +144,8 @@ public class ReportPostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
+        Member member = createMember(11L);
+        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
         ReportPost reportPost = createReportPost(5L, 2L, salePost,
                 ReportReactStatus.PROCESSING, null, null);
 
@@ -174,7 +182,8 @@ public class ReportPostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
+        Member member = createMember(11L);
+        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
         ReportPost reportPost = createReportPost(5L, 2L, salePost,
                 ReportReactStatus.PROCESSING, LocalDateTime.now(), "react note");
 

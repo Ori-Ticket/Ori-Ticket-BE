@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.post.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.controller.LikesController;
 import com.zerobase.oriticket.domain.post.dto.RegisterLikesRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
@@ -86,22 +87,29 @@ public class LikesControllerTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Ticket ticket){
+    private Post createPost(Long salePostId, Member member, Ticket ticket){
         return Post.builder()
                 .salePostId(salePostId)
+                .member(member)
                 .ticket(ticket)
                 .build();
     }
 
-    private Likes createLikes(Long likesId, Long memberId, Post salePost){
+    private Likes createLikes(Long likesId, Member member, Post salePost){
         return Likes.builder()
                 .likesId(likesId)
-                .memberId(memberId)
+                .member(member)
                 .salePost(salePost)
                 .build();
     }
 
-    @Test
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
+                .build();
+    }
+
+        @Test
     @DisplayName("찜하기에 등록 완료")
     void successRegister() throws Exception {
         //given
@@ -112,8 +120,10 @@ public class LikesControllerTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(12L, sports, stadium, awayTeam);
-        Post salePost = createPost(50L, ticket);
-        Likes likes = createLikes(1L, 10L, salePost);
+        Member member = createMember(10L);
+        Member seller = createMember(11L);
+        Post salePost = createPost(50L, seller, ticket);
+        Likes likes = createLikes(1L, member, salePost);
 
         given(likesService.register(anyLong(), any(RegisterLikesRequest.class)))
                 .willReturn(likes);
@@ -168,10 +178,13 @@ public class LikesControllerTest {
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket1 = createTicket(12L, sports, stadium, awayTeam);
         Ticket ticket2 = createTicket(13L, sports, stadium, awayTeam);
-        Post salePost1 = createPost(50L, ticket1);
-        Post salePost2 = createPost(51L, ticket2);
-        Likes likes1 = createLikes(1L, 10L, salePost1);
-        Likes likes2 = createLikes(2L, 10L, salePost2);
+        Member seller1 = createMember(11L);
+        Member seller2 = createMember(12L);
+        Post salePost1 = createPost(50L, seller1, ticket1);
+        Post salePost2 = createPost(51L, seller2, ticket2);
+        Member member = createMember(10L);
+        Likes likes1 = createLikes(1L, member, salePost1);
+        Likes likes2 = createLikes(2L, member, salePost2);
 
         List<Likes> likesList = Arrays.asList(likes1, likes2);
 

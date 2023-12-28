@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.report.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportTransactionSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
@@ -95,10 +96,10 @@ public class ReportTransactionServiceTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Long memberId, Ticket ticket, SaleStatus status){
+    private Post createPost(Long salePostId, Member member, Ticket ticket, SaleStatus status){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(status)
                 .createdAt(LocalDateTime.now())
@@ -139,6 +140,12 @@ public class ReportTransactionServiceTest {
                 .build();
     }
 
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
+                .build();
+    }
+
     @Test
     @DisplayName("Report Transaction 등록 성공")
     void successRegister() {
@@ -152,7 +159,8 @@ public class ReportTransactionServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
+        Member member = createMember(11L);
+        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
         Transaction transaction = createTransaction(19L, salePost, 2L);
         ReportTransaction reportTransaction =
                 createReportTransaction(5L, 2L, transaction,
@@ -190,7 +198,8 @@ public class ReportTransactionServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
+        Member member = createMember(11L);
+        Post salePost = createPost(14L, member, ticket, SaleStatus.FOR_SALE);
         Transaction transaction = createTransaction(19L, salePost, 2L);
         ReportTransaction reportTransaction =
                 createReportTransaction(5L, 2L, transaction,

@@ -4,6 +4,7 @@ import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -111,10 +112,17 @@ public class TransactionUpdateServiceTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, SaleStatus status){
+    private Post createPost(Long salePostId, Member member, SaleStatus status){
         return Post.builder()
                 .salePostId(salePostId)
+                .member(member)
                 .saleStatus(status)
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
                 .build();
     }
 
@@ -149,7 +157,8 @@ public class TransactionUpdateServiceTest {
                         .transactionId(11L)
                         .payAmount(10000)
                         .build();
-        Post salePost = createPost(1L, SaleStatus.TRADING);
+        Member member = createMember(1L);
+        Post salePost = createPost(1L, member, SaleStatus.TRADING);
         Transaction transaction = createTransaction(11L, salePost, 2L,
                 null, TransactionStatus.PENDING, null, null);
 
