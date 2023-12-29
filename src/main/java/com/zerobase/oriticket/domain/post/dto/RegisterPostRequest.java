@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.post.dto;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import lombok.AllArgsConstructor;
@@ -31,9 +32,9 @@ public class RegisterPostRequest {
     private String imgUrl;
     private String note;
 
-    public Post toEntityPost(Ticket ticket) {
+    public Post toEntityPost(Member member, Ticket ticket) {
         return Post.builder()
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(SaleStatus.FOR_SALE)
                 .createdAt(LocalDateTime.now())

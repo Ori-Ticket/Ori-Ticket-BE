@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.post.controller;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.controller.PostFetchController;
 import com.zerobase.oriticket.domain.post.entity.*;
@@ -81,13 +82,19 @@ public class PostFetchControllerTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Long memberId, SaleStatus saleStatus, Ticket ticket){
+    private Post createPost(Long salePostId, Member member, SaleStatus saleStatus, Ticket ticket){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(saleStatus)
                 .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
                 .build();
     }
 
@@ -100,8 +107,9 @@ public class PostFetchControllerTest {
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket1 = createTicket(1L, sports, stadium, awayTeam);
         Ticket ticket2 = createTicket(2L, sports, stadium, awayTeam);
-        Post post1 = createPost(1L, 1L, SaleStatus.FOR_SALE, ticket1);
-        Post post2 = createPost(2L, 1L, SaleStatus.TRADING, ticket2);
+        Member member = createMember(1L);
+        Post post1 = createPost(1L, member, SaleStatus.FOR_SALE, ticket1);
+        Post post2 = createPost(2L, member, SaleStatus.TRADING, ticket2);
         List<Post> postList = Arrays.asList(post1, post2);
 
         given(postFetchService.get(anyLong(), anyList()))
@@ -155,8 +163,9 @@ public class PostFetchControllerTest {
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket1 = createTicket(1L, sports, stadium, awayTeam);
         Ticket ticket2 = createTicket(2L, sports, stadium, awayTeam);
-        Post post1 = createPost(1L, 1L, SaleStatus.SOLD, ticket1);
-        Post post2 = createPost(2L, 1L, SaleStatus.REPORTED, ticket2);
+        Member member = createMember(1L);
+        Post post1 = createPost(1L, member, SaleStatus.SOLD, ticket1);
+        Post post2 = createPost(2L, member, SaleStatus.REPORTED, ticket2);
         List<Post> postList = Arrays.asList(post1, post2);
 
         given(postFetchService.get(anyLong(), anyList()))

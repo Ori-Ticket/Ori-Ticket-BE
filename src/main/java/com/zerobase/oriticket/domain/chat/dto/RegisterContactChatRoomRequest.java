@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.domain.chat.dto;
 
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,12 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RegisterContactChatRoomRequest {
 
-    //멤버 연동 예정
     private Long memberId;
     
-    public ContactChatRoom toEntity(){
+    public ContactChatRoom toEntity(Member member){
         return ContactChatRoom.builder()
-                .memberId(this.memberId)
+                .member(member)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

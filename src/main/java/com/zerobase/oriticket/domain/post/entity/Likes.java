@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.post.entity;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,8 +21,8 @@ public class Likes {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likesId;
 
-//    @ManyToOne
-    private Long memberId;
+    @ManyToOne
+    private Member member;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)

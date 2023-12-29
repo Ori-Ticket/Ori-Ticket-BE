@@ -4,6 +4,7 @@ import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -103,25 +104,34 @@ public class TransactionUpdateServiceTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, SaleStatus status, Ticket ticket){
+    private Post createPost(Long salePostId, Member member, SaleStatus status, Ticket ticket){
         return Post.builder()
                 .salePostId(salePostId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(status)
                 .build();
     }
 
-    private Post createPost(Long salePostId, SaleStatus status){
+    private Post createPost(Long salePostId, Member member, SaleStatus status){
         return Post.builder()
                 .salePostId(salePostId)
+                .member(member)
                 .saleStatus(status)
+                .build();
+    }
+
+    private Member createMember(Long membersId, String nickname){
+        return Member.builder()
+                .membersId(membersId)
+                .nickname(nickname)
                 .build();
     }
 
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
-            Long memberId,
+            Member member,
             Integer payAmount,
             TransactionStatus status,
             LocalDateTime receivedAt,
@@ -130,7 +140,7 @@ public class TransactionUpdateServiceTest {
         return Transaction.builder()
                 .transactionId(transactionId)
                 .salePost(salePost)
-                .memberId(memberId)
+                .member(member)
                 .payAmount(payAmount)
                 .status(status)
                 .receivedAt(receivedAt)
@@ -149,8 +159,10 @@ public class TransactionUpdateServiceTest {
                         .transactionId(11L)
                         .payAmount(10000)
                         .build();
-        Post salePost = createPost(1L, SaleStatus.TRADING);
-        Transaction transaction = createTransaction(11L, salePost, 2L,
+        Member member1 = createMember(1L, "seller name");
+        Member member2 = createMember(2L, "buyer name");
+        Post salePost = createPost(1L, member1, SaleStatus.TRADING);
+        Transaction transaction = createTransaction(11L, salePost, member2,
                 null, TransactionStatus.PENDING, null, null);
 
         given(transactionRepository.findById(anyLong()))
@@ -171,7 +183,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(11L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.RECEIVED);
         assertNotNull(fetchedTransaction.getReceivedAt());
@@ -200,8 +212,10 @@ public class TransactionUpdateServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Post salePost = createPost(2L, SaleStatus.TRADING, ticket);
-        Transaction transaction = createTransaction(12L, salePost, 3L,
+        Member member1 = createMember(2L, "seller name");
+        Member member2 = createMember(3L, "buyer name");
+        Post salePost = createPost(2L, member1, SaleStatus.TRADING, ticket);
+        Transaction transaction = createTransaction(12L, salePost, member2,
                 10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         given(transactionRepository.findById(anyLong()))
@@ -225,7 +239,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMemberId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.COMPLETED);
         assertNotNull(fetchedTransaction.getReceivedAt());
@@ -258,8 +272,10 @@ public class TransactionUpdateServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Post salePost = createPost(2L, SaleStatus.TRADING, ticket);
-        Transaction transaction = createTransaction(12L, salePost, 3L,
+        Member member1 = createMember(2L, "seller name");
+        Member member2 = createMember(3L, "buyer name");
+        Post salePost = createPost(2L, member1, SaleStatus.TRADING, ticket);
+        Transaction transaction = createTransaction(12L, salePost, member2,
                 10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         given(transactionRepository.findById(anyLong()))
@@ -283,7 +299,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMemberId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.CANCELED);
         assertNotNull(fetchedTransaction.getReceivedAt());
@@ -316,8 +332,10 @@ public class TransactionUpdateServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Post salePost = createPost(2L, SaleStatus.TRADING, ticket);
-        Transaction transaction = createTransaction(12L, salePost, 3L,
+        Member member1 = createMember(2L, "seller name");
+        Member member2 = createMember(3L, "buyer name");
+        Post salePost = createPost(2L, member1, SaleStatus.TRADING, ticket);
+        Transaction transaction = createTransaction(12L, salePost, member2,
                 10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         given(transactionRepository.findById(anyLong()))
@@ -341,7 +359,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMemberId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.REPORTED);
         assertNotNull(fetchedTransaction.getReceivedAt());

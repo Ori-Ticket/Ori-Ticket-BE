@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.report.entity;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.report.constants.ReportPostType;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
@@ -24,8 +25,8 @@ public class ReportPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportPostId;
 
-//    @ManyToOne
-    private Long memberId;
+    @ManyToOne
+    private Member member;
 
     @ManyToOne
     private Post salePost;

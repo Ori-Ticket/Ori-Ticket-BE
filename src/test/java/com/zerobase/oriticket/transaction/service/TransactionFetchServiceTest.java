@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.transaction.service;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
@@ -31,16 +32,23 @@ public class TransactionFetchServiceTest {
     @InjectMocks
     private TransactionFetchService transactionFetchService;
 
-    private Post createPost(Long salePostId, Long sellerId){
+    private Post createPost(Long salePostId, Member member){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(sellerId)
+                .member(member)
                 .build();
     }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .membersId(membersId)
+                .build();
+    }
+
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
-            Long buyerId,
+            Member buyer,
             Integer payAmount,
             TransactionStatus status,
             LocalDateTime receivedAt,
@@ -49,7 +57,7 @@ public class TransactionFetchServiceTest {
         return Transaction.builder()
                 .transactionId(transactionId)
                 .salePost(salePost)
-                .memberId(buyerId)
+                .member(buyer)
                 .payAmount(payAmount)
                 .status(status)
                 .receivedAt(receivedAt)
@@ -62,12 +70,14 @@ public class TransactionFetchServiceTest {
     @DisplayName("특정 멤버의 거래중인 Transaction 조회 성공")
     void successGetTransaction(){
         //given
-        Post salePost1 = createPost(1L, 1L);
-        Post salePost2 = createPost(2L, 2L);
+        Member member1 = createMember(1L);
+        Member member2 = createMember(2L);
+        Post salePost1 = createPost(1L, member1);
+        Post salePost2 = createPost(2L, member2);
 
-        Transaction transaction1 = createTransaction(1L, salePost1, 2L,
+        Transaction transaction1 = createTransaction(1L, salePost1, member2,
                 null, TransactionStatus.PENDING, null, null);
-        Transaction transaction2 = createTransaction(2L, salePost2, 1L,
+        Transaction transaction2 = createTransaction(2L, salePost2, member1,
                 10000, TransactionStatus.RECEIVED, LocalDateTime.now(), null);
 
         List<Transaction> transactionList = Arrays.asList(transaction1, transaction2);
@@ -83,7 +93,7 @@ public class TransactionFetchServiceTest {
         //then
         assertThat(fetchedTransactions.get(0).getTransactionId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(0).getSalePost()).isEqualTo(salePost1);
-        assertThat(fetchedTransactions.get(0).getMemberId()).isEqualTo(2L);
+        assertThat(fetchedTransactions.get(0).getMember().getMembersId()).isEqualTo(2L);
         assertNull(fetchedTransactions.get(0).getPayAmount());
         assertThat(fetchedTransactions.get(0).getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNull(fetchedTransactions.get(0).getReceivedAt());
@@ -91,7 +101,7 @@ public class TransactionFetchServiceTest {
         assertNull(fetchedTransactions.get(0).getEndedAt());
         assertThat(fetchedTransactions.get(1).getTransactionId()).isEqualTo(2L);
         assertThat(fetchedTransactions.get(1).getSalePost()).isEqualTo(salePost2);
-        assertThat(fetchedTransactions.get(1).getMemberId()).isEqualTo(1L);
+        assertThat(fetchedTransactions.get(1).getMember().getMembersId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(1).getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactions.get(1).getStatus()).isEqualTo(TransactionStatus.RECEIVED);
         assertNotNull(fetchedTransactions.get(1).getReceivedAt());
@@ -104,12 +114,14 @@ public class TransactionFetchServiceTest {
     @DisplayName("특정 멤버의 거래완료 된 Transaction 조회 성공")
     void successGetEnd(){
         //given
-        Post salePost1 = createPost(1L, 1L);
-        Post salePost2 = createPost(2L, 2L);
+        Member member1 = createMember(1L);
+        Member member2 = createMember(2L);
+        Post salePost1 = createPost(1L, member1);
+        Post salePost2 = createPost(2L, member2);
 
-        Transaction transaction1 = createTransaction(1L, salePost1, 2L,
+        Transaction transaction1 = createTransaction(1L, salePost1, member2,
                 10000, TransactionStatus.COMPLETED, LocalDateTime.now(), LocalDateTime.now());
-        Transaction transaction2 = createTransaction(2L, salePost2, 1L,
+        Transaction transaction2 = createTransaction(2L, salePost2, member1,
                 10000, TransactionStatus.CANCELED, LocalDateTime.now(), LocalDateTime.now());
 
         List<Transaction> transactionList = Arrays.asList(transaction1, transaction2);
@@ -125,7 +137,7 @@ public class TransactionFetchServiceTest {
         //then
         assertThat(fetchedTransactions.get(0).getTransactionId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(0).getSalePost()).isEqualTo(salePost1);
-        assertThat(fetchedTransactions.get(0).getMemberId()).isEqualTo(2L);
+        assertThat(fetchedTransactions.get(0).getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedTransactions.get(1).getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactions.get(0).getStatus()).isEqualTo(TransactionStatus.COMPLETED);
         assertNotNull(fetchedTransactions.get(0).getReceivedAt());
@@ -133,7 +145,7 @@ public class TransactionFetchServiceTest {
         assertNotNull(fetchedTransactions.get(0).getEndedAt());
         assertThat(fetchedTransactions.get(1).getTransactionId()).isEqualTo(2L);
         assertThat(fetchedTransactions.get(1).getSalePost()).isEqualTo(salePost2);
-        assertThat(fetchedTransactions.get(1).getMemberId()).isEqualTo(1L);
+        assertThat(fetchedTransactions.get(1).getMember().getMembersId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(1).getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactions.get(1).getStatus()).isEqualTo(TransactionStatus.CANCELED);
         assertNotNull(fetchedTransactions.get(1).getReceivedAt());

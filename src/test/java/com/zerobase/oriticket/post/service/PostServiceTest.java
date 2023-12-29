@@ -2,6 +2,8 @@ package com.zerobase.oriticket.post.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.MembersRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
 import com.zerobase.oriticket.domain.post.dto.UpdateStatusToReportedPostRequest;
@@ -52,6 +54,9 @@ public class PostServiceTest {
 
     @Mock
     private AwayTeamRepository awayTeamRepository;
+
+    @Mock
+    private MembersRepository membersRepository;
 
     @InjectMocks
     private PostService postService;
@@ -127,13 +132,20 @@ public class PostServiceTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Long memberId, Ticket ticket){
+    private Post createPost(Long salePostId, Member member, Ticket ticket){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(SaleStatus.FOR_SALE)
                 .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId, String nickname){
+        return Member.builder()
+                .membersId(membersId)
+                .nickname(nickname)
                 .build();
     }
 
@@ -147,8 +159,11 @@ public class PostServiceTest {
         Stadium stadium = createStadium(2L, sports, "잠실 주경기장", "두산");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(1L, sports, stadium, awayTeam);
-        Post post = createPost(10L, 11L, ticket);
+        Member member = createMember(11L, "seller name");
+        Post post = createPost(10L, member, ticket);
 
+        given(membersRepository.findById(anyLong()))
+                .willReturn(Optional.of(member));
         given(sportsRepository.findById(anyLong()))
                 .willReturn(Optional.of(sports));
         given(stadiumRepository.findById(anyLong()))
@@ -187,7 +202,7 @@ public class PostServiceTest {
         assertNotNull(fetchedPostDocument.getCreatedAt());
 
         assertThat(fetchedPost.getSalePostId()).isEqualTo(10L);
-        assertThat(fetchedPost.getMemberId()).isEqualTo(11L);
+        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(11L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.FOR_SALE);
         assertNotNull(fetchedPost.getCreatedAt());
@@ -201,7 +216,8 @@ public class PostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(3L, sports, "기아");
         Ticket ticket = createTicket(11L, sports, stadium, awayTeam);
-        Post post = createPost(3L, 2L, ticket);
+        Member member = createMember(2L, "seller name");
+        Post post = createPost(3L, member, ticket);
 
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(post));
@@ -210,7 +226,7 @@ public class PostServiceTest {
 
         //then
         assertThat(fetchedPost.getSalePostId()).isEqualTo(3L);
-        assertThat(fetchedPost.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.FOR_SALE);
         assertNotNull(fetchedPost.getCreatedAt());
@@ -225,7 +241,8 @@ public class PostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(3L, sports, "기아");
         Ticket ticket = createTicket(11L, sports, stadium, awayTeam);
-        Post post = createPost(3L, 2L, ticket);
+        Member member = createMember(2L, "seller name");
+        Post post = createPost(3L, member, ticket);
 
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(post));
@@ -248,7 +265,7 @@ public class PostServiceTest {
         assertThat(fetchedPostId).isEqualTo(3L);
 
         assertThat(fetchedPost.getSalePostId()).isEqualTo(3L);
-        assertThat(fetchedPost.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.FOR_SALE);
         assertNotNull(fetchedPost.getCreatedAt());
@@ -296,8 +313,9 @@ public class PostServiceTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(3L, sports, "기아");
         Ticket ticket = createTicket(11L, sports, stadium, awayTeam);
-        Post post = createPost(3L, 2L, ticket);
-        Post reportedPost = createPost(3L, 2L, ticket);
+        Member member = createMember(2L, "seller name");
+        Post post = createPost(3L, member, ticket);
+        Post reportedPost = createPost(3L, member, ticket);
         reportedPost.setSaleStatus(SaleStatus.REPORTED);
 
         given(postRepository.findById(anyLong()))
@@ -316,7 +334,7 @@ public class PostServiceTest {
         PostSearchDocument fetchedPostDocumentCaptor = captor.getValue();
 
         assertThat(fetchedPost.getSalePostId()).isEqualTo(3L);
-        assertThat(fetchedPost.getMemberId()).isEqualTo(2L);
+        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(2L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.REPORTED);
 

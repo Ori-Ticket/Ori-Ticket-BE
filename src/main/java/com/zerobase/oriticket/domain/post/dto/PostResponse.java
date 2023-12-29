@@ -23,7 +23,7 @@ public class PostResponse {
 
         return PostResponse.builder()
                 .salePostId(post.getSalePostId())
-                .memberId(post.getMemberId())
+                .memberId(post.getMember().getMembersId())
                 .ticket(ticketResponse)
                 .saleStatus(post.getSaleStatus())
                 .createdAt(post.getCreatedAt())

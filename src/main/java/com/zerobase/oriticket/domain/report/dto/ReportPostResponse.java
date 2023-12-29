@@ -25,7 +25,7 @@ public class ReportPostResponse {
 
         return ReportPostResponse.builder()
                 .reportPostId(reportPost.getReportPostId())
-                .memberId(reportPost.getMemberId())
+                .memberId(reportPost.getMember().getMembersId())
                 .salePost(PostResponse.fromEntity(reportPost.getSalePost()))
                 .reason(reportPost.getReason().getReportType())
                 .reportedAt(reportPost.getReportedAt())
