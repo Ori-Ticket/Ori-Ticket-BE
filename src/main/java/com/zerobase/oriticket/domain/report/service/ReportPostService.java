@@ -3,7 +3,7 @@ package com.zerobase.oriticket.domain.report.service;
 import com.zerobase.oriticket.domain.elasticsearch.report.entity.ReportPostSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportPostSearchRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
-import com.zerobase.oriticket.domain.members.repository.MembersRepository;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
 import com.zerobase.oriticket.domain.report.constants.ReportPostType;
@@ -12,8 +12,6 @@ import com.zerobase.oriticket.domain.report.dto.RegisterReportPostRequest;
 import com.zerobase.oriticket.domain.report.dto.UpdateReportRequest;
 import com.zerobase.oriticket.domain.report.entity.ReportPost;
 import com.zerobase.oriticket.domain.report.repository.ReportPostRepository;
-import com.zerobase.oriticket.global.constants.PostExceptionStatus;
-import com.zerobase.oriticket.global.constants.ReportExceptionStatus;
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,12 +31,12 @@ public class ReportPostService {
     private final ReportPostRepository reportPostRepository;
     private final ReportPostSearchRepository reportPostSearchRepository;
     private final PostRepository postRepository;
-    private final MembersRepository membersRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public ReportPost register(Long salePostId, RegisterReportPostRequest request) {
 
-        Member member = membersRepository.findById(request.getMemberId())
+        Member member = userRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND.getCode(), MEMBER_NOT_FOUND.getMessage()));
 
         Post salePost = postRepository.findById(salePostId)
@@ -68,7 +66,7 @@ public class ReportPostService {
     }
 
     private void validateCanRegister(Long salePostId, RegisterReportPostRequest request){
-        if(reportPostRepository.existsBySalePost_SalePostIdAndMember_MembersIdAndReason(
+        if(reportPostRepository.existsBySalePost_SalePostIdAndMember_MemberIdAndReason(
                 salePostId, request.getMemberId(), ReportPostType.valueOf(request.getReason().toUpperCase()))
         ){
             throw new CustomException(CANNOT_REGISTER_REPORT_POST.getCode(),

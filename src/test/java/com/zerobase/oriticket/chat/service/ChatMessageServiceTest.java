@@ -7,7 +7,7 @@ import com.zerobase.oriticket.domain.chat.repository.ChatMessageRepository;
 import com.zerobase.oriticket.domain.chat.repository.ChatRoomRepository;
 import com.zerobase.oriticket.domain.chat.service.ChatMessageService;
 import com.zerobase.oriticket.domain.members.entity.Member;
-import com.zerobase.oriticket.domain.members.repository.MembersRepository;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,7 @@ public class ChatMessageServiceTest {
     private ChatMessageRepository chatMessageRepository;
 
     @Mock
-    private MembersRepository membersRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
     private ChatMessageService chatMessageService;
@@ -65,7 +65,7 @@ public class ChatMessageServiceTest {
 
     private Member createMember(Long membersId){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .build();
     }
 
@@ -85,7 +85,7 @@ public class ChatMessageServiceTest {
 
         given(chatRoomRepository.findById(anyLong()))
                 .willReturn(Optional.of(chatRoom));
-        given(membersRepository.findById(anyLong()))
+        given(userRepository.findById(anyLong()))
                 .willReturn(Optional.of(member));
         given(chatMessageRepository.save(any(ChatMessage.class)))
                 .willReturn(chatMessage);
@@ -96,7 +96,7 @@ public class ChatMessageServiceTest {
         //then
         assertThat(fetchedChatMessage.getChatMessageId()).isEqualTo(4L);
         assertThat(fetchedChatMessage.getChatRoom()).isEqualTo(chatRoom);
-        assertThat(fetchedChatMessage.getMember().getMembersId()).isEqualTo(5L);
+        assertThat(fetchedChatMessage.getMember().getMemberId()).isEqualTo(5L);
         assertThat(fetchedChatMessage.getMessage()).isEqualTo("message");
         assertNotNull(fetchedChatMessage.getChattedAt());
     }
@@ -124,12 +124,12 @@ public class ChatMessageServiceTest {
         assertThat(fetchedChatMessages).hasSize(2);
         assertThat(fetchedChatMessages.get(0).getChatMessageId()).isEqualTo(1L);
         assertThat(fetchedChatMessages.get(0).getChatRoom()).isEqualTo(chatRoom);
-        assertThat(fetchedChatMessages.get(0).getMember().getMembersId()).isEqualTo(40L);
+        assertThat(fetchedChatMessages.get(0).getMember().getMemberId()).isEqualTo(40L);
         assertThat(fetchedChatMessages.get(0).getMessage()).isEqualTo("message1");
         assertNotNull(fetchedChatMessages.get(0).getChattedAt());
         assertThat(fetchedChatMessages.get(1).getChatMessageId()).isEqualTo(2L);
         assertThat(fetchedChatMessages.get(1).getChatRoom()).isEqualTo(chatRoom);
-        assertThat(fetchedChatMessages.get(1).getMember().getMembersId()).isEqualTo(50L);
+        assertThat(fetchedChatMessages.get(1).getMember().getMemberId()).isEqualTo(50L);
         assertThat(fetchedChatMessages.get(1).getMessage()).isEqualTo("message2");
         assertNotNull(fetchedChatMessages.get(1).getChattedAt());
     }

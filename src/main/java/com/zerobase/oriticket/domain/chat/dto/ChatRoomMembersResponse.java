@@ -7,12 +7,12 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ChatRoomMembersResponse {
-    private Long membersId;
+    private Long memberId;
     private String nickName;
 
     public static ChatRoomMembersResponse fromEntity(Member member){
         return ChatRoomMembersResponse.builder()
-                .membersId(member.getMembersId())
+                .memberId(member.getMemberId())
                 .nickName(member.getNickname())
                 .build();
     }

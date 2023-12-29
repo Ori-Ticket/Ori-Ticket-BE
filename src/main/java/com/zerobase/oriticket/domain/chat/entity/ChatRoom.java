@@ -4,15 +4,12 @@ import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,13 +27,14 @@ public class ChatRoom extends BaseChatRoom{
     @OneToOne
     private Transaction transaction;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Member> members;
+    @Builder.Default
+    @ManyToMany(targetEntity = Member.class)
+    private List<Member> members = new ArrayList<>();
 
     private LocalDateTime endedAt;
 
     public static ChatRoom createChatRoom(Transaction transaction, Post salePost){
-        Set<Member> members = new HashSet<>();
+        List<Member> members = new ArrayList<>();
         members.add(transaction.getMember());
         members.add(salePost.getMember());
 

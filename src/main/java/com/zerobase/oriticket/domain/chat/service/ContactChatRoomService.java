@@ -4,7 +4,7 @@ import com.zerobase.oriticket.domain.chat.dto.RegisterContactChatRoomRequest;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.repository.ContactChatRoomRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
-import com.zerobase.oriticket.domain.members.repository.MembersRepository;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.global.exception.impl.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,8 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 import static com.zerobase.oriticket.global.constants.ChatExceptionStatus.CHAT_ROOM_NOT_FOUND;
 import static com.zerobase.oriticket.global.constants.MemberExceptionStatus.MEMBER_NOT_FOUND;
 
@@ -24,14 +22,14 @@ import static com.zerobase.oriticket.global.constants.MemberExceptionStatus.MEMB
 public class ContactChatRoomService {
 
     private final ContactChatRoomRepository contactChatRoomRepository;
-    private final MembersRepository membersRepository;
+    private final UserRepository userRepository;
 
     private static final String CREATED_AT = "createdAt";
 
     @Transactional
     public ContactChatRoom register(RegisterContactChatRoomRequest request) {
 
-        Member member = membersRepository.findById(request.getMemberId())
+        Member member = userRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND.getCode(), MEMBER_NOT_FOUND.getMessage()));
 
         return contactChatRoomRepository.save(request.toEntity(member));
@@ -56,7 +54,7 @@ public class ContactChatRoomService {
     @Transactional(readOnly = true)
     public ContactChatRoom getByMember(Long memberId){
 
-        return contactChatRoomRepository.findByMember_MembersId(memberId)
+        return contactChatRoomRepository.findByMember_MemberId(memberId)
                 .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND.getCode(), CHAT_ROOM_NOT_FOUND.getMessage()));
     }
 }

@@ -2,7 +2,7 @@ package com.zerobase.oriticket.report.service;
 
 import com.zerobase.oriticket.domain.elasticsearch.report.repository.ReportTransactionSearchRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
-import com.zerobase.oriticket.domain.members.repository.MembersRepository;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
@@ -46,7 +46,7 @@ public class ReportTransactionServiceTest {
     private ReportTransactionSearchRepository reportTransactionSearchRepository;
 
     @Mock
-    private MembersRepository membersRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
     private ReportTransactionService reportTransactionService;
@@ -146,7 +146,7 @@ public class ReportTransactionServiceTest {
 
     private Member createMember(Long membersId){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .build();
     }
 
@@ -170,7 +170,7 @@ public class ReportTransactionServiceTest {
         ReportTransaction reportTransaction = createReportTransaction(5L, member2, transaction,
                         ReportReactStatus.PROCESSING, null, null);
 
-        given(membersRepository.findById(anyLong()))
+        given(userRepository.findById(anyLong()))
                 .willReturn(Optional.of(member2));
         given(transactionRepository.findById(anyLong()))
                 .willReturn(Optional.of(transaction));
@@ -182,7 +182,7 @@ public class ReportTransactionServiceTest {
 
         //then
         assertThat(fetchedReportTransaction.getReportTransactionId()).isEqualTo(5L);
-        assertThat(fetchedReportTransaction.getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedReportTransaction.getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedReportTransaction.getTransaction()).isEqualTo(transaction);
         assertThat(fetchedReportTransaction.getReason()).isEqualTo(ReportTransactionType.ECONOMIC_LOSS);
         assertNotNull(fetchedReportTransaction.getReportedAt());
@@ -222,7 +222,7 @@ public class ReportTransactionServiceTest {
 
         //then
         assertThat(fetchedReportTransaction.getReportTransactionId()).isEqualTo(5L);
-        assertThat(fetchedReportTransaction.getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedReportTransaction.getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedReportTransaction.getTransaction()).isEqualTo(transaction);
         assertThat(fetchedReportTransaction.getReason()).isEqualTo(ReportTransactionType.ECONOMIC_LOSS);
         assertNotNull(fetchedReportTransaction.getReportedAt());

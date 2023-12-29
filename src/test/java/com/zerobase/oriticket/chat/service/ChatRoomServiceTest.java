@@ -33,7 +33,7 @@ public class ChatRoomServiceTest {
     @InjectMocks
     private ChatRoomService chatRoomService;
 
-    private ChatRoom createChatRoom(Long chatRoomId, Transaction transaction, Set<Member> members){
+    private ChatRoom createChatRoom(Long chatRoomId, Transaction transaction, List<Member> members){
         return ChatRoom.builder()
                 .chatRoomId(chatRoomId)
                 .transaction(transaction)
@@ -44,7 +44,7 @@ public class ChatRoomServiceTest {
 
     private Member createMember(Long membersId){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .build();
     }
 
@@ -61,7 +61,7 @@ public class ChatRoomServiceTest {
         Transaction transaction = createTransaction(10L);
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
-        Set<Member> members = Set.of(member1, member2);
+        List<Member> members = List.of(member1, member2);
         ChatRoom chatRoom = createChatRoom(5L, transaction, members);
 
         given(chatRoomRepository.findById(anyLong()))
@@ -86,7 +86,7 @@ public class ChatRoomServiceTest {
         Transaction transaction2 = createTransaction(11L);
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
-        Set<Member> members = Set.of(member1, member2);
+        List<Member> members = List.of(member1, member2);
         ChatRoom chatRoom1 = createChatRoom(5L, transaction1, members);
         ChatRoom chatRoom2 = createChatRoom(6L, transaction2, members);
 
@@ -118,7 +118,7 @@ public class ChatRoomServiceTest {
         Transaction transaction = createTransaction(10L);
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
-        Set<Member> members = Set.of(member1, member2);
+        List<Member> members = List.of(member1, member2);
         ChatRoom chatRoom = createChatRoom(5L, transaction, members);
 
         given(chatRoomRepository.findByTransaction_TransactionId(anyLong()))
@@ -143,13 +143,13 @@ public class ChatRoomServiceTest {
         Transaction transaction2 = createTransaction(11L);
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
-        Set<Member> members = Set.of(member1, member2);
+        List<Member> members = List.of(member1, member2);
         ChatRoom chatRoom1 = createChatRoom(5L, transaction1, members);
         ChatRoom chatRoom2 = createChatRoom(10L, transaction2, members);
 
         List<ChatRoom> chatRoomList = Arrays.asList(chatRoom1, chatRoom2);
 
-        given(chatRoomRepository.findAllByMembers_MembersId(anyLong()))
+        given(chatRoomRepository.findAllByMembers_MemberId(anyLong()))
                 .willReturn(chatRoomList);
 
         //when

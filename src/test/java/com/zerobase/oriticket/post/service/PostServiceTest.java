@@ -3,7 +3,7 @@ package com.zerobase.oriticket.post.service;
 import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
-import com.zerobase.oriticket.domain.members.repository.MembersRepository;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.dto.RegisterPostRequest;
 import com.zerobase.oriticket.domain.post.dto.UpdateStatusToReportedPostRequest;
@@ -56,7 +56,7 @@ public class PostServiceTest {
     private AwayTeamRepository awayTeamRepository;
 
     @Mock
-    private MembersRepository membersRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
     private PostService postService;
@@ -144,7 +144,7 @@ public class PostServiceTest {
 
     private Member createMember(Long membersId, String nickname){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .nickname(nickname)
                 .build();
     }
@@ -162,7 +162,7 @@ public class PostServiceTest {
         Member member = createMember(11L, "seller name");
         Post post = createPost(10L, member, ticket);
 
-        given(membersRepository.findById(anyLong()))
+        given(userRepository.findById(anyLong()))
                 .willReturn(Optional.of(member));
         given(sportsRepository.findById(anyLong()))
                 .willReturn(Optional.of(sports));
@@ -202,7 +202,7 @@ public class PostServiceTest {
         assertNotNull(fetchedPostDocument.getCreatedAt());
 
         assertThat(fetchedPost.getSalePostId()).isEqualTo(10L);
-        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(11L);
+        assertThat(fetchedPost.getMember().getMemberId()).isEqualTo(11L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.FOR_SALE);
         assertNotNull(fetchedPost.getCreatedAt());
@@ -226,7 +226,7 @@ public class PostServiceTest {
 
         //then
         assertThat(fetchedPost.getSalePostId()).isEqualTo(3L);
-        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedPost.getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.FOR_SALE);
         assertNotNull(fetchedPost.getCreatedAt());
@@ -265,7 +265,7 @@ public class PostServiceTest {
         assertThat(fetchedPostId).isEqualTo(3L);
 
         assertThat(fetchedPost.getSalePostId()).isEqualTo(3L);
-        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedPost.getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.FOR_SALE);
         assertNotNull(fetchedPost.getCreatedAt());
@@ -334,7 +334,7 @@ public class PostServiceTest {
         PostSearchDocument fetchedPostDocumentCaptor = captor.getValue();
 
         assertThat(fetchedPost.getSalePostId()).isEqualTo(3L);
-        assertThat(fetchedPost.getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedPost.getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedPost.getTicket()).isEqualTo(ticket);
         assertThat(fetchedPost.getSaleStatus()).isEqualTo(SaleStatus.REPORTED);
 

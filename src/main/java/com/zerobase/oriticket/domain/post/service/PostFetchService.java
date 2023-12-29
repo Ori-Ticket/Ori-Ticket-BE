@@ -17,6 +17,6 @@ public class PostFetchService {
 
     @Transactional(readOnly = true)
     public List<Post> get(Long memberId, List<SaleStatus> saleStatusList) {
-        return postRepository.findAllByMember_MembersIdAndSaleStatusIn(memberId, saleStatusList);
+        return postRepository.findAllByMember_MemberIdAndSaleStatusIn(memberId, saleStatusList);
     }
 }
