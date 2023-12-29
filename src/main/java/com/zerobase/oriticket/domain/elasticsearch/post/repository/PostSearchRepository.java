@@ -6,6 +6,4 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 public interface PostSearchRepository extends ElasticsearchRepository<PostSearchDocument, Long> {
-
-    Page<PostSearchDocument> findAllBySportsNameContainingOrStadiumNameContainingOrHomeTeamNameContainingOrAwayTeamNameContaining(String sportsName, String stadiumName, String homeTeamName, String awayTeamName, Pageable pageable);
 }
