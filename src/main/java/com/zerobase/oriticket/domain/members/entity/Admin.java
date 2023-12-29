@@ -20,10 +20,11 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-public class AdminEntity {
+public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long adminId;
 
     @Column(nullable = false, length = 30, unique = true)

@@ -2,7 +2,7 @@ package com.zerobase.oriticket.domain.members.dto.user;
 
 import com.zerobase.oriticket.domain.members.constants.MemberStatus;
 import com.zerobase.oriticket.domain.members.constants.RoleType;
-import com.zerobase.oriticket.domain.members.entity.UserEntity;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -29,33 +29,19 @@ public class UserResponse {
     private Timestamp modifiedAt;
     private String oauth;
 
-//    public UserResponse fromEntity() {
-//        return UserResponse.builder()
-//                .email(this.email)
-//                .name(this.name)
-//                .nickname(this.nickname)
-//                .birthDate(this.birthDate)
-//                .phoneNum(this.phoneNum)
-//                .role(this.role)
-//                .status(this.status)
-//                .registeredAt(this.registeredAt)
-//                .modifiedAt(Timestamp.valueOf(LocalDateTime.now()))
-//                .oauth(this.oauth)
-//                .build();
-//    }
 
-    public static UserResponse fromEntity(UserEntity userEntity) {
+    public static UserResponse fromEntity(Member member) {
         return UserResponse.builder()
-                .email(userEntity.getEmail())
-                .name(userEntity.getName())
-                .nickname(userEntity.getNickname())
-                .birthDate(userEntity.getBirthDate())
-                .phoneNum(userEntity.getPhoneNum())
-                .role(userEntity.getRole())
-                .status(userEntity.getStatus())
-                .registeredAt(userEntity.getRegisteredAt().toLocalDateTime())
+                .email(member.getEmail())
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .birthDate(member.getBirthDate())
+                .phoneNum(member.getPhoneNum())
+                .role(member.getRole())
+                .status(member.getStatus())
+                .registeredAt(member.getRegisteredAt().toLocalDateTime())
                 .modifiedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .oauth(userEntity.getOauth())
+                .oauth(member.getOauth())
                 .build();
     }
 }
