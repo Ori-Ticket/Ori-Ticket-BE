@@ -2,7 +2,7 @@ package com.zerobase.oriticket.domain.members.dto.user;
 
 import com.zerobase.oriticket.domain.members.constants.MemberStatus;
 import com.zerobase.oriticket.domain.members.constants.RoleType;
-import com.zerobase.oriticket.domain.members.entity.UserEntity;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +30,8 @@ public class UserRequest {
     private String oauth;
     private String password;
 
-    public UserEntity toEntityKakao() {
-        return UserEntity.builder()
+    public Member toEntityKakao() {
+        return Member.builder()
                 .email(this.email)
                 .name(this.name)
                 .nickname(this.nickname)

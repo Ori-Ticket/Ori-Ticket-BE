@@ -24,11 +24,12 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @Builder
 @Entity
-public class UserEntity {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name="members_id")
+    private Long membersId;
 
     @Column(length = 30, unique = true)
     private String email;
@@ -61,6 +62,6 @@ public class UserEntity {
     @CreationTimestamp
     private Timestamp modifiedAt;
 
-    private String oauth; // kakao,naver
+    private String oauth; // kakao
 
 }
