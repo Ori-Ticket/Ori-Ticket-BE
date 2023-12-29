@@ -15,7 +15,7 @@ public class LikesResponse {
 
         return LikesResponse.builder()
                 .likesId(likes.getLikesId())
-                .memberId(likes.getMember().getMembersId())
+                .memberId(likes.getMember().getMemberId())
                 .salePost(PostResponse.fromEntity(likes.getSalePost()))
                 .build();
     }

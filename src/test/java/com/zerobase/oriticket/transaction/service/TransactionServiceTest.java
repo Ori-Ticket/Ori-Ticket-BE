@@ -4,7 +4,7 @@ import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRep
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
-import com.zerobase.oriticket.domain.members.repository.MembersRepository;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -54,7 +54,7 @@ public class TransactionServiceTest {
     private PostSearchRepository postSearchRepository;
 
     @Mock
-    private MembersRepository membersRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
     private TransactionService transactionService;
@@ -140,7 +140,7 @@ public class TransactionServiceTest {
 
     private Member createMember(Long membersId, String nickname){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .nickname(nickname)
                 .build();
     }
@@ -166,7 +166,7 @@ public class TransactionServiceTest {
 
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(salePost));
-        given(membersRepository.findById(anyLong()))
+        given(userRepository.findById(anyLong()))
                 .willReturn(Optional.of(member2));
         given(transactionRepository.validateCanRegisterTransaction(any(Post.class)))
                 .willReturn(true);
@@ -189,7 +189,7 @@ public class TransactionServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(10L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedTransaction.getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransaction.getStartedAt());
 
@@ -220,7 +220,7 @@ public class TransactionServiceTest {
         //then
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(15L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMemberId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransaction.getStartedAt());
 
@@ -248,12 +248,12 @@ public class TransactionServiceTest {
         //then
         assertThat(fetchedTransactions.getContent().get(0).getTransactionId()).isEqualTo(15L);
         assertThat(fetchedTransactions.getContent().get(0).getSalePost()).isEqualTo(salePost1);
-        assertThat(fetchedTransactions.getContent().get(0).getMember().getMembersId()).isEqualTo(3L);
+        assertThat(fetchedTransactions.getContent().get(0).getMember().getMemberId()).isEqualTo(3L);
         assertThat(fetchedTransactions.getContent().get(0).getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransactions.getContent().get(0).getStartedAt());
         assertThat(fetchedTransactions.getContent().get(1).getTransactionId()).isEqualTo(16L);
         assertThat(fetchedTransactions.getContent().get(1).getSalePost()).isEqualTo(salePost2);
-        assertThat(fetchedTransactions.getContent().get(1).getMember().getMembersId()).isEqualTo(4L);
+        assertThat(fetchedTransactions.getContent().get(1).getMember().getMemberId()).isEqualTo(4L);
         assertThat(fetchedTransactions.getContent().get(1).getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNotNull(fetchedTransactions.getContent().get(1).getStartedAt());
 

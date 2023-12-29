@@ -91,7 +91,7 @@ public class PostFetchServiceTest {
 
     private Member createMember(Long membersId){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .build();
     }
 
@@ -110,7 +110,7 @@ public class PostFetchServiceTest {
         Post post2 = createPost(2L, member, ticket2, SaleStatus.TRADING);
         List<Post> postList = Arrays.asList(post1, post2);
 
-        given(postRepository.findAllByMember_MembersIdAndSaleStatusIn(anyLong(), anyList()))
+        given(postRepository.findAllByMember_MemberIdAndSaleStatusIn(anyLong(), anyList()))
                 .willReturn(postList);
 
         //when
@@ -118,7 +118,7 @@ public class PostFetchServiceTest {
 
         //then
         assertThat(fetchedPost.get(0).getSalePostId()).isEqualTo(1L);
-        assertThat(fetchedPost.get(0).getMember().getMembersId()).isEqualTo(1L);
+        assertThat(fetchedPost.get(0).getMember().getMemberId()).isEqualTo(1L);
         assertThat(fetchedPost.get(0).getTicket().getTicketId()).isEqualTo(1L);
         assertThat(fetchedPost.get(0).getTicket().getSports()).isEqualTo(sports);
         assertThat(fetchedPost.get(0).getTicket().getStadium()).isEqualTo(stadium);
@@ -134,7 +134,7 @@ public class PostFetchServiceTest {
         assertThat(fetchedPost.get(0).getSaleStatus()).isEqualTo(SaleStatus.FOR_SALE);
         assertNotNull(fetchedPost.get(0).getCreatedAt());
         assertThat(fetchedPost.get(1).getSalePostId()).isEqualTo(2L);
-        assertThat(fetchedPost.get(1).getMember().getMembersId()).isEqualTo(1L);
+        assertThat(fetchedPost.get(1).getMember().getMemberId()).isEqualTo(1L);
         assertThat(fetchedPost.get(1).getTicket().getTicketId()).isEqualTo(2L);
         assertThat(fetchedPost.get(1).getTicket().getSports()).isEqualTo(sports);
         assertThat(fetchedPost.get(1).getTicket().getStadium()).isEqualTo(stadium);
@@ -166,7 +166,7 @@ public class PostFetchServiceTest {
         Post post2 = createPost(2L, member, ticket2, SaleStatus.REPORTED);
         List<Post> postList = Arrays.asList(post1, post2);
 
-        given(postRepository.findAllByMember_MembersIdAndSaleStatusIn(anyLong(), anyList()))
+        given(postRepository.findAllByMember_MemberIdAndSaleStatusIn(anyLong(), anyList()))
                 .willReturn(postList);
 
         //when
@@ -174,7 +174,7 @@ public class PostFetchServiceTest {
 
         //then
         assertThat(fetchedPost.get(0).getSalePostId()).isEqualTo(1L);
-        assertThat(fetchedPost.get(0).getMember().getMembersId()).isEqualTo(1L);
+        assertThat(fetchedPost.get(0).getMember().getMemberId()).isEqualTo(1L);
         assertThat(fetchedPost.get(0).getTicket().getTicketId()).isEqualTo(1L);
         assertThat(fetchedPost.get(0).getTicket().getSports()).isEqualTo(sports);
         assertThat(fetchedPost.get(0).getTicket().getStadium()).isEqualTo(stadium);
@@ -190,7 +190,7 @@ public class PostFetchServiceTest {
         assertThat(fetchedPost.get(0).getSaleStatus()).isEqualTo(SaleStatus.SOLD);
         assertNotNull(fetchedPost.get(0).getCreatedAt());
         assertThat(fetchedPost.get(1).getSalePostId()).isEqualTo(2L);
-        assertThat(fetchedPost.get(1).getMember().getMembersId()).isEqualTo(1L);
+        assertThat(fetchedPost.get(1).getMember().getMemberId()).isEqualTo(1L);
         assertThat(fetchedPost.get(1).getTicket().getTicketId()).isEqualTo(2L);
         assertThat(fetchedPost.get(1).getTicket().getSports()).isEqualTo(sports);
         assertThat(fetchedPost.get(1).getTicket().getStadium()).isEqualTo(stadium);

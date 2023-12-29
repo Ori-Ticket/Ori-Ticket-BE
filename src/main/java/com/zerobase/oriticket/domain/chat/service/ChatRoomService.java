@@ -50,6 +50,6 @@ public class ChatRoomService {
     @Transactional(readOnly = true)
     public List<ChatRoom> getByMember(Long memberId){
 
-        return chatRoomRepository.findAllByMembers_MembersId(memberId);
+        return chatRoomRepository.findAllByMembers_MemberId(memberId);
     }
 }

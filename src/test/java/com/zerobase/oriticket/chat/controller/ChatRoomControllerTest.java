@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -39,7 +38,7 @@ public class ChatRoomControllerTest {
 
     private final static String BASE_URL = "/chatroom";
 
-    private ChatRoom createChatRoom(Long chatRoomId, Transaction transaction, Set<Member> members){
+    private ChatRoom createChatRoom(Long chatRoomId, Transaction transaction, List<Member> members){
         return ChatRoom.builder()
                 .chatRoomId(chatRoomId)
                 .transaction(transaction)
@@ -50,7 +49,7 @@ public class ChatRoomControllerTest {
 
     private Member createMember(Long membersId){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .build();
     }
 
@@ -74,7 +73,7 @@ public class ChatRoomControllerTest {
         Transaction transaction = createTransaction(1L);
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
-        Set<Member> members = Set.of(member1, member2);
+        List<Member> members = List.of(member1, member2);
         ChatRoom chatRoom = createChatRoom(1L, transaction, members);
 
         given(chatRoomService.get(anyLong()))
@@ -88,8 +87,8 @@ public class ChatRoomControllerTest {
                 .andExpect(jsonPath("$.chatRoomId").value(1L))
                 .andExpect(jsonPath("$.salePostId").value(1L))
                 .andExpect(jsonPath("$.transactionId").value(1L))
-                .andExpect(jsonPath("$.members[0].membersId").value(1L))
-                .andExpect(jsonPath("$.members[1].membersId").value(2L))
+                .andExpect(jsonPath("$.members[0].memberId").value(1L))
+                .andExpect(jsonPath("$.members[1].memberId").value(2L))
                 .andExpect(jsonPath("$.createdAt").exists());
     }
 
@@ -103,8 +102,8 @@ public class ChatRoomControllerTest {
         Member member2 = createMember(2L);
         Member member3 = createMember(3L);
         Member member4 = createMember(4L);
-        Set<Member> members1 = Set.of(member1, member2);
-        Set<Member> members2 = Set.of(member3, member4);
+        List<Member> members1 = List.of(member1, member2);
+        List<Member> members2 = List.of(member3, member4);
         ChatRoom chatRoom1 = createChatRoom(1L, transaction1, members1);
         ChatRoom chatRoom2 = createChatRoom(2L, transaction2, members2);
 
@@ -121,13 +120,13 @@ public class ChatRoomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].chatRoomId").value(1L))
                 .andExpect(jsonPath("$.content[0].transactionId").value(1L))
-                .andExpect(jsonPath("$.content[0].members[0].membersId").value(1L))
-                .andExpect(jsonPath("$.content[0].members[1].membersId").value(2L))
+                .andExpect(jsonPath("$.content[0].members[0].memberId").value(1L))
+                .andExpect(jsonPath("$.content[0].members[1].memberId").value(2L))
                 .andExpect(jsonPath("$.content[0].createdAt").exists())
                 .andExpect(jsonPath("$.content[1].chatRoomId").value(2L))
                 .andExpect(jsonPath("$.content[1].transactionId").value(2L))
-                .andExpect(jsonPath("$.content[1].members[0].membersId").value(3L))
-                .andExpect(jsonPath("$.content[1].members[1].membersId").value(4L))
+                .andExpect(jsonPath("$.content[1].members[0].memberId").value(3L))
+                .andExpect(jsonPath("$.content[1].members[1].memberId").value(4L))
                 .andExpect(jsonPath("$.content[1].createdAt").exists());
     }
 
@@ -138,7 +137,7 @@ public class ChatRoomControllerTest {
         Transaction transaction = createTransaction(1L);
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
-        Set<Member> members = Set.of(member1, member2);
+        List<Member> members = List.of(member1, member2);
         ChatRoom chatRoom = createChatRoom(1L, transaction, members);
 
         given(chatRoomService.getByTransaction(anyLong()))
@@ -151,8 +150,8 @@ public class ChatRoomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.chatRoomId").value(1L))
                 .andExpect(jsonPath("$.transactionId").value(1L))
-                .andExpect(jsonPath("$.members[0].membersId").value(1L))
-                .andExpect(jsonPath("$.members[1].membersId").value(2L))
+                .andExpect(jsonPath("$.members[0].memberId").value(1L))
+                .andExpect(jsonPath("$.members[1].memberId").value(2L))
                 .andExpect(jsonPath("$.createdAt").exists());
     }
 
@@ -165,8 +164,8 @@ public class ChatRoomControllerTest {
         Member member1 = createMember(1L);
         Member member2 = createMember(2L);
         Member member3 = createMember(3L);
-        Set<Member> members1 = Set.of(member1, member2);
-        Set<Member> members2 = Set.of(member1, member3);
+        List<Member> members1 = List.of(member1, member2);
+        List<Member> members2 = List.of(member1, member3);
         ChatRoom chatRoom1 = createChatRoom(1L, transaction1, members1);
         ChatRoom chatRoom2 = createChatRoom(2L, transaction2, members2);
 
@@ -182,13 +181,13 @@ public class ChatRoomControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].chatRoomId").value(1L))
                 .andExpect(jsonPath("$.[0].transactionId").value(1L))
-                .andExpect(jsonPath("$.[0].members[0].membersId").value(1L))
-                .andExpect(jsonPath("$.[0].members[1].membersId").value(2L))
+                .andExpect(jsonPath("$.[0].members[0].memberId").value(1L))
+                .andExpect(jsonPath("$.[0].members[1].memberId").value(2L))
                 .andExpect(jsonPath("$.[0].createdAt").exists())
                 .andExpect(jsonPath("$.[1].chatRoomId").value(2L))
                 .andExpect(jsonPath("$.[1].transactionId").value(2L))
-                .andExpect(jsonPath("$.[1].members[0].membersId").value(1L))
-                .andExpect(jsonPath("$.[1].members[1].membersId").value(3L))
+                .andExpect(jsonPath("$.[1].members[0].memberId").value(1L))
+                .andExpect(jsonPath("$.[1].members[1].memberId").value(3L))
                 .andExpect(jsonPath("$.[1].createdAt").exists());
     }
 }

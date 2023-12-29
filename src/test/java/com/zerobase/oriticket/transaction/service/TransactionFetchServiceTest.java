@@ -41,7 +41,7 @@ public class TransactionFetchServiceTest {
 
     private Member createMember(Long membersId){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .build();
     }
 
@@ -93,7 +93,7 @@ public class TransactionFetchServiceTest {
         //then
         assertThat(fetchedTransactions.get(0).getTransactionId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(0).getSalePost()).isEqualTo(salePost1);
-        assertThat(fetchedTransactions.get(0).getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedTransactions.get(0).getMember().getMemberId()).isEqualTo(2L);
         assertNull(fetchedTransactions.get(0).getPayAmount());
         assertThat(fetchedTransactions.get(0).getStatus()).isEqualTo(TransactionStatus.PENDING);
         assertNull(fetchedTransactions.get(0).getReceivedAt());
@@ -101,7 +101,7 @@ public class TransactionFetchServiceTest {
         assertNull(fetchedTransactions.get(0).getEndedAt());
         assertThat(fetchedTransactions.get(1).getTransactionId()).isEqualTo(2L);
         assertThat(fetchedTransactions.get(1).getSalePost()).isEqualTo(salePost2);
-        assertThat(fetchedTransactions.get(1).getMember().getMembersId()).isEqualTo(1L);
+        assertThat(fetchedTransactions.get(1).getMember().getMemberId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(1).getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactions.get(1).getStatus()).isEqualTo(TransactionStatus.RECEIVED);
         assertNotNull(fetchedTransactions.get(1).getReceivedAt());
@@ -137,7 +137,7 @@ public class TransactionFetchServiceTest {
         //then
         assertThat(fetchedTransactions.get(0).getTransactionId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(0).getSalePost()).isEqualTo(salePost1);
-        assertThat(fetchedTransactions.get(0).getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedTransactions.get(0).getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedTransactions.get(1).getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactions.get(0).getStatus()).isEqualTo(TransactionStatus.COMPLETED);
         assertNotNull(fetchedTransactions.get(0).getReceivedAt());
@@ -145,7 +145,7 @@ public class TransactionFetchServiceTest {
         assertNotNull(fetchedTransactions.get(0).getEndedAt());
         assertThat(fetchedTransactions.get(1).getTransactionId()).isEqualTo(2L);
         assertThat(fetchedTransactions.get(1).getSalePost()).isEqualTo(salePost2);
-        assertThat(fetchedTransactions.get(1).getMember().getMembersId()).isEqualTo(1L);
+        assertThat(fetchedTransactions.get(1).getMember().getMemberId()).isEqualTo(1L);
         assertThat(fetchedTransactions.get(1).getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransactions.get(1).getStatus()).isEqualTo(TransactionStatus.CANCELED);
         assertNotNull(fetchedTransactions.get(1).getReceivedAt());

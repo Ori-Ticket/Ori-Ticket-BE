@@ -21,7 +21,7 @@ public class ChatMessageResponse {
         return ChatMessageResponse.builder()
                 .chatMessageId(chatMessage.getChatMessageId())
                 .chatRoomId(chatMessage.getChatRoom().getChatRoomId())
-                .memberId(chatMessage.getMember().getMembersId())
+                .memberId(chatMessage.getMember().getMemberId())
                 .message(chatMessage.getMessage())
                 .chattedAt(chatMessage.getChattedAt())
                 .build();

@@ -18,7 +18,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t " +
             "JOIN t.salePost sp " +
             "WHERE t.status IN :statusList " +
-            "AND (t.member.membersId = :memberId OR sp.member.membersId = :memberId)")
+            "AND (t.member.memberId = :memberId OR sp.member.memberId = :memberId)")
     List<Transaction> findAllBySellerOrBuyerIdAndStatusList(Long memberId, List<TransactionStatus> statusList);
 
     @Query("SELECT CASE \n" +

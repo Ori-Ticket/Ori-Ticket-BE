@@ -5,7 +5,7 @@ import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRep
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
 import com.zerobase.oriticket.domain.members.entity.Member;
-import com.zerobase.oriticket.domain.members.repository.MembersRepository;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -33,7 +33,7 @@ public class TransactionService {
     private final TransactionSearchRepository transactionSearchRepository;
     private final PostRepository postRepository;
     private final PostSearchRepository postSearchRepository;
-    private final MembersRepository membersRepository;
+    private final UserRepository userRepository;
 
     private static final String STARTED_AT = "startedAt";
 
@@ -43,7 +43,7 @@ public class TransactionService {
         Post salePost = postRepository.findById(request.getSalePostId())
                 .orElseThrow(() -> new CustomException(SALE_POST_NOT_FOUND.getCode(), SALE_POST_NOT_FOUND.getMessage()));
 
-        Member member = membersRepository.findById(request.getMemberId())
+        Member member = userRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND.getCode(), MEMBER_NOT_FOUND.getMessage()));
 
         if (!transactionRepository.validateCanRegisterTransaction(salePost)){

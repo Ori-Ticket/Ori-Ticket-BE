@@ -123,7 +123,7 @@ public class TransactionUpdateServiceTest {
 
     private Member createMember(Long membersId, String nickname){
         return Member.builder()
-                .membersId(membersId)
+                .memberId(membersId)
                 .nickname(nickname)
                 .build();
     }
@@ -183,7 +183,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(11L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(2L);
+        assertThat(fetchedTransaction.getMember().getMemberId()).isEqualTo(2L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.RECEIVED);
         assertNotNull(fetchedTransaction.getReceivedAt());
@@ -239,7 +239,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMemberId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.COMPLETED);
         assertNotNull(fetchedTransaction.getReceivedAt());
@@ -299,7 +299,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMemberId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.CANCELED);
         assertNotNull(fetchedTransaction.getReceivedAt());
@@ -359,7 +359,7 @@ public class TransactionUpdateServiceTest {
 
         assertThat(fetchedTransaction.getTransactionId()).isEqualTo(12L);
         assertThat(fetchedTransaction.getSalePost()).isEqualTo(salePost);
-        assertThat(fetchedTransaction.getMember().getMembersId()).isEqualTo(3L);
+        assertThat(fetchedTransaction.getMember().getMemberId()).isEqualTo(3L);
         assertThat(fetchedTransaction.getPayAmount()).isEqualTo(10000);
         assertThat(fetchedTransaction.getStatus()).isEqualTo(TransactionStatus.REPORTED);
         assertNotNull(fetchedTransaction.getReceivedAt());
