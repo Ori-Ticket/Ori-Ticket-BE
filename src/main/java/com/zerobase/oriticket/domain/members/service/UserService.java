@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public Member updateUser(UserRequest userRequest) {
-        Member byId = userRepository.findByMembersId(userRequest.getId());
+        Member byId = userRepository.findByMemberId(userRequest.getId());
         if (byId == null) {
             throw new RuntimeException("존재하지 않는 정보 입니다.");
         }
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public Member checkUser(long id) {
-        Member byId = userRepository.findByMembersId(id);
+        Member byId = userRepository.findByMemberId(id);
         if (byId == null) {
             throw new RuntimeException("존재하지 않는 정보 입니다.");
         }
@@ -61,7 +61,7 @@ public class UserService {
     }
 
     public Member deleteUser(long id) {
-        Member byId = userRepository.findByMembersId(id);
+        Member byId = userRepository.findByMemberId(id);
         if (byId == null) {
             throw new RuntimeException("존재하지 않는 정보 입니다.");
         }

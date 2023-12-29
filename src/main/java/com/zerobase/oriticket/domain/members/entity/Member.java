@@ -28,8 +28,8 @@ public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="members_id")
-    private Long membersId;
+    @Column(name="id")
+    private Long memberId;
 
     @Column(length = 30, unique = true)
     private String email;
