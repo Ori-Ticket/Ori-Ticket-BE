@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.report.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
@@ -94,10 +95,10 @@ public class ReportTransactionControllerTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Long memberId, Ticket ticket, SaleStatus status){
+    private Post createPost(Long salePostId, Member member, Ticket ticket, SaleStatus status){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(status)
                 .createdAt(LocalDateTime.now())
@@ -107,12 +108,12 @@ public class ReportTransactionControllerTest {
     private Transaction createTransaction(
             Long transactionId,
             Post salePost,
-            Long memberId
+            Member member
     ){
         return Transaction.builder()
                 .transactionId(transactionId)
                 .salePost(salePost)
-                .memberId(memberId)
+                .member(member)
                 .startedAt(LocalDateTime.now())
                 .status(TransactionStatus.PENDING)
                 .build();
@@ -120,7 +121,7 @@ public class ReportTransactionControllerTest {
 
     private ReportTransaction createReportTransaction(
             Long reportTransactionId,
-            Long memberId,
+            Member member,
             Transaction transaction,
             ReportReactStatus status,
             LocalDateTime reactedAt,
@@ -128,13 +129,19 @@ public class ReportTransactionControllerTest {
     ){
         return ReportTransaction.builder()
                 .reportTransactionId(reportTransactionId)
-                .memberId(memberId)
+                .member(member)
                 .transaction(transaction)
                 .reason(ReportTransactionType.ECONOMIC_LOSS)
                 .reportedAt(LocalDateTime.now())
                 .status(status)
                 .reactedAt(reactedAt)
                 .note(note)
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .memberId(membersId)
                 .build();
     }
 
@@ -151,10 +158,11 @@ public class ReportTransactionControllerTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
-        Transaction transaction = createTransaction(19L, salePost, 2L);
-        ReportTransaction reportTransaction =
-                createReportTransaction(5L, 2L, transaction,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        Transaction transaction = createTransaction(19L, salePost, member2);
+        ReportTransaction reportTransaction = createReportTransaction(5L, member2, transaction,
                         ReportReactStatus.PROCESSING, null, null);
 
         given(reportTransactionService.register(anyLong(), any(RegisterReportTransactionRequest.class)))
@@ -197,10 +205,11 @@ public class ReportTransactionControllerTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
-        Transaction transaction = createTransaction(19L, salePost, 2L);
-        ReportTransaction reportTransaction =
-                createReportTransaction(5L, 2L, transaction,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        Transaction transaction = createTransaction(19L, salePost, member2);
+        ReportTransaction reportTransaction = createReportTransaction(5L, member2, transaction,
                         ReportReactStatus.REACTED, LocalDateTime.now(), "react note");
 
         given(reportTransactionService.updateToReacted(anyLong(), any(UpdateReportRequest.class)))

@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.chat.entity;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class ContactChatRoom extends BaseChatRoom{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contactChatRoomId;
 
-    private Long memberId;
+    @OneToOne
+    private Member member;
 
 }

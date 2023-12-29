@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.chat.entity;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class ChatMessage extends BaseChatMessage {
     @ManyToOne
     private ChatRoom chatRoom;
 
-    private Long memberId;
+    @ManyToOne
+    private Member member;
 
 }

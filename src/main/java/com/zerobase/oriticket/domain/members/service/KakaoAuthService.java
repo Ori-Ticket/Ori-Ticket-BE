@@ -30,7 +30,6 @@ public class KakaoAuthService {
     private static final String REDIRECT_URI = "http://localhost:8080/members/kakao/login";
     private final RestTemplate restTemplate = new RestTemplate();
 
-//    private AuthenticationManager authenticationManager;
 
     @Value("${ori.key}")
     private String oriKey;
@@ -97,13 +96,7 @@ public class KakaoAuthService {
                 .role(RoleType.ROLE_USER).status(MemberStatus.ACTIVE).build();
     }
 
-//    public UserEntity autoLogin(KakaoProfile kakaoProfile, UserService userService) {
-//        return userService.findUserByEmail(kakaoProfile.getKakao_account().getEmail());
-////        Authentication authentication = authenticationManager.authenticate(
-////                new UsernamePasswordAuthenticationToken(kakaoProfile.getKakao_account().getEmail(), oriKey));
-////        SecurityContextHolder.getContext().setAuthentication(authentication);
-////        return "회원가입완료";
-//    }
+
 }
 
 

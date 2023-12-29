@@ -1,5 +1,7 @@
 package com.zerobase.oriticket.post.service;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.post.dto.RegisterLikesRequest;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.post.repository.LikesRepository;
@@ -29,6 +31,10 @@ public class LikesServiceTest {
 
     @Mock
     private PostRepository postRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
 
     @InjectMocks
     private LikesService likesService;
@@ -89,11 +95,17 @@ public class LikesServiceTest {
                 .build();
     }
 
-    private Likes createLikes(Long likesId, Long memberId, Post salePost){
+    private Likes createLikes(Long likesId, Member member, Post salePost){
         return Likes.builder()
                 .likesId(likesId)
-                .memberId(memberId)
+                .member(member)
                 .salePost(salePost)
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .memberId(membersId)
                 .build();
     }
 
@@ -109,11 +121,14 @@ public class LikesServiceTest {
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(12L, sports, stadium, awayTeam);
         Post salePost = createPost(50L, ticket);
-        Likes likes = createLikes(1L, 10L, salePost);
+        Member member = createMember(10L);
+        Likes likes = createLikes(1L, member, salePost);
 
+        given(userRepository.findById(anyLong()))
+                .willReturn(Optional.of(member));
         given(postRepository.findById(anyLong()))
                 .willReturn(Optional.of(salePost));
-        given(likesRepository.existsByMemberIdAndSalePost(anyLong(), any(Post.class)))
+        given(likesRepository.existsByMember_MemberIdAndSalePost(anyLong(), any(Post.class)))
                 .willReturn(false);
         given(likesRepository.save(any(Likes.class)))
                 .willReturn(likes);
@@ -123,7 +138,7 @@ public class LikesServiceTest {
 
         //then
         assertThat(fetchedLikes.getLikesId()).isEqualTo(1L);
-        assertThat(fetchedLikes.getMemberId()).isEqualTo(10L);
+        assertThat(fetchedLikes.getMember().getMemberId()).isEqualTo(10L);
         assertThat(fetchedLikes.getSalePost()).isEqualTo(salePost);
     }
 
@@ -136,9 +151,10 @@ public class LikesServiceTest {
         AwayTeam awayTeam = createAwayTeam(1L, sports, "한화");
         Ticket ticket = createTicket(12L, sports, stadium, awayTeam);
         Post salePost = createPost(50L, ticket);
-        Likes likes = createLikes(1L, 10L, salePost);
+        Member member = createMember(10L);
+        Likes likes = createLikes(1L, member, salePost);
 
-        given(likesRepository.findBySalePost_SalePostIdAndMemberId(anyLong(), anyLong()))
+        given(likesRepository.findBySalePost_SalePostIdAndMember_MemberId(anyLong(), anyLong()))
                 .willReturn(Optional.of(likes));
 
         //when
@@ -159,11 +175,12 @@ public class LikesServiceTest {
         Ticket ticket2 = createTicket(13L, sports, stadium, awayTeam);
         Post salePost1 = createPost(50L, ticket1);
         Post salePost2 = createPost(51L, ticket2);
-        Likes likes1 = createLikes(1L, 10L, salePost1);
-        Likes likes2 = createLikes(2L, 10L, salePost2);
+        Member member = createMember(10L);
+        Likes likes1 = createLikes(1L, member, salePost1);
+        Likes likes2 = createLikes(2L, member, salePost2);
         List<Likes> likesList = Arrays.asList(likes1, likes2);
 
-        given(likesRepository.findAllByMemberIdAndSalePost_SaleStatusNotIn(anyLong(), anyList()))
+        given(likesRepository.findAllByMember_MemberIdAndSalePost_SaleStatusNotIn(anyLong(), anyList()))
                 .willReturn(likesList);
 
         //when
@@ -171,10 +188,10 @@ public class LikesServiceTest {
 
         //then
         assertThat(fetchedLikes.get(0).getLikesId()).isEqualTo(1L);
-        assertThat(fetchedLikes.get(0).getMemberId()).isEqualTo(10L);
+        assertThat(fetchedLikes.get(0).getMember().getMemberId()).isEqualTo(10L);
         assertThat(fetchedLikes.get(0).getSalePost()).isEqualTo(salePost1);
         assertThat(fetchedLikes.get(1).getLikesId()).isEqualTo(2L);
-        assertThat(fetchedLikes.get(1).getMemberId()).isEqualTo(10L);
+        assertThat(fetchedLikes.get(1).getMember().getMemberId()).isEqualTo(10L);
         assertThat(fetchedLikes.get(1).getSalePost()).isEqualTo(salePost2);
     }
 }

@@ -12,6 +12,7 @@ import com.zerobase.oriticket.domain.chat.entity.ContactChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.service.ChatMessageService;
 import com.zerobase.oriticket.domain.chat.service.ContactChatMessageService;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,27 @@ public class ChatControllerTest {
     @InjectMocks
     private ChatController chatController;
 
+    private ChatRoom createChatRoom(Long chatRoomId){
+        return ChatRoom.builder()
+                .chatRoomId(chatRoomId)
+                .build();
+    }
+    private ChatMessage createChatMessage(Long chatMessageId, ChatRoom chatRoom, Member member, String message){
+        return ChatMessage.builder()
+                .chatMessageId(chatMessageId)
+                .chatRoom(chatRoom)
+                .member(member)
+                .message(message)
+                .chattedAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .memberId(membersId)
+                .build();
+    }
+
     @Test
     @DisplayName("1:1 채팅 보내기 성공")
     void successChat(){
@@ -50,19 +72,9 @@ public class ChatControllerTest {
                         .memberId(1L)
                         .message("message")
                         .build();
-
-        ChatRoom chatRoom = ChatRoom.builder()
-                .chatRoomId(1L)
-                .build();
-
-        ChatMessage chatMessage =
-                ChatMessage.builder()
-                        .chatMessageId(4L)
-                        .chatRoom(chatRoom)
-                        .memberId(50L)
-                        .message("message")
-                        .chattedAt(LocalDateTime.now())
-                        .build();
+        Member member = createMember(50L);
+        ChatRoom chatRoom = createChatRoom(1L);
+        ChatMessage chatMessage = createChatMessage(4L, chatRoom, member, "message");
 
         given(chatMessageService.register(anyLong(), any(SendChatMessageRequest.class)))
                 .willReturn(chatMessage);

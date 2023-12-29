@@ -1,7 +1,7 @@
 package com.zerobase.oriticket.domain.members.entity;
 
-import com.zerobase.oriticket.global.constants.MemberStatus;
-import com.zerobase.oriticket.global.constants.UserRole;
+import com.zerobase.oriticket.domain.members.constants.MemberStatus;
+import com.zerobase.oriticket.domain.members.constants.RoleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,54 +11,57 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import org.hibernate.annotations.CreationTimestamp;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long membersId;
+    @Column(name="id")
+    private Long memberId;
 
-    @Column(length = 30)
+    @Column(length = 30, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String name;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30, unique = true)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column( length = 100)
+    private String password;
+
+    @Column()
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime birthDate;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30, unique = true)
     private String phoneNum;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private UserRole roles;
+    private RoleType role = RoleType.ROLE_USER;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private MemberStatus status;
+    private MemberStatus status = MemberStatus.ACTIVE;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime registeredAt;
+    @CreationTimestamp
+    private Timestamp registeredAt;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime modifiedAt;
+    @CreationTimestamp
+    private Timestamp modifiedAt;
+
+    private String oauth; // kakao
 
 }
