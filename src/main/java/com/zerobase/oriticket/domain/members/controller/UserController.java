@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.domain.members.controller;
 
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
+import com.zerobase.oriticket.domain.members.dto.user.UserResponse;
 import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
@@ -32,12 +33,18 @@ public class UserController {
     private UserRequest kakaoUser;
 
     @GetMapping("/kakao/login")
-    public ResponseEntity<Member> handleKakao(String code) {
+    public ResponseEntity<UserResponse> handleKakao(String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
         ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
         KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
-        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
-        return ResponseEntity.ok().body(kakaoUser.toEntityKakao());
+        UserResponse userResponse = UserResponse.builder()
+                .email(kakaoProfile.getKakao_account().getEmail())
+                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
+                .build();
+        return ResponseEntity.ok().body(userResponse);
+//        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
+//        return ResponseEntity.ok().body(kakaoUser);
+//        return ResponseEntity.ok().body(kakaoProfile);
     }
 
     @PostMapping("/signup")
@@ -64,7 +71,8 @@ public class UserController {
     public ResponseEntity<Member> checkUser(@PathVariable long id) {
         System.out.println("회원정보확인");
         Member member = userService.checkUser(id);
-        return ResponseEntity.ok(member);
+        return ResponseEntity.ok().body(kakaoUser.toEntityKakao());
+//        return ResponseEntity.ok(member);
     }
 
     @DeleteMapping("/withdraw/{id}")
