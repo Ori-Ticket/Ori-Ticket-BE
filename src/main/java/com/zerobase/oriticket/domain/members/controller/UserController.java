@@ -6,8 +6,6 @@ import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
 import com.zerobase.oriticket.domain.members.service.KakaoAuthService;
 import com.zerobase.oriticket.domain.members.service.UserService;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/members")
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@RequiredArgsConstructor
 public class UserController {
 
     @Autowired
@@ -31,17 +32,12 @@ public class UserController {
     private UserRequest kakaoUser;
 
     @GetMapping("/kakao/login")
-    public ResponseEntity<Map<String, Object>> handleKakao(String code) {
+    public ResponseEntity<Member> handleKakao(String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
         ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
         KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
         kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("data", kakaoUser);
-
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(kakaoUser.toEntityKakao());
     }
 
     @PostMapping("/signup")
