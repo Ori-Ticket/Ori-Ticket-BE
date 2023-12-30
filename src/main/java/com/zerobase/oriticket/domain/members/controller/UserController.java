@@ -6,9 +6,6 @@ import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
 import com.zerobase.oriticket.domain.members.service.KakaoAuthService;
 import com.zerobase.oriticket.domain.members.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,14 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/members")
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@RequiredArgsConstructor
 public class UserController {
 
-        @Autowired
+    @Autowired
     private KakaoAuthService kakaoAuthService;
-        @Autowired
+    @Autowired
     private UserService userService;
 
     private UserRequest kakaoUser;
@@ -40,7 +34,7 @@ public class UserController {
         ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
         KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
         kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
-        return ResponseEntity.ok(kakaoUser);
+        return ResponseEntity.ok().body(kakaoUser);
     }
 
     @PostMapping("/signup")
