@@ -34,6 +34,7 @@ public class CorsFilter implements Filter {
                 "Origin, X-Requested-With, Content-Type, Accept, Authorization");
 
         if(origin != null && allowUrl.contains(origin)){
+            log.info("allow access : " + origin);
             response.setHeader("Access-Control-Allow-Origin", origin);
         }
 
