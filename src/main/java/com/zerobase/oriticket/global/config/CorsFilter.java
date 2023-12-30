@@ -23,7 +23,7 @@ public class CorsFilter implements Filter {
                 "https://jxy.me",               // chat debug site url
                 "http://localhost:8080",
                 "http://127.0.0.1:8080",
-                "https://ori-ticket.vercel.app/"
+                "https://ori-ticket.vercel.app"
         );
         String origin = request.getHeader("origin");
         log.info("origin url : "+origin);
