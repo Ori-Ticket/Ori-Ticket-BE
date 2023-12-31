@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.report.dto;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.report.constants.ReportPostType;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
@@ -18,12 +19,12 @@ public class RegisterReportPostRequest {
     private Long memberId;
     private String reason;
 
-    public ReportPost toEntity(Post salePost){
+    public ReportPost toEntity(Member member, Post salePost){
 
         ReportPostType reportType = ReportPostType.valueOf(reason.toUpperCase());
 
         return ReportPost.builder()
-                .memberId(this.memberId)
+                .member(member)
                 .salePost(salePost)
                 .reason(reportType)
                 .status(ReportReactStatus.PROCESSING)

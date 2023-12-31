@@ -5,6 +5,7 @@ import com.zerobase.oriticket.domain.chat.controller.ContactChatRoomController;
 import com.zerobase.oriticket.domain.chat.dto.RegisterContactChatRoomRequest;
 import com.zerobase.oriticket.domain.chat.entity.ContactChatRoom;
 import com.zerobase.oriticket.domain.chat.service.ContactChatRoomService;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,20 @@ public class ContactChatRoomControllerTest {
 
     private final static String BASE_URL = "/contact";
 
+    private ContactChatRoom createContactChatRoom(Long contactChatRoomId, Member member){
+        return ContactChatRoom.builder()
+                .contactChatRoomId(contactChatRoomId)
+                .member(member)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .memberId(membersId)
+                .build();
+    }
+
     @Test
     @DisplayName("ContactChatRoom 등록 성공")
     void successRegister() throws Exception{
@@ -49,13 +64,11 @@ public class ContactChatRoomControllerTest {
                 RegisterContactChatRoomRequest.builder()
                         .memberId(1L)
                         .build();
+        Member member = createMember(1L);
+        ContactChatRoom contactChatRoom = createContactChatRoom(1L, member);
 
         given(contactChatRoomService.register(any(RegisterContactChatRoomRequest.class)))
-                .willReturn(ContactChatRoom.builder()
-                        .contactChatRoomId(1L)
-                        .memberId(1L)
-                        .createdAt(LocalDateTime.now())
-                        .build());
+                .willReturn(contactChatRoom);
 
         //when
         //then
@@ -74,12 +87,11 @@ public class ContactChatRoomControllerTest {
     @DisplayName("ContactChatRoom 조회 성공")
     void successGet() throws Exception{
         //given
+        Member member = createMember(1L);
+        ContactChatRoom contactChatRoom = createContactChatRoom(1L, member);
+
         given(contactChatRoomService.get(anyLong()))
-                .willReturn(ContactChatRoom.builder()
-                        .contactChatRoomId(1L)
-                        .memberId(1L)
-                        .createdAt(LocalDateTime.now())
-                        .build());
+                .willReturn(contactChatRoom);
 
         //when
         //then
@@ -95,17 +107,10 @@ public class ContactChatRoomControllerTest {
     @DisplayName("모든 ContactChatRoom 조회 성공")
     void successGetAll() throws Exception{
         //given
-        ContactChatRoom contactChatRoom1 = ContactChatRoom.builder()
-                .contactChatRoomId(1L)
-                .memberId(1L)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        ContactChatRoom contactChatRoom2 = ContactChatRoom.builder()
-                .contactChatRoomId(2L)
-                .memberId(2L)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Member member1 = createMember(1L);
+        Member member2 = createMember(2L);
+        ContactChatRoom contactChatRoom1 = createContactChatRoom(1L, member1);
+        ContactChatRoom contactChatRoom2 = createContactChatRoom(2L, member2);
 
         List<ContactChatRoom> contactChatRoomList = Arrays.asList(contactChatRoom1, contactChatRoom2);
         Page<ContactChatRoom> contactChatRooms = new PageImpl<>(contactChatRoomList);
@@ -130,11 +135,8 @@ public class ContactChatRoomControllerTest {
     @DisplayName("Member 로 ContactChatRoom 조회 성공")
     void successGetByMember() throws Exception {
         //given
-        ContactChatRoom contactChatRoom = ContactChatRoom.builder()
-                .contactChatRoomId(1L)
-                .memberId(1L)
-                .createdAt(LocalDateTime.now())
-                .build();
+        Member member = createMember(1L);
+        ContactChatRoom contactChatRoom = createContactChatRoom(1L, member);
 
         given(contactChatRoomService.getByMember(anyLong()))
                 .willReturn(contactChatRoom);
