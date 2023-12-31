@@ -1,7 +1,6 @@
 package com.zerobase.oriticket.domain.members.controller;
 
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
-import com.zerobase.oriticket.domain.members.dto.user.UserResponse;
 import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
@@ -33,18 +32,16 @@ public class UserController {
     private UserRequest kakaoUser;
 
     @GetMapping("/kakao/login")
-    public ResponseEntity<UserResponse> handleKakao(String code) {
+    public ResponseEntity<KakaoProfile> handleKakao(String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
         ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
         KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
-        UserResponse userResponse = UserResponse.builder()
-                .email(kakaoProfile.getKakao_account().getEmail())
-                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
-                .build();
-        return ResponseEntity.ok().body(userResponse);
+//        UserResponse userResponse = UserResponse.builder()
+//                .email(kakaoProfile.getKakao_account().getEmail())
+//                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
+//                .build();
 //        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
-//        return ResponseEntity.ok().body(kakaoUser);
-//        return ResponseEntity.ok().body(kakaoProfile);
+        return ResponseEntity.ok(kakaoProfile);
     }
 
     @PostMapping("/signup")
