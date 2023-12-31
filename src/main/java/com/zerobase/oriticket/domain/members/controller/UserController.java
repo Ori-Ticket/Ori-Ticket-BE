@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.members.controller;
 
+
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
@@ -9,12 +10,17 @@ import com.zerobase.oriticket.domain.members.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/members")
-//@AllArgsConstructor
-//@NoArgsConstructor
-//@RequiredArgsConstructor
 public class UserController {
 
     @Autowired
@@ -24,20 +30,8 @@ public class UserController {
 
     private UserRequest kakaoUser;
 
-//    @GetMapping("/kakao/login")
-//    public ResponseEntity<KakaoProfile> handleKakao(String code) {
-//        OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
-//        ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
-//        KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
-////        UserResponse userResponse = UserResponse.builder()
-////                .email(kakaoProfile.getKakao_account().getEmail())
-////                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
-////                .build();
-////        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
-//        return ResponseEntity.ok(kakaoProfile);
-//    }
-
     @GetMapping("/kakao/login")
+    public ResponseEntity<KakaoProfile> handleKakao(@RequestParam String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
         ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
         KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
@@ -63,14 +57,6 @@ public class UserController {
         System.out.println("회원수정");
         Member member = userService.updateUser(userRequest);
         return ResponseEntity.ok(member);
-    }
-
-    @GetMapping("/check/{id}")
-    public ResponseEntity<Member> checkUser(@PathVariable long id) {
-        System.out.println("회원정보확인");
-        Member member = userService.checkUser(id);
-        return ResponseEntity.ok().body(kakaoUser.toEntityKakao());
-//        return ResponseEntity.ok(member);
     }
 
     @DeleteMapping("/withdraw/{id}")
