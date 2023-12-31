@@ -29,19 +29,4 @@ public class UserResponse {
     private Timestamp modifiedAt;
     private String oauth;
 
-
-    public static UserResponse fromEntity(Member member) {
-        return UserResponse.builder()
-                .email(member.getEmail())
-                .name(member.getName())
-                .nickname(member.getNickname())
-                .birthDate(member.getBirthDate())
-                .phoneNum(member.getPhoneNum())
-                .role(member.getRole())
-                .status(member.getStatus())
-                .registeredAt(member.getRegisteredAt().toLocalDateTime())
-                .modifiedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .oauth(member.getOauth())
-                .build();
-    }
 }
