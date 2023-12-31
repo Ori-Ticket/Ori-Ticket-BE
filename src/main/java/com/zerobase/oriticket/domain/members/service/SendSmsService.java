@@ -22,6 +22,9 @@ public class SendSmsService {
         message.setFrom("01097799391");
         message.setTo(phoneNum.getPhoneNum());
         message.setStatusCode(String.valueOf(authKey));
+        message.setSubject(String.valueOf(authKey));
+        message.setText(String.valueOf(authKey));
+        message.setMessageId(String.valueOf(authKey));
         message.setText("[Ori-Ticket] 입력하셔야할 인증번호는[" + authKey + "]입니다.");
 
         return message;
