@@ -28,8 +28,8 @@ public class KakaoAuthService {
     private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
     private static final String CLIENT_ID = "0f5dbcca74a5d4028b0110d4e1201c8d";
     private static final String REDIRECT_URI = "http://13.124.46.138:8080/members/kakao/login";
+//    private static final String REDIRECT_URI = "http://localhost:8080/members/kakao/login";
     private final RestTemplate restTemplate = new RestTemplate();
-
 
     @Value("${ori.key}")
     private String oriKey;

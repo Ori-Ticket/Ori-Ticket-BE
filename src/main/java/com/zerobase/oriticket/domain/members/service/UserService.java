@@ -26,18 +26,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public void findByEmail(String userEmail) {
-        System.out.println(userEmail+"1");
-        boolean email = userRepository.existsByEmail(userEmail);
-        System.out.println(userEmail+"2");
-        if (!email) {
-            throw new RuntimeException("존재하지 않는 회원입니다.");
-        }
-        System.out.println("가입되어있는 유저 입니다.");
-                Member
-                .builder()
-                .email(userEmail)
-                .build();
+    public boolean findByEmail(String userEmail) {
+        return userRepository.existsByEmail(userEmail);
     }
 
     public Member updateUser(UserRequest userRequest) {

@@ -51,10 +51,10 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<UserRequest> signin(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<Boolean> signin(@RequestBody UserRequest userRequest) {
         System.out.println("로그인");
-        userService.findByEmail(userRequest.getEmail());
-        return ResponseEntity.ok(userRequest);
+        boolean byUser = userService.findByEmail(userRequest.getEmail());
+        return ResponseEntity.ok(byUser);
     }
 
     @PatchMapping("/modify")
