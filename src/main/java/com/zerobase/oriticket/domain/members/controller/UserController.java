@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/members")
@@ -31,18 +32,27 @@ public class UserController {
 
     private UserRequest kakaoUser;
 
+//    @GetMapping("/kakao/login")
+//    public ResponseEntity<KakaoProfile> handleKakao(String code) {
+//        OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
+//        ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
+//        KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
+////        UserResponse userResponse = UserResponse.builder()
+////                .email(kakaoProfile.getKakao_account().getEmail())
+////                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
+////                .build();
+////        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
+//        return ResponseEntity.ok(kakaoProfile);
+//    }
+
     @GetMapping("/kakao/login")
-    public ResponseEntity<KakaoProfile> handleKakao(String code) {
+    public ResponseEntity<KakaoProfile> handleKakao(@RequestParam("code") String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
         ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
         KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
-//        UserResponse userResponse = UserResponse.builder()
-//                .email(kakaoProfile.getKakao_account().getEmail())
-//                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
-//                .build();
-//        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
         return ResponseEntity.ok(kakaoProfile);
     }
+
 
     @PostMapping("/signup")
     public ResponseEntity<UserRequest> signup(@RequestBody UserRequest userRequest) {
