@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.post.entity;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +24,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long salePostId;
 
-    private Long memberId; //
+    @ManyToOne
+    private Member member;
 
     @OneToOne
     @JoinColumn(name = "TICKET_ID")

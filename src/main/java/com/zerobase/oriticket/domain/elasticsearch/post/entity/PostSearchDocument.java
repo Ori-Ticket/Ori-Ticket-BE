@@ -50,7 +50,7 @@ public class PostSearchDocument {
     public static PostSearchDocument fromEntity(Post post){
         return PostSearchDocument.builder()
                 .salePostId(post.getSalePostId())
-                .memberName("seller name")
+                .memberName(post.getMember().getNickname())
                 .sportsName(post.getTicket().getSports().getSportsName())
                 .stadiumName(post.getTicket().getStadium().getStadiumName())
                 .homeTeamName(post.getTicket().getStadium().getHomeTeamName())

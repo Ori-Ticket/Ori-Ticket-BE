@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.transaction.dto;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.transaction.constants.TransactionStatus;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
@@ -18,10 +19,10 @@ public class RegisterTransactionRequest {
     private Long salePostId;
     private Long memberId;
 
-    public Transaction toEntity(Post salePost) {
+    public Transaction toEntity(Post salePost, Member member) {
         return Transaction.builder()
                 .salePost(salePost)
-                .memberId(this.memberId)
+                .member(member)
                 .status(TransactionStatus.PENDING)
                 .startedAt(LocalDateTime.now())
                 .build();

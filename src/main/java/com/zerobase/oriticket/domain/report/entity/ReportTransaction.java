@@ -1,5 +1,6 @@
 package com.zerobase.oriticket.domain.report.entity;
 
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.report.constants.ReportReactStatus;
 import com.zerobase.oriticket.domain.report.constants.ReportTransactionType;
 import com.zerobase.oriticket.domain.transaction.entity.Transaction;
@@ -24,8 +25,8 @@ public class ReportTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportTransactionId;
 
-//    @ManyToOne
-    private Long memberId;
+    @ManyToOne
+    private Member member;
 
     @ManyToOne
     private Transaction transaction;

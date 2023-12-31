@@ -54,7 +54,8 @@ public class TransactionUpdateService {
     @Transactional
     public Transaction updateToCompleted(UpdateStatusTransactionRequest request) {
         Transaction transaction = transactionRepository.findById(request.getTransactionId())
-                .orElseThrow(() -> new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> new CustomException(TRANSACTION_NOT_FOUND.getCode(),
+                        TRANSACTION_NOT_FOUND.getMessage()));
 
         validateCanUpdateStatus(transaction.getStatus());
 

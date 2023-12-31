@@ -1,6 +1,7 @@
 package com.zerobase.oriticket.report.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.*;
 import com.zerobase.oriticket.domain.report.constants.ReportPostType;
@@ -92,10 +93,10 @@ public class ReportPostControllerTest {
                 .build();
     }
 
-    private Post createPost(Long salePostId, Long memberId, Ticket ticket, SaleStatus status){
+    private Post createPost(Long salePostId, Member member, Ticket ticket, SaleStatus status){
         return Post.builder()
                 .salePostId(salePostId)
-                .memberId(memberId)
+                .member(member)
                 .ticket(ticket)
                 .saleStatus(status)
                 .createdAt(LocalDateTime.now())
@@ -104,7 +105,7 @@ public class ReportPostControllerTest {
 
     private ReportPost createReportPost(
             Long reportPostId,
-            Long memberId,
+            Member member,
             Post salePost,
             ReportReactStatus status,
             LocalDateTime reactedAt,
@@ -112,13 +113,19 @@ public class ReportPostControllerTest {
     ){
         return ReportPost.builder()
                 .reportPostId(reportPostId)
-                .memberId(memberId)
+                .member(member)
                 .salePost(salePost)
                 .reason(ReportPostType.OTHER_ISSUES)
                 .reportedAt(LocalDateTime.now())
                 .status(status)
                 .reactedAt(reactedAt)
                 .note(note)
+                .build();
+    }
+
+    private Member createMember(Long membersId){
+        return Member.builder()
+                .memberId(membersId)
                 .build();
     }
 
@@ -135,8 +142,10 @@ public class ReportPostControllerTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
-        ReportPost reportPost = createReportPost(5L, 2L, salePost,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        ReportPost reportPost = createReportPost(5L, member2, salePost,
                 ReportReactStatus.PROCESSING, null, null);
 
         given(reportPostService.register(anyLong(), any(RegisterReportPostRequest.class)))
@@ -186,8 +195,10 @@ public class ReportPostControllerTest {
         Stadium stadium = createStadium(1L, sports, "고척돔", "키움");
         AwayTeam awayTeam = createAwayTeam(1L, sports, "두산");
         Ticket ticket = createTicket(10L, sports, stadium, awayTeam);
-        Post salePost = createPost(14L, 11L, ticket, SaleStatus.FOR_SALE);
-        ReportPost reportPost = createReportPost(5L, 2L, salePost,
+        Member member1 = createMember(11L);
+        Member member2 = createMember(2L);
+        Post salePost = createPost(14L, member1, ticket, SaleStatus.FOR_SALE);
+        ReportPost reportPost = createReportPost(5L, member2, salePost,
                 ReportReactStatus.REACTED, LocalDateTime.now(), "react note");
 
         given(reportPostService.updateToReacted(anyLong(), any(UpdateReportRequest.class)))

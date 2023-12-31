@@ -2,6 +2,7 @@ package com.zerobase.oriticket.domain.chat.dto;
 
 import com.zerobase.oriticket.domain.chat.entity.ChatMessage;
 import com.zerobase.oriticket.domain.chat.entity.ChatRoom;
+import com.zerobase.oriticket.domain.members.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +19,10 @@ public class SendChatMessageRequest {
     private Long memberId;
     private String message;
 
-    public ChatMessage toEntity(ChatRoom chatRoom){
+    public ChatMessage toEntity(ChatRoom chatRoom, Member member){
         return ChatMessage.builder()
                 .chatRoom(chatRoom)
-                .memberId(memberId)
+                .member(member)
                 .message(this.message)
                 .chattedAt(LocalDateTime.now())
                 .build();

@@ -4,6 +4,8 @@ import com.zerobase.oriticket.domain.elasticsearch.post.entity.PostSearchDocumen
 import com.zerobase.oriticket.domain.elasticsearch.post.repository.PostSearchRepository;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.entity.TransactionSearchDocument;
 import com.zerobase.oriticket.domain.elasticsearch.transaction.repository.TransactionSearchRepository;
+import com.zerobase.oriticket.domain.members.entity.Member;
+import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import com.zerobase.oriticket.domain.post.constants.SaleStatus;
 import com.zerobase.oriticket.domain.post.entity.Post;
 import com.zerobase.oriticket.domain.post.repository.PostRepository;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.zerobase.oriticket.global.constants.MemberExceptionStatus.MEMBER_NOT_FOUND;
 import static com.zerobase.oriticket.global.constants.PostExceptionStatus.SALE_POST_NOT_FOUND;
 import static com.zerobase.oriticket.global.constants.TransactionExceptionStatus.TRANSACTION_NOT_FOUND;
 
@@ -30,6 +33,7 @@ public class TransactionService {
     private final TransactionSearchRepository transactionSearchRepository;
     private final PostRepository postRepository;
     private final PostSearchRepository postSearchRepository;
+    private final UserRepository userRepository;
 
     private static final String STARTED_AT = "startedAt";
 
@@ -39,13 +43,14 @@ public class TransactionService {
         Post salePost = postRepository.findById(request.getSalePostId())
                 .orElseThrow(() -> new CustomException(SALE_POST_NOT_FOUND.getCode(), SALE_POST_NOT_FOUND.getMessage()));
 
-        // 멤버 유효성 체크
+        Member member = userRepository.findById(request.getMemberId())
+                .orElseThrow(() -> new CustomException(MEMBER_NOT_FOUND.getCode(), MEMBER_NOT_FOUND.getMessage()));
 
         if (!transactionRepository.validateCanRegisterTransaction(salePost)){
             throw new CustomException(TRANSACTION_NOT_FOUND.getCode(), TRANSACTION_NOT_FOUND.getMessage());
         }
 
-        Transaction transaction = transactionRepository.save(request.toEntity(salePost));
+        Transaction transaction = transactionRepository.save(request.toEntity(salePost, member));
         transactionSearchRepository.save(TransactionSearchDocument.fromEntity(transaction));
         salePost.setSaleStatus(SaleStatus.TRADING);
         postRepository.save(salePost);
