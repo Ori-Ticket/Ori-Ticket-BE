@@ -9,7 +9,6 @@ import com.zerobase.oriticket.domain.members.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/members")
@@ -25,18 +24,26 @@ public class UserController {
 
     private UserRequest kakaoUser;
 
+//    @GetMapping("/kakao/login")
+//    public ResponseEntity<KakaoProfile> handleKakao(String code) {
+//        OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
+//        ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
+//        KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
+////        UserResponse userResponse = UserResponse.builder()
+////                .email(kakaoProfile.getKakao_account().getEmail())
+////                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
+////                .build();
+////        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
+//        return ResponseEntity.ok(kakaoProfile);
+//    }
+
     @GetMapping("/kakao/login")
-    public ResponseEntity<KakaoProfile> handleKakao(@RequestParam String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
         ResponseEntity<String> kakaoProfileResponse = kakaoAuthService.requestKakaoProfile(oAuthToken);
         KakaoProfile kakaoProfile = kakaoAuthService.registerOrUpdateKakaoUser(kakaoProfileResponse);
-//        UserResponse userResponse = UserResponse.builder()
-//                .email(kakaoProfile.getKakao_account().getEmail())
-//                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname())
-//                .build();
-//        kakaoUser = kakaoAuthService.buildKakaoUser(kakaoProfile);
         return ResponseEntity.ok(kakaoProfile);
     }
+
 
     @PostMapping("/signup")
     public ResponseEntity<UserRequest> signup(@RequestBody UserRequest userRequest) {
