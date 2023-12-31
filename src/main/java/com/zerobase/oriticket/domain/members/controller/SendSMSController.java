@@ -31,6 +31,7 @@ public class SendSMSController {
     @PostMapping("/send-one")
     public SingleMessageSentResponse sendOne(@RequestBody UserRequest phoneNum) {
         Message message = sendSmsService.sendSms(phoneNum);
+        System.out.println(message.getStatusCode());
         return this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 }
