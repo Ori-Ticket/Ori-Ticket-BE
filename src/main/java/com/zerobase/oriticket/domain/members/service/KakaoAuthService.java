@@ -38,11 +38,14 @@ public class KakaoAuthService {
     public OAuthToken requestKakaoToken(String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(CONTENT_TYPE_HEADER, APPLICATION_X_WWW_FORM_URLENCODED);
+        System.out.println("여기");
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", GRANT_TYPE_AUTHORIZATION_CODE);
         params.add("client_id", CLIENT_ID);
+        System.out.println("야기");
         params.add("redirect_uri", REDIRECT_URI);
+        System.out.println("요기");
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
