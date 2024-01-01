@@ -2,9 +2,6 @@ package com.zerobase.oriticket.domain.members.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zerobase.oriticket.domain.members.constants.MemberStatus;
-import com.zerobase.oriticket.domain.members.constants.RoleType;
-import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,32 +24,22 @@ public class KakaoAuthService {
     private static final String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded;charset=utf-8";
     private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
     private static final String CLIENT_ID = "0f5dbcca74a5d4028b0110d4e1201c8d";
-    private static final String REDIRECT_URI = "http://13.124.46.138:8080/members/kakao/login";
-//    private static final String REDIRECT_URI = "http://localhost:8080/members/kakao/login";
+    private static final String REDIRECT_URI = "http://localhost:8080/members/kakao/login";
 
     private final RestTemplate restTemplate = new RestTemplate();
-
-    @Value("${ori.key}")
-    private String oriKey;
 
     public OAuthToken requestKakaoToken(String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(CONTENT_TYPE_HEADER, APPLICATION_X_WWW_FORM_URLENCODED);
-        System.out.println("여기");
-
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", GRANT_TYPE_AUTHORIZATION_CODE);
         params.add("client_id", CLIENT_ID);
-        System.out.println("야기");
         params.add("redirect_uri", REDIRECT_URI);
-        System.out.println("요기");
         params.add("code", code);
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
-
         ResponseEntity<String> response = restTemplate.exchange(KAKAO_OAUTH_TOKEN_URL, HttpMethod.POST,
                 kakaoTokenRequest, String.class);
-
         ObjectMapper objectMapper = new ObjectMapper();
         OAuthToken oauthToken = null;
 
@@ -61,7 +48,6 @@ public class KakaoAuthService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
         return oauthToken;
     }
 
@@ -87,20 +73,6 @@ public class KakaoAuthService {
 
         return kakaoProfile;
     }
-
-    public UserRequest buildKakaoUser(KakaoProfile kakaoProfile) {
-        System.out.println("고유식별번호 : " + kakaoProfile.getId());
-        System.out.println("이메일 : " + kakaoProfile.getKakao_account().getEmail());
-        System.out.println("이름 : " + kakaoProfile.getKakao_account().getProfile().getNickname());
-        System.out.println("패스워드 : " + oriKey);
-        System.out.println("권한 : " + RoleType.ROLE_USER);
-        System.out.println("상태 : " + MemberStatus.ACTIVE);
-        return UserRequest.builder().email(kakaoProfile.getKakao_account().getEmail())
-                .nickname(kakaoProfile.getKakao_account().getProfile().getNickname()).password(oriKey).oauth("kakao")
-                .role(RoleType.ROLE_USER).status(MemberStatus.ACTIVE).build();
-    }
-
-
 }
 
 
