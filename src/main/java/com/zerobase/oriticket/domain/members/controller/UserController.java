@@ -2,11 +2,14 @@ package com.zerobase.oriticket.domain.members.controller;
 
 
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
+import com.zerobase.oriticket.domain.members.dto.user.UserResponse;
 import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
 import com.zerobase.oriticket.domain.members.service.KakaoAuthService;
 import com.zerobase.oriticket.domain.members.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private UserResponse userResponse = new UserResponse();
+
     @GetMapping("/kakao/login")
     public ResponseEntity<KakaoProfile> handleKakao(@RequestParam String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
@@ -44,10 +49,10 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<Boolean> signin(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> signin(@RequestBody UserRequest userRequest) {
         System.out.println("로그인");
-        boolean byUser = userService.findByEmail(userRequest.getEmail());
-        return ResponseEntity.ok(byUser);
+        userRequest.setExistsByEmail(userService.findByEmail(userRequest.getEmail()));
+        return ResponseEntity.ok(userResponse.toEntity(userRequest));
     }
 
     @PatchMapping("/modify")

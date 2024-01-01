@@ -29,6 +29,7 @@ public class UserRequest {
     private MemberStatus status;
     private String oauth;
     private String password;
+    private Boolean existsByEmail;
 
     public Member toEntityKakao(UserRequest userRequest) {
         return Member.builder()
