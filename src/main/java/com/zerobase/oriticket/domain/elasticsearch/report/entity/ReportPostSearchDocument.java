@@ -38,8 +38,7 @@ public class ReportPostSearchDocument {
     public static ReportPostSearchDocument fromEntity(ReportPost reportPost) {
         return ReportPostSearchDocument.builder()
                 .reportPostId(reportPost.getReportPostId())
-                .memberName("reported member")
-//                .memberName(reportPost.getMember().getUserName())
+                .memberName(reportPost.getMember().getNickname())
                 .salePostId(reportPost.getSalePost().getSalePostId())
                 .reason(reportPost.getReason().getReportType())
                 .reportedAt(reportPost.getReportedAt())

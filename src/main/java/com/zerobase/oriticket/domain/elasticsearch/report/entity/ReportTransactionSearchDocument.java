@@ -38,8 +38,7 @@ public class ReportTransactionSearchDocument {
     public static ReportTransactionSearchDocument fromEntity(ReportTransaction reportTransaction){
         return ReportTransactionSearchDocument.builder()
                 .reportTransactionId(reportTransaction.getReportTransactionId())
-                .memberName("reported member")
-//                .memberName(reportTransaction.getMemberId().getUserName())
+                .memberName(reportTransaction.getMember().getNickname())
                 .transactionId(reportTransaction.getTransaction().getTransactionId())
                 .reason(reportTransaction.getReason().getReportType())
                 .reportedAt(reportTransaction.getReportedAt())
