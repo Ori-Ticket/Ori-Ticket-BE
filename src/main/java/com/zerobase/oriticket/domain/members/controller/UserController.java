@@ -28,8 +28,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private UserRequest kakaoUser;
-
     @GetMapping("/kakao/login")
     public ResponseEntity<KakaoProfile> handleKakao(@RequestParam String code) {
         OAuthToken oAuthToken = kakaoAuthService.requestKakaoToken(code);
@@ -38,10 +36,10 @@ public class UserController {
         return ResponseEntity.ok(kakaoProfile);
     }
 
-
     @PostMapping("/signup")
     public ResponseEntity<UserRequest> signup(@RequestBody UserRequest userRequest) {
-        userService.updateUserByEmail(kakaoUser, userRequest);
+        System.out.println("회원가입");
+        userService.updateUserByEmail(userRequest);
         return ResponseEntity.ok(userRequest);
     }
 
