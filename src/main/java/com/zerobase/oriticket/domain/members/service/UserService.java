@@ -3,26 +3,28 @@ package com.zerobase.oriticket.domain.members.service;
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.members.repository.UserRepository;
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    private UserRequest userRequest;
 
     @Transactional
-    public void updateUserByEmail(UserRequest userKakao, UserRequest userRequest) {
-        if (!Objects.equals(userKakao.getEmail(), userRequest.getEmail())) {
-            throw new RuntimeException("카카오 토큰인증이 없는 회원입니다. 새로고침 후 다시 진행해주시길 바랍니다.");
+    public void updateUserByEmail(UserRequest userRequest) {
+        if (userRepository.existsByEmail(userRequest.getEmail())) {
+            throw new RuntimeException("이미 가입되어 있는 회원입니다.");
         }
-        userKakao.setName(userRequest.getName());
-        userKakao.setBirthDate(userRequest.getBirthDate());
-        userKakao.setPhoneNum(userRequest.getPhoneNum());
-        userRepository.save(userKakao.toEntityKakao());
+        Member entityKakao = userRequest.toEntityKakao(userRequest);
+        userRepository.save(entityKakao);
     }
 
     @Transactional(readOnly = true)

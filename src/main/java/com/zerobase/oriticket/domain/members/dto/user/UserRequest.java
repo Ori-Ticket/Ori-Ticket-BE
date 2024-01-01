@@ -30,17 +30,17 @@ public class UserRequest {
     private String oauth;
     private String password;
 
-    public Member toEntityKakao() {
+    public Member toEntityKakao(UserRequest userRequest) {
         return Member.builder()
-                .email(this.email)
-                .name(this.name)
-                .nickname(this.nickname)
-                .birthDate(this.birthDate)
-                .phoneNum(this.phoneNum)
-                .password(this.password)
-                .role(this.role)
-                .status(this.status)
-                .oauth(this.oauth)
+                .email(userRequest.getEmail())
+                .name(userRequest.getName())
+                .nickname(userRequest.getNickname())
+                .birthDate(userRequest.getBirthDate())
+                .phoneNum(userRequest.getPhoneNum())
+                .password("ori1234")
+                .role(RoleType.ROLE_USER)
+                .status(MemberStatus.ACTIVE)
+                .oauth("KaKao")
                 .build();
     }
 }
