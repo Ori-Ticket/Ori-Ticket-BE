@@ -2,7 +2,6 @@ package com.zerobase.oriticket.domain.members.controller;
 
 import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.service.SendSmsService;
-import lombok.AllArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
@@ -16,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SendSMSController {
 
-    @Autowired
-    private SendSmsService sendSmsService;
     private final DefaultMessageService messageService;
+    private final SendSmsService sendSmsService;
 
-    public SendSMSController() {
+    @Autowired
+    public SendSMSController(SendSmsService sendSmsService) {
+        this.sendSmsService = sendSmsService;
         this.messageService = NurigoApp.INSTANCE.initialize("NCSO8SAGQJZTJ7OP", "WWZMQAXBFO5AOIASJF9YNOFAGZOF5CBT",
                 "https://api.coolsms.co.kr");
     }
