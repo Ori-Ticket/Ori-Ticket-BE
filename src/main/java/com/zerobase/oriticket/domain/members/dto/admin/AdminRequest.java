@@ -5,17 +5,19 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@Component
 public class AdminRequest {
 
     private String email;
     private String name;
     private String nickname;
+
 }
 
 

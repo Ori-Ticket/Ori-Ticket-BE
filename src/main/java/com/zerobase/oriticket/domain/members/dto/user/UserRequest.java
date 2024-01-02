@@ -6,17 +6,19 @@ import com.zerobase.oriticket.domain.members.entity.Member;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@Component
 public class UserRequest {
 
     private long id;
@@ -31,13 +33,13 @@ public class UserRequest {
     private String password;
     private Boolean existsByEmail;
 
-    public Member toEntityKakao(UserRequest userRequest) {
+    public Member toEntityKakao() {
         return Member.builder()
-                .email(userRequest.getEmail())
-                .name(userRequest.getName())
-                .nickname(userRequest.getNickname())
-                .birthDate(userRequest.getBirthDate())
-                .phoneNum(userRequest.getPhoneNum())
+                .email(this.getEmail())
+                .name(this.getName())
+                .nickname(this.getNickname())
+                .birthDate(this.getBirthDate())
+                .phoneNum(this.getPhoneNum())
                 .password("ori1234")
                 .role(RoleType.ROLE_USER)
                 .status(MemberStatus.ACTIVE)

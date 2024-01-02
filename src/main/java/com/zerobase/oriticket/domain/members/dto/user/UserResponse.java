@@ -5,17 +5,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.stereotype.Component;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@Component
 public class UserResponse {
 
     private Boolean existsByEmail;
     private String email;
-
 
     public UserResponse toEntity(UserRequest userRequest) {
         return UserResponse.builder()
