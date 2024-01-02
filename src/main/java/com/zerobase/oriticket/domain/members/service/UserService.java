@@ -4,27 +4,23 @@ import com.zerobase.oriticket.domain.members.dto.user.UserRequest;
 import com.zerobase.oriticket.domain.members.entity.Member;
 import com.zerobase.oriticket.domain.members.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class UserService {
 
-    @Autowired
+    private final String NON_EXISTENT_MEMBER = "존재하지 않는 회원 입니다.";
+    private final String EXISTENT_MEMBER = "이미 가입되어 있는 회원 입니다.";
     private UserRepository userRepository;
-    private UserRequest userRequest;
 
     @Transactional
     public void updateUserByEmail(UserRequest userRequest) {
         if (userRepository.existsByEmail(userRequest.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 회원입니다.");
+            throw new RuntimeException(EXISTENT_MEMBER);
         }
-        Member entityKakao = userRequest.toEntityKakao(userRequest);
-        userRepository.save(entityKakao);
+        userRepository.save(userRequest.toEntityKakao());
     }
 
     @Transactional(readOnly = true)
@@ -35,7 +31,7 @@ public class UserService {
     public Member updateUser(UserRequest userRequest) {
         Member byId = userRepository.findByMemberId(userRequest.getId());
         if (byId == null) {
-            throw new RuntimeException("존재하지 않는 정보 입니다.");
+            throw new RuntimeException(NON_EXISTENT_MEMBER);
         }
         if (userRequest.getNickname() != null) {
             byId.setNickname(userRequest.getNickname());
@@ -47,7 +43,7 @@ public class UserService {
     public Member checkUser(long id) {
         Member byId = userRepository.findByMemberId(id);
         if (byId == null) {
-            throw new RuntimeException("존재하지 않는 정보 입니다.");
+            throw new RuntimeException(NON_EXISTENT_MEMBER);
         }
         return byId;
     }
@@ -55,7 +51,7 @@ public class UserService {
     public Member deleteUser(long id) {
         Member byId = userRepository.findByMemberId(id);
         if (byId == null) {
-            throw new RuntimeException("존재하지 않는 정보 입니다.");
+            throw new RuntimeException(NON_EXISTENT_MEMBER);
         }
         userRepository.delete(byId);
         return byId;

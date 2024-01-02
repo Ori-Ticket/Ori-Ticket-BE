@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zerobase.oriticket.domain.members.model.KakaoProfile;
 import com.zerobase.oriticket.domain.members.model.OAuthToken;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +18,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@AllArgsConstructor
+@NoArgsConstructor
 public class KakaoAuthService {
 
     public static final String KAKAO_OAUTH_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
@@ -26,7 +31,8 @@ public class KakaoAuthService {
     private static final String CLIENT_ID = "0f5dbcca74a5d4028b0110d4e1201c8d";
     private static final String REDIRECT_URI ="https://ori-ticket.vercel.app/members/kakao/login";
 
-    private final RestTemplate restTemplate = new RestTemplate();
+
+    private RestTemplate restTemplate;
 
     public OAuthToken requestKakaoToken(String code) {
         HttpHeaders headers = new HttpHeaders();

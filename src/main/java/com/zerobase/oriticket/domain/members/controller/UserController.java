@@ -23,15 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/members")
 public class UserController {
 
-    @Autowired
     private KakaoAuthService kakaoAuthService;
-    @Autowired
     private UserService userService;
-
-    private UserResponse userResponse = new UserResponse();
+    private UserResponse userResponse;
 
     @GetMapping("/kakao/login")
     public ResponseEntity<KakaoProfile> handleKakao(@RequestParam String code) {
