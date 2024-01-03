@@ -29,8 +29,9 @@ public class SendSMSController {
      * 단일 메시지 발송
      */
     @PostMapping("/send-one")
-    public SingleMessageSentResponse sendOne(@RequestBody UserRequest phoneNum) {
+    public String sendOne(@RequestBody UserRequest phoneNum) {
         Message message = sendSmsService.sendSms(phoneNum);
-        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        return message.getSubject();
     }
 }

@@ -49,7 +49,9 @@ public class UserController {
     @PostMapping("/signin")
     public ResponseEntity<UserResponse> signin(@RequestBody UserRequest userRequest) {
         System.out.println("로그인");
-        userRequest.setExistsByEmail(userService.findByEmail(userRequest.getEmail()));
+        boolean byEmail = userService.findByEmail(userRequest.getEmail());
+        userRequest.setExistsByEmail(byEmail);
+        userRequest.setId(userService.findById(byEmail,userRequest.getEmail()));
         return ResponseEntity.ok(userResponse.toEntity(userRequest));
     }
 
