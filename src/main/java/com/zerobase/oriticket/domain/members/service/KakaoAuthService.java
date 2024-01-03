@@ -29,7 +29,8 @@ public class KakaoAuthService {
     private static final String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded;charset=utf-8";
     private static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
     private static final String CLIENT_ID = "0f5dbcca74a5d4028b0110d4e1201c8d";
-    private static final String REDIRECT_URI ="https://ori-ticket.vercel.app/members/kakao/login";
+//    private static final String REDIRECT_URI ="https://ori-ticket.vercel.app/members/kakao/login";
+    private static final String REDIRECT_URI ="http://localhost:8080/members/kakao/login";
 
 
     private RestTemplate restTemplate = new RestTemplate();
