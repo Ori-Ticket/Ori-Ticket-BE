@@ -32,7 +32,7 @@ public class KakaoAuthService {
     private static final String REDIRECT_URI ="https://ori-ticket.vercel.app/members/kakao/login";
 
 
-    private RestTemplate restTemplate;
+    private RestTemplate restTemplate = new RestTemplate();
 
     public OAuthToken requestKakaoToken(String code) {
         HttpHeaders headers = new HttpHeaders();
