@@ -16,11 +16,13 @@ public class UserResponse {
 
     private Boolean existsByEmail;
     private String email;
+    private Long id;
 
     public UserResponse toEntity(UserRequest userRequest) {
         return UserResponse.builder()
                 .existsByEmail(userRequest.getExistsByEmail())
                 .email(userRequest.getEmail())
+                .id(userRequest.getId())
                 .build();
     }
 
