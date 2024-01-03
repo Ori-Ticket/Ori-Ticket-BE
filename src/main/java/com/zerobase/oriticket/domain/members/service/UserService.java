@@ -28,6 +28,14 @@ public class UserService {
         return userRepository.existsByEmail(userEmail);
     }
 
+    public long findById(Boolean userEmail, String email) {
+        if (userEmail) {
+            Member member = userRepository.findByEmail(email);
+            return member.getMemberId();
+        }
+        return -1;
+    }
+
     public Member updateUser(UserRequest userRequest) {
         Member byId = userRepository.findByMemberId(userRequest.getId());
         if (byId == null) {
